@@ -80,7 +80,7 @@ var ParallelJS = null;
 
   const defaults = {
     evalPath: null,
-    maxWorkers: navigator.hardwareConcurrency || 4,
+    maxWorkers: typeof navigator !== 'undefined' && navigator.hardwareConcurrency || 4,
     synchronous: true,
     env: {},
     envNamespace: 'env'
