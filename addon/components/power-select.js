@@ -24,6 +24,7 @@ import {
   defaultTypeAheadMatcher
 } from '../utils/group-utils';
 import { task, timeout } from 'ember-concurrency';
+import ParallelJS from '../utils/parallel';
 
 // Copied from Ember. It shouldn't be necessary in Ember 2.5+
 const assign = Object.assign || function EmberAssign(original, ...args) {

@@ -5,8 +5,8 @@
   {{/if}}
 {{/if}}
 {{#vertical-collection options
-  estimateHeight=verticalCollection.estimateHeight
-  bufferSize=verticalCollection.bufferSize as |opt index|}}
+  estimateHeight=(or verticalCollection.estimateHeight 50)
+  bufferSize=(or verticalCollection.bufferSize 20) as |opt index|}}
   {{#if (ember-power-select-is-group opt)}}
     {{#component groupComponent
         group=(readonly opt)
