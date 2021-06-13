@@ -2,7 +2,8 @@ var ParallelJS = null;
 
 (function() {
   const isCommonJS = typeof module !== 'undefined' && module.exports;
-  const isNode = !(typeof window !== 'undefined' && this === window);
+  // const isNode = !(typeof window !== 'undefined' && this === window);
+  const isNode = false;
   var setImmediate =
     setImmediate ||
     function(cb) {
@@ -79,7 +80,7 @@ var ParallelJS = null;
 
   const defaults = {
     evalPath: null,
-    maxWorkers: typeof navigator !== 'undefined' && navigator.hardwareConcurrency || 4,
+    maxWorkers: navigator.hardwareConcurrency || 4,
     synchronous: true,
     env: {},
     envNamespace: 'env'
