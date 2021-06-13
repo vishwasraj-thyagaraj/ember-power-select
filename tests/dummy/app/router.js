@@ -7,6 +7,8 @@ const Router = EmberRouter.extend({
 });
 
 Router.map(function() {
+  this.route('vc');
+
   this.route('public-pages', { path: '' }, function() {
     this.route('docs', function() {
       // GETTING STARTED

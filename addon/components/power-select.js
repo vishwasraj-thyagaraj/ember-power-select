@@ -7,7 +7,7 @@ import { get, set } from '@ember/object';
 import { assert } from '@ember/debug';
 import { DEBUG } from '@glimmer/env';
 import { isBlank } from '@ember/utils';
-import { isArray as isEmberArray } from '@ember/array';
+import { isArray as isEmberArray, A } from '@ember/array';
 import ArrayProxy from '@ember/array/proxy';
 import ObjectProxy from '@ember/object/proxy';
 import layout from '../templates/components/power-select';
