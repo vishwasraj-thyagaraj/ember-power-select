@@ -1,9 +1,12 @@
-<PowerSelect
-  @search={{false}}
-  @searchEnabled={{true}}
-  @searchField="name"
-  @options={{options}}
-  @selected={{selected}}
-  @onchange={{action "onchange"}} as |usernames|>
-  {{usernames.name}}
-</PowerSelect>
+<div class="fields">
+  <PowerSelect
+    @search={{false}}
+    @searchEnabled={{true}}
+    @searchField="name"
+    @options={{options}}
+    @selected={{selected}}
+    @renderInPlace={{true}}
+    @onchange={{action "onchange"}} as |usernames|>
+    {{usernames.name}}
+  </PowerSelect>
+</div>
