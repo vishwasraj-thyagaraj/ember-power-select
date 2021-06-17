@@ -13,4 +13,19 @@
     @onchange={{action "onchange"}} as |usernames|>
     {{usernames.name}}
   </PowerSelect>
+
+  <PowerSelectMultiple
+    @search={{false}}
+    @searchEnabled={{true}}
+    @searchField="name"
+    @options={{options}}
+    @selected={{selected}}
+    @renderInPlace={{true}}
+    @estimateHeightVC={{28}}
+    @bufferSizeVC={{20}}
+    @renderInVC={{true}}
+    @staticHeightVC={{false}}
+    @onchange={{action "onchange"}} as |usernames|>
+    {{usernames.name}}
+  </PowerSelectMultiple>
 </div>
