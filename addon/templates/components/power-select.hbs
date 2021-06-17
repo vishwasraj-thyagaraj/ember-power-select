@@ -46,7 +46,6 @@
       searchEnabled=(readonly searchEnabled)
       searchField=(readonly searchField)
       select=(readonly publicAPI)
-      verticalCollection=verticalCollection
       selectedItemComponent=(readonly selectedItemComponent)
       as |opt term|}}
       {{yield opt term}}
@@ -95,6 +94,10 @@
         highlightOnHover=(readonly highlightOnHover)
         groupComponent=(readonly groupComponent)
         select=(readonly publicAPI)
+        estimateHeightVC=(readonly estimateHeightVC)
+        bufferSizeVC=(readonly bufferSizeVC)
+        staticHeightVC=(readonly staticHeightVC)
+        renderInVC=(readonly renderInVC)
         as |option term|}}
         {{yield option term}}
       {{/component}}
