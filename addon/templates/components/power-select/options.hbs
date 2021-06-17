@@ -4,35 +4,70 @@
     <li class="ember-power-select-option ember-power-select-option--loading-message" role="option">{{loadingMessage}}</li>
   {{/if}}
 {{/if}}
-{{#vertical-collection options
-  estimateHeight=(or verticalCollection.estimateHeight 50)
-  bufferSize=(or verticalCollection.bufferSize 20) as |opt index|}}
-  {{#if (ember-power-select-is-group opt)}}
-    {{#component groupComponent
-        group=(readonly opt)
-        select=(readonly select)
-        extra=(readonly extra)
-      }}
-      {{#component optionsComponent
-        options=(readonly opt.options)
-        select=(readonly select)
-        groupIndex=(concat groupIndex index ".")
-        optionsComponent=(readonly optionsComponent)
-        groupComponent=(readonly groupComponent)
-        extra=(readonly extra)
-        role="group"
-        class="ember-power-select-options" as |option|}}
-        {{yield option select}}
+
+{{#if renderInVC}}
+  {{#vertical-collection options
+    estimateHeight=(or estimateHeightVC 28)
+    bufferSize=(or bufferSizeVC 1)
+    staticHeight=(or staticHeightVC false) as |opt index|}}
+    {{#if (ember-power-select-is-group opt)}}
+      {{#component groupComponent
+          group=(readonly opt)
+          select=(readonly select)
+          extra=(readonly extra)
+        }}
+        {{#component optionsComponent
+          options=(readonly opt.options)
+          select=(readonly select)
+          groupIndex=(concat groupIndex index ".")
+          optionsComponent=(readonly optionsComponent)
+          groupComponent=(readonly groupComponent)
+          extra=(readonly extra)
+          role="group"
+          class="ember-power-select-options" as |option|}}
+          {{yield option select}}
+        {{/component}}
       {{/component}}
-    {{/component}}
-  {{else}}
-    <li class="ember-power-select-option"
-      aria-selected="{{ember-power-select-is-selected opt select.selected}}"
-      aria-disabled={{ember-power-select-true-string-if-present opt.disabled}}
-      aria-current="{{eq opt select.highlighted}}"
-      data-option-index="{{groupIndex}}{{index}}"
-      role="option">
-      {{yield opt select}}
-    </li>
-  {{/if}}
-{{/vertical-collection}}
+    {{else}}
+      <li class="ember-power-select-option"
+        aria-selected="{{ember-power-select-is-selected opt select.selected}}"
+        aria-disabled={{ember-power-select-true-string-if-present opt.disabled}}
+        aria-current="{{eq opt select.highlighted}}"
+        data-option-index="{{groupIndex}}{{index}}"
+        role="option">
+        {{yield opt select}}
+      </li>
+    {{/if}}
+  {{/vertical-collection}}
+{{else}}
+  {{#each options as |opt index|}}
+    {{#if (ember-power-select-is-group opt)}}
+      {{#component groupComponent
+          group=(readonly opt)
+          select=(readonly select)
+          extra=(readonly extra)
+        }}
+        {{#component optionsComponent
+          options=(readonly opt.options)
+          select=(readonly select)
+          groupIndex=(concat groupIndex index ".")
+          optionsComponent=(readonly optionsComponent)
+          groupComponent=(readonly groupComponent)
+          extra=(readonly extra)
+          role="group"
+          class="ember-power-select-options" as |option|}}
+          {{yield option select}}
+        {{/component}}
+      {{/component}}
+    {{else}}
+      <li class="ember-power-select-option"
+        aria-selected="{{ember-power-select-is-selected opt select.selected}}"
+        aria-disabled={{ember-power-select-true-string-if-present opt.disabled}}
+        aria-current="{{eq opt select.highlighted}}"
+        data-option-index="{{groupIndex}}{{index}}"
+        role="option">
+        {{yield opt select}}
+      </li>
+    {{/if}}
+  {{/each}}
+{{/if}}
