@@ -5,7 +5,7 @@
   {{/if}}
 {{/if}}
 
-{{#if renderInVC}}
+{{#if (readonly renderInVC)}}
   {{#vertical-collection options
     estimateHeight=(or estimateHeightVC 28)
     bufferSize=(or bufferSizeVC 1)
