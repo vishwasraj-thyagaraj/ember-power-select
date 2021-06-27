@@ -74,6 +74,16 @@ export default Component.extend({
     return (!select.selected || get(select.selected, 'length') === 0) ? (this.get('placeholder') || '') : '';
   }),
 
+  labelForInput: computed('select.selected.length', function() {
+    if(this.select.selected && this.select.selected.length) {
+      if(this.searchField) {
+        return `Selected ${this.select.selected.map(item => item[this.searchField]).join(', ')}`
+      } else {
+        return `Selected ${this.select.selected.join(', ')}`
+      }
+    }
+  }),
+
   // Actions
   actions: {
     onInput(e) {

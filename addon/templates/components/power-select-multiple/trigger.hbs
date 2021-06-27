@@ -40,8 +40,10 @@
     aria-controls={{listboxId}}
     aria-owns={{listboxId}}
     aria-autocomplete="list"
+    aria-haspopup="listbox"
     aria-activedescendant={{ariaActivedescendant}}
     aria-expanded={{if dropdown.isOpen "true" "false"}}
+    aria-label={{labelForInput}}
     role="combobox"
     style={{triggerMultipleInputStyle}}
     placeholder={{maybePlaceholder}}
