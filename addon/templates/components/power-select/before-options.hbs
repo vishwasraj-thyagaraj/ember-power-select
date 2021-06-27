@@ -6,6 +6,8 @@
       class="ember-power-select-search-input"
       value={{select.searchText}}
       aria-controls={{listboxId}}
+      aria-autocomplete="list"
+      aria-activedescendant={{ariaActivedescendant}}
       placeholder={{searchPlaceholder}}
       oninput={{onInput}}
       onfocus={{onFocus}}

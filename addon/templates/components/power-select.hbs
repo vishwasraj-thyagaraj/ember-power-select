@@ -30,7 +30,11 @@
     onKeyDown=(action "onTriggerKeydown")
     onFocus=(action "onTriggerFocus")
     onBlur=(action "onTriggerBlur")
-    tabindex=(readonly tabindex)}}
+    tabindex=(readonly tabindex)
+    ariaActivedescendant=ariaActivedescendant
+    aria-activedescendant=ariaActivedescendant
+    aria-haspopup="listbox"
+  }}
     {{#component triggerComponent
       allowClear=(readonly allowClear)
       buildSelection=(readonly buildSelection)
@@ -47,11 +51,12 @@
       searchField=(readonly searchField)
       select=(readonly publicAPI)
       selectedItemComponent=(readonly selectedItemComponent)
+      ariaActivedescendant=ariaActivedescendant
+      dropdown=dropdown
       as |opt term|}}
       {{yield opt term}}
     {{/component}}
   {{/dropdown.trigger}}
-
   {{#dropdown.content _contentTagName=_contentTagName class=(readonly concatenatedDropdownClasses)}}
     {{component beforeOptionsComponent
       animationEnabled=(readonly animationEnabled)
@@ -66,6 +71,7 @@
       placeholderComponent=(readonly placeholderComponent)
       searchPlaceholder=(readonly searchPlaceholder)
       select=(readonly publicAPI)
+      ariaActivedescendant=ariaActivedescendant
       selectedItemComponent=(readonly selectedItemComponent)}}
     {{#if mustShowSearchMessage}}
       {{component searchMessageComponent
@@ -97,7 +103,8 @@
         estimateHeightVC=(readonly estimateHeightVC)
         bufferSizeVC=(readonly bufferSizeVC)
         staticHeightVC=(readonly staticHeightVC)
-        renderInVC=(readonly renderInVC)
+        renderInVC=shouldRenderInVC
+        multiSelect=(or multiSelect false)
         as |option term|}}
         {{yield option term}}
       {{/component}}

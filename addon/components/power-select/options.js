@@ -28,7 +28,8 @@ export default Component.extend({
   isTouchDevice,
   layout,
   tagName: 'ul',
-  attributeBindings: ['role', 'aria-controls'],
+  multiSelect: true,
+  attributeBindings: ['role', 'aria-multiselectable'/*'aria-controls'*/],
   role: 'listbox',
 
   // Lifecycle hooks
@@ -64,6 +65,11 @@ export default Component.extend({
   // CPs
   'aria-controls': computed('select.uniqueId', function() {
     return `ember-power-select-trigger-${this.get('select.uniqueId')}`;
+  }),
+
+  'aria-multiselectable': computed(function() {
+    if(this.get('multiSelect')) return 'true';
+    return false;
   }),
 
   // Methods

@@ -76,6 +76,8 @@ export default Component.extend({
   tagName: '',
 
   // Options
+  ariaActivedescendant: '-1',
+  triggerRole: fallbackIfUndefined('combobox'),
   searchEnabled: fallbackIfUndefined(true),
   matchTriggerWidth: fallbackIfUndefined(true),
   preventScroll: fallbackIfUndefined(false),
@@ -135,6 +137,10 @@ export default Component.extend({
   },
 
   // CPs
+  shouldRenderInVC: computed('renderInVC', function() {
+    return this.get('renderInVC') || this.options.length > 500;
+  }),
+
   inTesting: computed(function() {
     let config = getOwner(this).resolveRegistration('config:environment');
     return config.environment === 'test';
@@ -643,9 +649,15 @@ export default Component.extend({
       let newHighlighted = advanceSelectableOption(publicAPI.results, publicAPI.highlighted, step);
       publicAPI.actions.highlight(newHighlighted, e);
       publicAPI.actions.scrollTo(newHighlighted);
+      this._setActiveDescendant(newHighlighted);
     } else {
       publicAPI.actions.open(e);
     }
+  },
+
+  _setActiveDescendant(newHighlighted) {
+    let _highlightedIndex = indexOfOption(this.get('publicAPI.results'), newHighlighted);
+    this.set('ariaActivedescendant', `ember-power-select-options-${this.get('publicAPI.uniqueId')}-${_highlightedIndex}`);
   },
 
   _handleKeyEnter(e) {

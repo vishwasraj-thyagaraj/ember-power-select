@@ -6,9 +6,10 @@
 {{/if}}
 
 {{#if (readonly renderInVC)}}
+  {{!-- by default estimateHeight is 1 & bufferSizeVC is 100 to prevent occluded-content z-index problem --}}
   {{#vertical-collection options
-    estimateHeight=(or estimateHeightVC 28)
-    bufferSize=(or bufferSizeVC 1)
+    estimateHeight=(or estimateHeightVC 1)
+    bufferSize=(or bufferSizeVC 100)
     staticHeight=(or staticHeightVC false) as |opt index|}}
     {{#if (ember-power-select-is-group opt)}}
       {{#component groupComponent
@@ -29,7 +30,7 @@
         {{/component}}
       {{/component}}
     {{else}}
-      <li class="ember-power-select-option"
+      <li id="{{concat id '-' index}}" class="ember-power-select-option"
         aria-selected="{{ember-power-select-is-selected opt select.selected}}"
         aria-disabled={{ember-power-select-true-string-if-present opt.disabled}}
         aria-current="{{eq opt select.highlighted}}"
@@ -60,7 +61,7 @@
         {{/component}}
       {{/component}}
     {{else}}
-      <li class="ember-power-select-option"
+      <li id="{{concat id '-' index}}" class="ember-power-select-option"
         aria-selected="{{ember-power-select-is-selected opt select.selected}}"
         aria-disabled={{ember-power-select-true-string-if-present opt.disabled}}
         aria-current="{{eq opt select.highlighted}}"

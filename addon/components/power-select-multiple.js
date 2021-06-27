@@ -9,9 +9,14 @@ export default Component.extend({
   layout,
   // Config
   triggerComponent: fallbackIfUndefined('power-select-multiple/trigger'),
+  removeButtonClassName: 'ember-power-select-multiple-remove-btn',
   beforeOptionsComponent: fallbackIfUndefined(null),
 
   // CPs
+  shouldRenderInVC: computed('renderInVC', function() {
+    return this.get('renderInVC') || this.options.length > 500;
+  }),
+
   concatenatedTriggerClass: computed('triggerClass', function() {
     let classes = ['ember-power-select-multiple-trigger'];
     if (this.get('triggerClass')) {
@@ -32,6 +37,11 @@ export default Component.extend({
     }
   }),
 
+  // role comobobox is given to input as input owns and controls the dropdown options
+  triggerRole: computed('searchEnabled', function() {
+    return this.get('searchEnabled') ? '' : 'combobox';
+  }),
+
   computedTabIndex: computed('tabindex', 'searchEnabled', 'triggerComponent', function() {
     if (this.get('triggerComponent') === 'power-select-multiple/trigger' && this.get('searchEnabled') !== false) {
       return '-1';
@@ -45,6 +55,11 @@ export default Component.extend({
     handleOpen(select, e) {
       let action = this.get('onopen');
       if (action && action(select, e) === false) {
+        return false;
+      } else if(this.get('allowTabRemoval') && e.keyCode === 13 && e.target.classList.contains(this.get('removeButtonClassName'))) {
+        let index = parseInt(e.target.getAttribute('data-selected-index'));
+        let removedItem = select.selected[index];
+        select.actions.select(this.actions.buildSelection(removedItem, select), e);
         return false;
       }
       this.focusInput(select);
