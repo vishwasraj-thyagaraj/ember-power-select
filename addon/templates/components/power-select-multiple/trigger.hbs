@@ -1,4 +1,4 @@
-<ul id="ember-power-select-multiple-options-{{select.uniqueId}}" class="ember-power-select-multiple-options">
+<ul aria-label={{if select.selected.length labelForSelectedList ""}} id="ember-power-select-multiple-options-{{select.uniqueId}}" class="ember-power-select-multiple-options">
   {{#each select.selected as |opt idx|}}
     <li data-selected-index={{idx}} class="ember-power-select-multiple-option {{if opt.disabled "ember-power-select-multiple-option--disabled"}}">
       {{#if selectedItemComponent}}
@@ -7,23 +7,13 @@
         {{yield opt select}}
       {{/if}}
       {{#unless select.disabled }}
-        {{#if allowTabRemoval}}
-          <button
-            type="button"
-            aria-label="Remove"
-            class="ember-power-select-multiple-remove-btn"
-            data-selected-index={{idx}}>
-            &times;
-          </button>
-        {{else}}
-          <span
-            role="button"
-            aria-label="Remove"
-            class="ember-power-select-multiple-remove-btn"
-            data-selected-index={{idx}}>
-            &times;
-          </span>
-        {{/if}}
+        <button
+          type="button"
+          aria-label="Remove {{if searchField (get opt searchField) opt}}"
+          class="ember-power-select-multiple-remove-btn"
+          data-selected-index={{idx}}>
+          &times;
+        </button>
       {{/unless}}
     </li>
   {{else}}
@@ -43,7 +33,6 @@
     aria-haspopup="listbox"
     aria-activedescendant={{ariaActivedescendant}}
     aria-expanded={{if dropdown.isOpen "true" "false"}}
-    aria-label={{labelForInput}}
     role="combobox"
     style={{triggerMultipleInputStyle}}
     placeholder={{maybePlaceholder}}

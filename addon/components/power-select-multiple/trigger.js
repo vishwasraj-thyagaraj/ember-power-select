@@ -74,14 +74,8 @@ export default Component.extend({
     return (!select.selected || get(select.selected, 'length') === 0) ? (this.get('placeholder') || '') : '';
   }),
 
-  labelForInput: computed('select.selected.length', function() {
-    if(this.select.selected && this.select.selected.length) {
-      if(this.searchField) {
-        return `Selected ${this.select.selected.map(item => item[this.searchField]).join(', ')}`
-      } else {
-        return `Selected ${this.select.selected.join(', ')}`
-      }
-    }
+  listboxLabel: computed('ariaDescribedBy', 'ariaLabel', 'ariaLabelledBy', function() {
+    return this.get('ariaLabel') || this.get('ariaLabelledBy') || this.get('ariaDescribedBy')
   }),
 
   // Actions
@@ -105,8 +99,9 @@ export default Component.extend({
         if (isBlank(e.target.value)) {
           let lastSelection = select.selected[select.selected.length - 1];
           if (lastSelection) {
-            select.actions.select(this.get('buildSelection')(lastSelection, select), e);
-            if(get(this, 'searchAfterRemove')) {
+            // if enabled, will remove selected option char by char instead of single removal
+            if(get(this, 'allowBackspaceRemoval')) {
+              select.actions.select(this.get('buildSelection')(lastSelection, select), e);
               if (typeof lastSelection === 'string') {
                 select.actions.search(lastSelection);
               } else {
@@ -114,6 +109,10 @@ export default Component.extend({
                 assert('`{{power-select-multiple}}` requires a `searchField` when the options are not strings to remove options using backspace', searchField);
                 select.actions.search(get(lastSelection, searchField));
               }
+              select.actions.open(e);
+            } else {
+              // removed via backspace and open dropdown once removed
+              select.actions.select(this.get('buildSelection')(lastSelection, select), e);
               select.actions.open(e);
             }
           }

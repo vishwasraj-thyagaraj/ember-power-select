@@ -1,5 +1,6 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
+import { reads } from '@ember/object/computed';
 import layout from '../../templates/components/power-select/options';
 
 const isTouchDevice = (!!window && 'ontouchstart' in window);
@@ -29,7 +30,7 @@ export default Component.extend({
   layout,
   tagName: 'ul',
   multiSelect: true,
-  attributeBindings: ['role', 'aria-multiselectable'/*'aria-controls'*/],
+  attributeBindings: ['role', 'aria-multiselectable', 'aria-label' /*'aria-controls'*/],
   role: 'listbox',
 
   // Lifecycle hooks
@@ -71,6 +72,8 @@ export default Component.extend({
     if(this.get('multiSelect')) return 'true';
     return false;
   }),
+
+  'aria-label': reads('labelForList'),
 
   // Methods
   _addTouchEvents() {

@@ -56,11 +56,12 @@ export default Component.extend({
       let action = this.get('onopen');
       if (action && action(select, e) === false) {
         return false;
-      } else if(this.get('allowTabRemoval') && e.keyCode === 13 && e.target.classList.contains(this.get('removeButtonClassName'))) {
+      } 
+      // handle option removal via button pill
+      else if(e && e.keyCode === 13 && e.target.classList.contains(this.get('removeButtonClassName'))) {
         let index = parseInt(e.target.getAttribute('data-selected-index'));
         let removedItem = select.selected[index];
         select.actions.select(this.actions.buildSelection(removedItem, select), e);
-        return false;
       }
       this.focusInput(select);
     },
@@ -70,7 +71,9 @@ export default Component.extend({
       if (action) {
         action(select, e);
       }
-      this.focusInput(select);
+      // this.focusInput(select);
+      // on input focus, open dropdown
+      select.actions.open();
     },
 
     handleKeydown(select, e) {

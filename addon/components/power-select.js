@@ -304,7 +304,8 @@ export default Component.extend({
       }
       let publicAPI = this.get('publicAPI');
       publicAPI.actions.select(this.get('buildSelection')(selected, publicAPI), e);
-      if (this.get('closeOnSelect')) {
+      // for multi select, once selected keep dropdown open
+      if (this.get('closeOnSelect') && !this.get('multiSelect')) {
         publicAPI.actions.close(e);
         return false;
       }
@@ -382,6 +383,10 @@ export default Component.extend({
       if (action) {
         action(this.get('publicAPI'), event);
       }
+
+      if(this.get('ariaActivedescendant') === '-1') {
+        this._setActiveDescendant(this.get('publicAPI').options[0]);
+      }
     },
 
     onTriggerBlur(_, event) {
@@ -402,6 +407,7 @@ export default Component.extend({
       if (action) {
         action(this.get('publicAPI'), event);
       }
+      set(this, 'ariaActivedescendant', '-1');
     },
 
     activate() {
