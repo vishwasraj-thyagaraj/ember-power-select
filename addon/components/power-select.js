@@ -138,7 +138,7 @@ export default Component.extend({
 
   // CPs
   shouldRenderInVC: computed('renderInVC', function() {
-    return this.get('renderInVC') || this.options.length > 500;
+    return this.get('renderInVC') || this.get('options.length') > 500;
   }),
 
   inTesting: computed(function() {
@@ -304,8 +304,14 @@ export default Component.extend({
       }
       let publicAPI = this.get('publicAPI');
       publicAPI.actions.select(this.get('buildSelection')(selected, publicAPI), e);
-      // for multi select, once selected keep dropdown open
-      if (this.get('closeOnSelect') && !this.get('multiSelect')) {
+
+      if (this.get('closeOnSelect')) {
+        // for multi select, once selected keep dropdown open
+        if(this.get('multiSelect')) {
+          if(this.get('searchEnabled')) publicAPI.actions.search('');
+          return false;
+        }
+
         publicAPI.actions.close(e);
         return false;
       }

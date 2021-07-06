@@ -14,7 +14,7 @@ export default Component.extend({
 
   // CPs
   shouldRenderInVC: computed('renderInVC', function() {
-    return this.get('renderInVC') || this.options.length > 500;
+    return this.get('renderInVC') || this.get('options.length') > 500;
   }),
 
   concatenatedTriggerClass: computed('triggerClass', function() {
