@@ -15,7 +15,7 @@
   as |dropdown|}}
 
   {{#dropdown.trigger
-    role=(readonly triggerRole)
+    role=(if multiSelect null (readonly triggerRole))
     tagName=(readonly _triggerTagName)
     ariaDescribedBy=(readonly ariaDescribedBy)
     ariaInvalid=(readonly ariaInvalid)
@@ -31,7 +31,7 @@
     onFocus=(action "onTriggerFocus")
     onBlur=(action "onTriggerBlur")
     tabindex=(readonly tabindex)
-    aria-activedescendant=ariaActivedescendant
+    aria-activedescendant=(if multiSelect null ariaActivedescendant)
     aria-haspopup=(if multiSelect "true" "listbox")
     aria-expanded=(if dropdown.isOpen "true" "false")
   }}
