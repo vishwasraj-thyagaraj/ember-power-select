@@ -62,6 +62,7 @@ export default Component.extend({
         let index = parseInt(e.target.getAttribute('data-selected-index'));
         let removedItem = select.selected[index];
         select.actions.select(this.actions.buildSelection(removedItem, select), e);
+        e.preventDefault();
       }
       this.focusInput(select);
     },
