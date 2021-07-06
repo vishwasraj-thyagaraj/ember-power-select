@@ -37,11 +37,6 @@ export default Component.extend({
     }
   }),
 
-  // role comobobox is given to input as input owns and controls the dropdown options
-  triggerRole: computed('searchEnabled', function() {
-    return this.get('searchEnabled') ? '' : 'combobox';
-  }),
-
   computedTabIndex: computed('tabindex', 'searchEnabled', 'triggerComponent', function() {
     if (this.get('triggerComponent') === 'power-select-multiple/trigger' && this.get('searchEnabled') !== false) {
       return '-1';
@@ -72,9 +67,7 @@ export default Component.extend({
       if (action) {
         action(select, e);
       }
-      // this.focusInput(select);
-      // on input focus, open dropdown
-      select.actions.open();
+      this.focusInput(select);
     },
 
     handleKeydown(select, e) {

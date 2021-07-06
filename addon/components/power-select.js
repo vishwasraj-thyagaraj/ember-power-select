@@ -77,7 +77,7 @@ export default Component.extend({
 
   // Options
   ariaActivedescendant: '-1',
-  triggerRole: fallbackIfUndefined('combobox'),
+  triggerRole: fallbackIfUndefined('button'),
   searchEnabled: fallbackIfUndefined(true),
   matchTriggerWidth: fallbackIfUndefined(true),
   preventScroll: fallbackIfUndefined(false),
