@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
-import { scheduleOnce } from '@ember/runloop';
+import { scheduleOnce, run } from '@ember/runloop';
 import { getOwner } from '@ember/application';
 import { isEqual } from '@ember/utils';
 import { get, set } from '@ember/object';
@@ -413,7 +413,8 @@ export default Component.extend({
       if (action) {
         action(this.get('publicAPI'), event);
       }
-      set(this, 'ariaActivedescendant', '-1');
+      
+      run.next(() => this.set('ariaActivedescendant', '-1'));
     },
 
     activate() {
