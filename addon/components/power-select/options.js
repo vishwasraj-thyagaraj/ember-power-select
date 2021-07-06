@@ -30,7 +30,7 @@ export default Component.extend({
   layout,
   tagName: 'ul',
   multiSelect: true,
-  attributeBindings: ['role', 'aria-multiselectable', 'aria-label' /*'aria-controls'*/],
+  attributeBindings: ['role', 'aria-multiselectable', 'aria-label'],
   role: 'listbox',
 
   // Lifecycle hooks
@@ -64,13 +64,8 @@ export default Component.extend({
   },
 
   // CPs
-  'aria-controls': computed('select.uniqueId', function() {
-    return `ember-power-select-trigger-${this.get('select.uniqueId')}`;
-  }),
-
   'aria-multiselectable': computed(function() {
-    if(this.get('multiSelect')) return 'true';
-    return false;
+    return this.get('multiSelect') ? 'true' : 'false'
   }),
 
   'aria-label': reads('labelForList'),

@@ -31,9 +31,9 @@
     onFocus=(action "onTriggerFocus")
     onBlur=(action "onTriggerBlur")
     tabindex=(readonly tabindex)
-    ariaActivedescendant=ariaActivedescendant
     aria-activedescendant=ariaActivedescendant
-    aria-haspopup="listbox"
+    aria-haspopup=(if multiSelect "true" "listbox")
+    aria-expanded=(if dropdown.isOpen "true" "false")
   }}
     {{#component triggerComponent
       allowClear=(readonly allowClear)
