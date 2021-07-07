@@ -2,7 +2,7 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { scheduleOnce, run } from '@ember/runloop';
 import { getOwner } from '@ember/application';
-import { isEqual } from '@ember/utils';
+import { isEqual, isEmpty } from '@ember/utils';
 import { get, set } from '@ember/object';
 import { assert } from '@ember/debug';
 import { DEBUG } from '@glimmer/env';
@@ -139,6 +139,25 @@ export default Component.extend({
   // CPs
   shouldRenderInVC: computed('renderInVC', function() {
     return this.get('renderInVC') || this.get('options.length') > 500;
+  }),
+
+  ariaLabelForInput: computed('selected.length', function() {
+    let selected = this.get('selected');
+
+    if(Array.isArray(selected) && selected.length) {
+      if(this.get('searchField')) {
+        return `Selected ${selected.map(item => item[this.searchField]).join(', ')}`
+      } else {
+        return `Selected ${selected.join(', ')}`
+      }
+    } else if(!isEmpty(selected)) {
+      if(this.get('searchField')) {
+        return `Selected ${selected[this.searchField]}`;
+      } else {
+        return `Selected ${selected}`;
+      }
+    }
+    return '';
   }),
 
   inTesting: computed(function() {

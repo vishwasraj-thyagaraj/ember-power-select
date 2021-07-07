@@ -1,4 +1,4 @@
-<ul aria-label={{if select.selected.length labelForSelectedList null}} id="ember-power-select-multiple-options-{{select.uniqueId}}" class="ember-power-select-multiple-options">
+<ul aria-label={{if select.selected.length ariaLabelForSelectedList null}} id="ember-power-select-multiple-options-{{select.uniqueId}}" class="ember-power-select-multiple-options">
   {{#each select.selected as |opt idx|}}
     <li aria-selected="true" data-selected-index={{idx}} class="ember-power-select-multiple-option {{if opt.disabled "ember-power-select-multiple-option--disabled"}}">
       {{#if selectedItemComponent}}
@@ -32,6 +32,7 @@
     spellcheck="false"
     id="ember-power-select-trigger-multiple-input-{{select.uniqueId}}"
     value={{select.searchText}}
+    aria-label={{ariaLabelForInput}}
     aria-owns={{listboxId}}
     aria-autocomplete="list"
     aria-activedescendant={{ariaActivedescendant}}
@@ -45,5 +46,7 @@
     onblur={{onBlur}}
     tabindex={{tabindex}}
     onkeydown={{action "onKeydown"}}>
+{{else}}
+  <span id="power-select-selected-items-{{dropdown.uniqueId}}" aria-hidden="true" style="display:none;">{{ariaLabelForInput}}</span>
 {{/if}}
 <span class="ember-power-select-status-icon" role="presentation"></span>

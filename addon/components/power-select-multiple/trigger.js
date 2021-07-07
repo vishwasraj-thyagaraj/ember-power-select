@@ -74,10 +74,6 @@ export default Component.extend({
     return (!select.selected || get(select.selected, 'length') === 0) ? (this.get('placeholder') || '') : '';
   }),
 
-  listboxLabel: computed('ariaDescribedBy', 'ariaLabel', 'ariaLabelledBy', function() {
-    return this.get('ariaLabel') || this.get('ariaLabelledBy') || this.get('ariaDescribedBy')
-  }),
-
   // Actions
   actions: {
     onInput(e) {
