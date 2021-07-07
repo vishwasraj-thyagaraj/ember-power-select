@@ -82,14 +82,15 @@
     {{#if mustShowSearchMessage}}
       {{component searchMessageComponent
         searchMessage=(readonly searchMessage)
+        optionsId=optionsId
         select=(readonly publicAPI)
       }}
     {{else if mustShowNoMessages}}
       {{#if (hasBlock "inverse")}}
         {{yield to="inverse"}}
       {{else if noMatchesMessage}}
-        <ul class="ember-power-select-options" role="listbox">
-          <li class="ember-power-select-option ember-power-select-option--no-matches-message" role="option">
+        <ul class="ember-power-select-options" role="listbox" id={{optionsId}}>
+          <li aria-live="polite" aria-atomic="true" class="ember-power-select-option ember-power-select-option--no-matches-message" role="option">
             {{noMatchesMessage}}
           </li>
         </ul>
