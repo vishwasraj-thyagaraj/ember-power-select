@@ -5,6 +5,7 @@ import layout from '../templates/components/power-select-multiple';
 import fallbackIfUndefined from '../utils/computed-fallback-if-undefined';
 
 export default Component.extend({
+  multiSelect: true,
   tagName: '',
   layout,
   // Config
@@ -58,8 +59,15 @@ export default Component.extend({
         let removedItem = select.selected[index];
         select.actions.select(this.actions.buildSelection(removedItem, select), e);
         e.preventDefault();
+        // once option is removed, will focus input and open the dropdown
       }
-      this.focusInput(select);
+
+      if(!this.get('searchEnabled')) {
+        let listBox = document.querySelector(`.ember-power-select-multiple-trigger[aria-owns='ember-basic-dropdown-content-${select.uniqueId}']`);
+        listBox && listBox.focus();
+      } else {
+        this.focusInput(select);
+      }
     },
 
     handleFocus(select, e) {
@@ -115,9 +123,7 @@ export default Component.extend({
   focusInput(select) {
     if (select) {
       let input = document.querySelector(`#ember-power-select-trigger-multiple-input-${select.uniqueId}`);
-      if (input) {
-        input.focus();
-      }
+      input && input.focus();
     }
   }
 });

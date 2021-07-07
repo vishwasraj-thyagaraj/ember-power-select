@@ -29,7 +29,6 @@ export default Component.extend({
   isTouchDevice,
   layout,
   tagName: 'ul',
-  multiSelect: true,
   attributeBindings: ['role', 'aria-multiselectable', 'aria-label'],
   role: 'listbox',
 

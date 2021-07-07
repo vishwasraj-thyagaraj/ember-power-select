@@ -309,7 +309,8 @@ export default Component.extend({
         // for multi select, once selected keep dropdown open
         if(this.get('multiSelect')) {
           if(this.get('searchEnabled')) publicAPI.actions.search('');
-          return false;
+          // uncommenting below code will close dropdown once selected
+          // return false;
         }
 
         publicAPI.actions.close(e);

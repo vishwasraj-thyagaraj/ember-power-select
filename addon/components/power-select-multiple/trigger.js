@@ -111,9 +111,8 @@ export default Component.extend({
               }
               select.actions.open(e);
             } else {
-              // removed via backspace and open dropdown once removed
+              // removed via backspace
               select.actions.select(this.get('buildSelection')(lastSelection, select), e);
-              select.actions.open(e);
             }
           }
         }
