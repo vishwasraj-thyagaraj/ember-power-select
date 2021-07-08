@@ -1,0 +1,88 @@
+<main style="width:50%;margin:50px auto;">
+	<h1>Sample</h1>
+
+	<p>Multi Select (with search)</p>
+
+	{{#power-select-multiple
+	  options=names
+	  tabindex="0"
+	  searchField="name"
+	  selected=name0
+	  renderInPlace=true
+	  onchange=(action "changeName" "name0")
+
+	  ariaLabel="Select Agents"
+	  ariaLabelForList="List of agents"
+	  ariaDescribedByForSelectedList="Selected agents"
+
+	  placeholder="Type to search"
+	  as |username|
+	}}
+	  {{username.name}}
+	{{/power-select-multiple}}
+
+	<br>
+	<p>Multi Select (no search)</p>
+
+	{{#power-select-multiple
+	  options=names
+	  searchField="name"
+	  selected=name1
+	  renderInPlace=true
+	  onchange=(action "changeName" "name1")
+
+	  searchEnabled=false
+
+	  ariaLabel="Open Agents Options"
+	  ariaLabelForList="List of agents"
+	  ariaDescribedByForSelectedList="Selected agents"
+
+	  placeholder="Select Agents"
+	  as |username|
+	}}
+	  {{username.name}}
+	{{/power-select-multiple}}
+
+	<br>
+	<p>Single Select (with search)</p>
+
+	{{#power-select
+	  options=names
+	  searchField="name"
+	  renderInPlace=true
+	  selected=name2
+	  onchange=(action "changeName" "name2")
+
+	  ariaLabel="Open Agents Options"
+	  ariaLabelForList="List of agents"
+	  ariaDescribedByForSelectedList="Selected agent"
+
+	  placeholder="Select Agents"
+	  searchPlaceholder="Type to search"
+	  as |username|
+	}}
+	  {{username.name}}
+	{{/power-select}}
+
+	<br>
+	<p>Single Select (no search)</p>
+
+	{{#power-select
+	  options=names
+	  searchField="name"
+	  renderInPlace=true
+	  selected=name3
+	  onchange=(action "changeName" "name3")
+
+	  searchEnabled=false
+
+	  ariaLabel="Open Agents Options"
+	  ariaLabelForList="List of agents"
+	  ariaDescribedByForSelectedList="Selected agent"
+
+	  placeholder="Select Agents"
+	  as |username|
+	}}
+	  {{username.name}}
+	{{/power-select}}
+</main>
