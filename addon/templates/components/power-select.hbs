@@ -19,7 +19,7 @@
     tagName=(readonly _triggerTagName)
     ariaDescribedBy=(readonly ariaDescribedBy)
     ariaInvalid=(readonly ariaInvalid)
-    ariaLabel=(readonly ariaLabel)
+    ariaLabel=(unless (and searchEnabled multiSelect) (readonly ariaLabel) null)
     ariaLabelledBy=(if (and searchEnabled multiSelect) (readonly ariaLabelledBy) (concat ariaLabelledBy (concat " power-select-selected-items-" dropdown.uniqueId)))
     ariaRequired=(readonly required)
     title=(readonly title)
@@ -32,7 +32,7 @@
     onBlur=(action "onTriggerBlur")
     tabindex=(readonly tabindex)
     aria-activedescendant=(if searchEnabled null ariaActivedescendant)
-    aria-haspopup=(if (and searchEnabled multiSelect) "true" "listbox")
+    aria-haspopup=(if searchEnabled "true" "listbox")
     aria-expanded=(if dropdown.isOpen "true" "false")
   }}
     {{#component triggerComponent
@@ -90,7 +90,7 @@
         {{yield to="inverse"}}
       {{else if noMatchesMessage}}
         <ul class="ember-power-select-options" role="listbox" id={{optionsId}}>
-          <li aria-live="polite" aria-atomic="true" class="ember-power-select-option ember-power-select-option--no-matches-message" role="option">
+          <li aria-live="assertive" class="ember-power-select-option ember-power-select-option--no-matches-message" role="option">
             {{noMatchesMessage}}
           </li>
         </ul>

@@ -26,21 +26,11 @@ export default Component.extend({
     let inputStyle = this.input ? window.getComputedStyle(this.input) : null;
     this.inputFont = inputStyle ? `${ inputStyle.fontStyle } ${  inputStyle.fontVariant} ${ inputStyle.fontWeight } ${ inputStyle.fontSize}/${ inputStyle.lineHeight } ${ inputStyle.fontFamily }` : null;
     let optionsList = document.getElementById(`ember-power-select-multiple-options-${select.uniqueId}`);
-    let chooseOption = (e) => {
-      let selectedIndex = e.target.getAttribute('data-selected-index');
-      if (selectedIndex) {
-        e.stopPropagation();
-        e.preventDefault();
 
-        let select = this.get('select');
-        let object = this.selectedObject(select.selected, selectedIndex);
-        select.actions.choose(object);
-      }
-    };
     if (isTouchDevice) {
-      optionsList.addEventListener('touchstart', chooseOption);
+      optionsList.addEventListener('touchstart', this.chooseOption.bind(this));
     }
-    optionsList.addEventListener('mousedown', chooseOption);
+    optionsList.addEventListener('mousedown', this.chooseOption.bind(this));
   },
 
   didReceiveAttrs() {
@@ -48,6 +38,19 @@ export default Component.extend({
     let select = this.set('oldSelect', this.get('select'));
     if (oldSelect.isOpen && !select.isOpen) {
       scheduleOnce('actions', null, select.actions.search, '');
+    }
+  },
+
+  chooseOption (e) {
+    let selectedIndex = e.target.getAttribute('data-selected-index');
+
+    if (selectedIndex) {
+      e.stopPropagation();
+      e.preventDefault();
+
+      let select = this.get('select');
+      let object = this.selectedObject(select.selected, selectedIndex);
+      select.actions.choose(object);
     }
   },
 
@@ -76,6 +79,22 @@ export default Component.extend({
 
   // Actions
   actions: {
+    removeOption(e) {
+      // handle option removal via button pill
+      if(e.keyCode === 13) {
+        this.chooseOption(e);
+        let trigger;
+        let selectId = this.get('select.uniqueId');
+
+        if(this.get('searchEnabled')) {
+          trigger = document.querySelector(`#ember-power-select-trigger-multiple-input-${selectId}`);
+        } else {
+          trigger = document.querySelector(`.ember-power-select-multiple-trigger[aria-owns='ember-basic-dropdown-content-${selectId}']`);
+        }
+        trigger && trigger.focus();
+      }
+    },
+
     onInput(e) {
       let action = this.get('onInput');
       if (action &&  action(e) === false) {

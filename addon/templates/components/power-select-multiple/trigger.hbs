@@ -1,6 +1,6 @@
 <ul aria-label={{if select.selected.length ariaLabelForSelectedList null}} id="ember-power-select-multiple-options-{{select.uniqueId}}" class="ember-power-select-multiple-options">
   {{#each select.selected as |opt idx|}}
-    <li aria-selected="true" data-selected-index={{idx}} class="ember-power-select-multiple-option {{if opt.disabled "ember-power-select-multiple-option--disabled"}}">
+    <li data-selected-index={{idx}} class="ember-power-select-multiple-option {{if opt.disabled "ember-power-select-multiple-option--disabled"}}">
       {{#if selectedItemComponent}}
         {{component selectedItemComponent extra=(readonly extra) option=(readonly opt) select=(readonly select)}}
       {{else}}
@@ -8,6 +8,7 @@
       {{/if}}
       {{#unless select.disabled }}
         <button
+          onkeydown={{action "removeOption"}}
           type="button"
           aria-label="Remove {{if searchField (get opt searchField) opt}}"
           class="ember-power-select-multiple-remove-btn"
@@ -22,6 +23,7 @@
     {{/if}}
   {{/each}}
 </ul>
+
 {{#if searchEnabled}}
   <input 
     type="search" 
@@ -32,14 +34,15 @@
     spellcheck="false"
     id="ember-power-select-trigger-multiple-input-{{select.uniqueId}}"
     value={{select.searchText}}
-    aria-label={{ariaLabelForInput}}
+    aria-label={{or ariaLabelForInput null}}
     aria-owns={{listboxId}}
     aria-autocomplete="list"
     aria-activedescendant={{ariaActivedescendant}}
     aria-expanded={{if dropdown.isOpen "true" "false"}}
     role="combobox"
     style={{triggerMultipleInputStyle}}
-    placeholder={{maybePlaceholder}}
+    placeholder={{or maybePlaceholder null}}
+    title={{if maybePlaceholder null "Search"}}
     disabled={{select.disabled}}
     oninput={{action "onInput"}}
     onfocus={{onFocus}}

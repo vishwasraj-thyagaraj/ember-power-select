@@ -11,11 +11,12 @@
       value={{select.searchText}}
       role="combobox"
       aria-autocomplete="list"
-      aria-haspopup="listbox"
+      aria-label="Search"
+      aria-haspopup="true"
       aria-expanded={{if dropdown.isOpen "true" "false"}}
       aria-activedescendant={{ariaActivedescendant}}
       aria-controls={{listboxId}}
-      placeholder={{searchPlaceholder}}
+      placeholder={{or searchPlaceholder null}}
       oninput={{onInput}}
       onfocus={{onFocus}}
       onblur={{onBlur}}

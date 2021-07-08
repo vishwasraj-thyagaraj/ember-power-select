@@ -1,6 +1,8 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { isEqual } from '@ember/utils';
+import { run } from '@ember/runloop';
+
 import layout from '../templates/components/power-select-multiple';
 import fallbackIfUndefined from '../utils/computed-fallback-if-undefined';
 
@@ -12,6 +14,7 @@ export default Component.extend({
   triggerComponent: fallbackIfUndefined('power-select-multiple/trigger'),
   removeButtonClassName: 'ember-power-select-multiple-remove-btn',
   beforeOptionsComponent: fallbackIfUndefined(null),
+  searchEnabled: fallbackIfUndefined(true),
 
   // CPs
   shouldRenderInVC: computed('renderInVC', function() {
@@ -52,22 +55,8 @@ export default Component.extend({
       let action = this.get('onopen');
       if (action && action(select, e) === false) {
         return false;
-      } 
-      // handle option removal via button pill
-      else if(e && e.keyCode === 13 && e.target.classList.contains(this.get('removeButtonClassName'))) {
-        let index = parseInt(e.target.getAttribute('data-selected-index'));
-        let removedItem = select.selected[index];
-        select.actions.select(this.actions.buildSelection(removedItem, select), e);
-        e.preventDefault();
-        // once option is removed, will focus input and open the dropdown
       }
-
-      if(!this.get('searchEnabled')) {
-        let listBox = document.querySelector(`.ember-power-select-multiple-trigger[aria-owns='ember-basic-dropdown-content-${select.uniqueId}']`);
-        listBox && listBox.focus();
-      } else {
-        this.focusInput(select);
-      }
+      run.later(() => this.focusInput(select));
     },
 
     handleFocus(select, e) {
@@ -75,7 +64,6 @@ export default Component.extend({
       if (action) {
         action(select, e);
       }
-      this.focusInput(select);
     },
 
     handleKeydown(select, e) {
@@ -123,7 +111,7 @@ export default Component.extend({
   focusInput(select) {
     if (select) {
       let input = document.querySelector(`#ember-power-select-trigger-multiple-input-${select.uniqueId}`);
-      input && input.focus();
+      if(input && document.activeElement !== input) input.focus();
     }
   }
 });

@@ -7,7 +7,7 @@ export default Component.extend({
 
   // Actions
   actions: {
-    clearOption(e) {
+    removeOption(e) {
       if(e && e.keyCode === 13) {
         e.stopPropagation();
         this.get('select').actions.select(null);

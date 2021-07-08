@@ -6,7 +6,7 @@ import { isEqual, isEmpty } from '@ember/utils';
 import { get, set } from '@ember/object';
 import { assert } from '@ember/debug';
 import { DEBUG } from '@glimmer/env';
-import { isBlank } from '@ember/utils';
+import { isBlank, isPresent } from '@ember/utils';
 import { isArray as isEmberArray } from '@ember/array';
 import ArrayProxy from '@ember/array/proxy';
 import ObjectProxy from '@ember/object/proxy';
@@ -76,8 +76,8 @@ export default Component.extend({
   tagName: '',
 
   // Options
-  ariaActivedescendant: '-1',
-  triggerRole: fallbackIfUndefined('button'),
+  ariaActivedescendant: null,
+  triggerRole: fallbackIfUndefined('group'),
   searchEnabled: fallbackIfUndefined(true),
   matchTriggerWidth: fallbackIfUndefined(true),
   preventScroll: fallbackIfUndefined(false),
@@ -146,13 +146,13 @@ export default Component.extend({
 
     if(Array.isArray(selected) && selected.length) {
       if(this.get('searchField')) {
-        return `Selected ${selected.map(item => item[this.searchField]).join(', ')}`
+        return `Selected ${selected.map(item => item[this.get('searchField')]).join(', ')}`
       } else {
         return `Selected ${selected.join(', ')}`
       }
     } else if(!isEmpty(selected)) {
       if(this.get('searchField')) {
-        return `Selected ${selected[this.searchField]}`;
+        return `Selected ${selected[this.get('searchField')]}`;
       } else {
         return `Selected ${selected}`;
       }
@@ -260,6 +260,14 @@ export default Component.extend({
         }
       }
       this.resetHighlighted();
+
+      if(this.get('ariaActivedescendant') === null) {
+        if(isPresent(this.get('selected')) && !this.get('multiSelect')) {
+          this._setActiveDescendant(this.get('selected'));
+        } else {
+          this._setActiveDescendant(this.get('publicAPI').options[0]);
+        }
+      }
     },
 
     onClose(_, e) {
@@ -271,6 +279,10 @@ export default Component.extend({
         this.set('openingEvent', null);
       }
       this.updateState({ highlighted: undefined });
+
+      if(this.get('ariaActivedescendant') !== null) {
+        run.next(() => this.set('ariaActivedescendant', null));
+      }
     },
 
     onInput(e) {
@@ -409,10 +421,6 @@ export default Component.extend({
       if (action) {
         action(this.get('publicAPI'), event);
       }
-
-      if(this.get('ariaActivedescendant') === '-1') {
-        this._setActiveDescendant(this.get('publicAPI').options[0]);
-      }
     },
 
     onTriggerBlur(_, event) {
@@ -433,8 +441,6 @@ export default Component.extend({
       if (action) {
         action(this.get('publicAPI'), event);
       }
-      
-      run.next(() => this.set('ariaActivedescendant', '-1'));
     },
 
     activate() {
