@@ -2,7 +2,7 @@ import Component from '@ember/component';
 import { get } from '@ember/object';
 import { computed } from '@ember/object';
 import { inject } from '@ember/service';
-import { scheduleOnce } from '@ember/runloop';
+import { scheduleOnce, run } from '@ember/runloop';
 import { assert } from '@ember/debug';
 import { isBlank } from '@ember/utils';
 import { htmlSafe } from '@ember/string';
@@ -91,7 +91,8 @@ export default Component.extend({
         } else {
           trigger = document.querySelector(`.ember-power-select-multiple-trigger[aria-owns='ember-basic-dropdown-content-${selectId}']`);
         }
-        trigger && trigger.focus();
+        // focus to combobox/trigger once option is removed
+        run.later(() => trigger && trigger.focus());
       }
     },
 

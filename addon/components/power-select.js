@@ -77,7 +77,7 @@ export default Component.extend({
 
   // Options
   ariaActivedescendant: null,
-  triggerRole: fallbackIfUndefined('group'),
+  triggerRole: fallbackIfUndefined('button'),
   searchEnabled: fallbackIfUndefined(true),
   matchTriggerWidth: fallbackIfUndefined(true),
   preventScroll: fallbackIfUndefined(false),
@@ -345,6 +345,14 @@ export default Component.extend({
         }
 
         publicAPI.actions.close(e);
+
+        if(!this.get('multiSelect') || !this.get('searchEnabled')) {
+          let selectId = this.get('publicAPI.uniqueId');
+          let trigger = document.querySelector(`.ember-power-select-trigger[aria-owns='ember-basic-dropdown-content-${selectId}']`);
+          // focus to trigger once option is selected
+          run.later(() => trigger && trigger.focus());
+        }
+
         return false;
       }
     },

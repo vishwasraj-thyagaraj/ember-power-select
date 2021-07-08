@@ -111,6 +111,7 @@ export default Component.extend({
   focusInput(select) {
     if (select) {
       let input = document.querySelector(`#ember-power-select-trigger-multiple-input-${select.uniqueId}`);
+      // focus to combobox input once dropdown is opened
       if(input && document.activeElement !== input) input.focus();
     }
   }

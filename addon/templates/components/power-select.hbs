@@ -17,10 +17,10 @@
   {{#dropdown.trigger
     role=(if searchEnabled (if multiSelect null triggerRole) triggerRole)
     tagName=(readonly _triggerTagName)
-    ariaDescribedBy=(readonly ariaDescribedBy)
+    ariaDescribedBy=(if (and searchEnabled multiSelect) (readonly ariaDescribedBy) (concat ariaDescribedBy (concat " power-select-selected-items-" dropdown.uniqueId)))
     ariaInvalid=(readonly ariaInvalid)
     ariaLabel=(unless (and searchEnabled multiSelect) (readonly ariaLabel) null)
-    ariaLabelledBy=(if (and searchEnabled multiSelect) (readonly ariaLabelledBy) (concat ariaLabelledBy (concat " power-select-selected-items-" dropdown.uniqueId)))
+    ariaLabelledBy=(readonly ariaLabelledBy)
     ariaRequired=(readonly required)
     title=(readonly title)
     class=(readonly concatenatedTriggerClasses)
@@ -111,8 +111,10 @@
         bufferSizeVC=(readonly bufferSizeVC)
         staticHeightVC=(readonly staticHeightVC)
         renderInVC=shouldRenderInVC
+        searchEnabled=searchEnabled
         multiSelect=(or multiSelect false)
         ariaLabelForList=ariaLabelForList
+        ariaActivedescendant=ariaActivedescendant
         as |option term|}}
         {{yield option term}}
       {{/component}}
