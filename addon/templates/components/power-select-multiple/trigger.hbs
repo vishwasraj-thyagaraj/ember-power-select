@@ -17,12 +17,11 @@
         </button>
       {{/unless}}
     </li>
-  {{else}}
-    {{#if (and placeholder (not searchEnabled))}}
-      <span class="ember-power-select-placeholder">{{placeholder}}</span>
-    {{/if}}
   {{/each}}
 </ul>
+{{#if (and placeholder (not searchEnabled) (not select.selected.length))}}
+  <span class="ember-power-select-placeholder">{{placeholder}}</span>
+{{/if}}
 
 {{#if searchEnabled}}
   <input 
