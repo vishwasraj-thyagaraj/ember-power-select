@@ -160,6 +160,10 @@ export default Component.extend({
     return '';
   }),
 
+  ariaDescribedById: computed(function() {
+    return `power-select-selected-items-${this.get('publicAPI.uniqueId')} ${this.ariaDescribedBy || ''}`;
+  }),
+
   inTesting: computed(function() {
     let config = getOwner(this).resolveRegistration('config:environment');
     return config.environment === 'test';
