@@ -1,5 +1,5 @@
 <ul
-  aria-label={{if select.selected.length ariaLabelForList null}}
+  aria-label={{if select.selected.length "Selected options" null}}
   id="ember-power-select-multiple-options-{{select.uniqueId}}" 
   class="ember-power-select-multiple-options">
   {{#each select.selected as |opt idx|}}
@@ -40,7 +40,6 @@
   role="combobox"
   style={{triggerMultipleInputStyle}}
   placeholder={{or maybePlaceholder null}}
-  title={{if maybePlaceholder null "Search"}}
   disabled={{select.disabled}}
   oninput={{action "onInput"}}
   onfocus={{onFocus}}

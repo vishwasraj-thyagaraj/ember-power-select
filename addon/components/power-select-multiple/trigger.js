@@ -43,8 +43,7 @@ export default Component.extend({
 
   chooseOption (e) {
     let selectedIndex = e.target.getAttribute('data-selected-index');
-
-    if (selectedIndex) {
+    if (selectedIndex && e.target.classList.contains('ember-power-select-multiple-remove-btn')) {
       e.stopPropagation();
       e.preventDefault();
 
@@ -83,16 +82,10 @@ export default Component.extend({
       // handle option removal via button pill
       if(e.keyCode === 13) {
         this.chooseOption(e);
-        let trigger;
         let selectId = this.get('select.uniqueId');
-
-        if(this.get('searchEnabled')) {
-          trigger = document.querySelector(`#ember-power-select-trigger-multiple-input-${selectId}`);
-        } else {
-          trigger = document.querySelector(`.ember-power-select-multiple-trigger[aria-owns='ember-basic-dropdown-content-${selectId}']`);
-        }
-        // focus to combobox/trigger once option is removed
-        run.later(() => trigger && trigger.focus());
+        let trigger = document.querySelector(`#ember-power-select-trigger-multiple-input-${selectId}`);
+        // focus to combobox once option is removed
+        trigger && trigger.focus();
       }
     },
 

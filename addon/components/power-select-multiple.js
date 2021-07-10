@@ -1,7 +1,6 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { isEqual } from '@ember/utils';
-import { run } from '@ember/runloop';
 
 import layout from '../templates/components/power-select-multiple';
 import fallbackIfUndefined from '../utils/computed-fallback-if-undefined';
@@ -12,7 +11,6 @@ export default Component.extend({
   layout,
   // Config
   triggerComponent: fallbackIfUndefined('power-select-multiple/trigger'),
-  removeButtonClassName: 'ember-power-select-multiple-remove-btn',
   beforeOptionsComponent: fallbackIfUndefined(null),
   // by default it is made as true, to render all multi select dropdown as combobox for accessibility concerns
   searchEnabled: true,
@@ -57,7 +55,8 @@ export default Component.extend({
       if (action && action(select, e) === false) {
         return false;
       }
-      run.later(() => this.focusInput(select));
+
+      this.focusInput(select);
     },
 
     handleFocus(select, e) {

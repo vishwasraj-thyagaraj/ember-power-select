@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
-import { scheduleOnce, run } from '@ember/runloop';
+import { scheduleOnce } from '@ember/runloop';
 import { getOwner } from '@ember/application';
 import { isEqual, isEmpty } from '@ember/utils';
 import { get, set } from '@ember/object';
@@ -85,6 +85,7 @@ export default Component.extend({
   loadingMessage: fallbackIfUndefined('Loading options...'),
   noMatchesMessage: fallbackIfUndefined('No results found'),
   searchMessage: fallbackIfUndefined('Type to search'),
+  searchPlaceholder: fallbackIfUndefined('Type to search'),
   closeOnSelect: fallbackIfUndefined(true),
   defaultHighlighted: fallbackIfUndefined(defaultHighlighted),
   typeAheadMatcher: fallbackIfUndefined(defaultTypeAheadMatcher),
@@ -139,6 +140,13 @@ export default Component.extend({
   // CPs
   shouldRenderInVC: computed('renderInVC', function() {
     return this.get('renderInVC') || this.get('options.length') > 500;
+  }),
+
+  getPlaceholder: computed('placeholder', 'multiSelect', function() {
+    if(isBlank(this.get('placeholder'))) {
+      return this.get('multiSelect') ? 'Search' : 'Select';
+    }
+    return this.get('placeholder');
   }),
 
   inTesting: computed(function() {
@@ -261,9 +269,7 @@ export default Component.extend({
       }
       this.updateState({ highlighted: undefined });
 
-      if(this.get('ariaActivedescendant') !== null) {
-        run.next(() => this.set('ariaActivedescendant', null));
-      }
+      if(this.get('ariaActivedescendant') !== null) this.set('ariaActivedescendant', null);
     },
 
     onInput(e) {
@@ -326,14 +332,6 @@ export default Component.extend({
         }
 
         publicAPI.actions.close(e);
-
-        if(!this.get('multiSelect') || !this.get('searchEnabled')) {
-          let selectId = this.get('publicAPI.uniqueId');
-          let trigger = document.querySelector(`.ember-power-select-trigger[aria-owns='ember-basic-dropdown-content-${selectId}']`);
-          // focus to trigger once option is selected
-          run.later(() => trigger && trigger.focus());
-        }
-
         return false;
       }
     },

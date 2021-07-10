@@ -67,7 +67,9 @@ export default Component.extend({
     return this.get('multiSelect') ? 'true' : 'false'
   }),
 
-  'aria-label': reads('ariaLabelForList'),
+  'aria-label': computed(function() {
+    return this.get('ariaLabelForList') || 'Options list';
+  }),
 
   // Methods
   _addTouchEvents() {
