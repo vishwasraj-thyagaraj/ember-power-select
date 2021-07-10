@@ -14,7 +14,8 @@ export default Component.extend({
   triggerComponent: fallbackIfUndefined('power-select-multiple/trigger'),
   removeButtonClassName: 'ember-power-select-multiple-remove-btn',
   beforeOptionsComponent: fallbackIfUndefined(null),
-  searchEnabled: fallbackIfUndefined(true),
+  // by default it is made as true, to render all multi select dropdown as combobox for accessibility concerns
+  searchEnabled: true,
 
   // CPs
   shouldRenderInVC: computed('renderInVC', function() {
@@ -42,7 +43,7 @@ export default Component.extend({
   }),
 
   computedTabIndex: computed('tabindex', 'searchEnabled', 'triggerComponent', function() {
-    if (this.get('triggerComponent') === 'power-select-multiple/trigger' && this.get('searchEnabled') !== false) {
+    if (this.get('triggerComponent') === 'power-select-multiple/trigger') {
       return '-1';
     } else {
       return this.get('tabindex');

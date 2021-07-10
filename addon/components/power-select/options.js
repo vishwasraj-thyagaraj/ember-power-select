@@ -29,7 +29,7 @@ export default Component.extend({
   isTouchDevice,
   layout,
   tagName: 'ul',
-  attributeBindings: ['role', 'aria-multiselectable', 'aria-label', 'aria-activedescendant'],
+  attributeBindings: ['role', 'aria-multiselectable', 'aria-label'],
   role: 'listbox',
 
   // Lifecycle hooks
@@ -68,7 +68,6 @@ export default Component.extend({
   }),
 
   'aria-label': reads('ariaLabelForList'),
-  'aria-activedescendant': reads('ariaActivedescendant'),
 
   // Methods
   _addTouchEvents() {

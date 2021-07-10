@@ -1,25 +1,11 @@
-{{#unless multiSelect}}
-  <span id="power-select-selected-items-{{dropdown.uniqueId}}" aria-hidden="true" style="display:none;">{{ariaLabelForInput}}</span>
-{{/unless}}
-
 {{#if select.selected}}
   {{#if selectedItemComponent}}
     {{component selectedItemComponent extra=(readonly extra) option=(readonly select.selected) select=(readonly select)}}
   {{else}}
-    <span class="ember-power-select-selected-item" aria-selected="true">{{yield select.selected select}}</span>
-  {{/if}}
-  {{#if (and allowClear (not select.disabled))}}
-    <button
-      type="button"
-      aria-label="Clear"
-      class="ember-power-select-clear-btn"
-      onkeydown={{action "removeOption"}}
-      onmousedown={{action "clear"}}
-      ontouchstart={{action "clear"}}>
-      &times;
-    </button>
+    <span class="ember-power-select-selected-item">{{yield select.selected select}}</span>
   {{/if}}
 {{else}}
   {{component placeholderComponent placeholder=placeholder}}
 {{/if}}
+
 <span class="ember-power-select-status-icon" role="presentation"></span>

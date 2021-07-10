@@ -14,12 +14,18 @@
   disabled=(readonly disabled)
   as |dropdown|}}
 
+  {{#trigger 
+    select=(readonly publicAPI)
+    multiSelect=multiSelect
+    searchEnabled=searchEnabled
+    allowClear=allowClear
+  }}
   {{#dropdown.trigger
-    role=(if searchEnabled (if multiSelect null triggerRole) triggerRole)
+    role=(if multiSelect null (readonly triggerRole))
     tagName=(readonly _triggerTagName)
-    ariaDescribedBy=(if (and searchEnabled multiSelect) (readonly ariaDescribedBy) ariaDescribedById)
+    ariaDescribedBy=(readonly ariaDescribedBy)
     ariaInvalid=(readonly ariaInvalid)
-    ariaLabel=(unless (and searchEnabled multiSelect) (readonly ariaLabel) null)
+    ariaLabel=(readonly ariaLabel)
     ariaLabelledBy=(readonly ariaLabelledBy)
     ariaRequired=(readonly required)
     title=(readonly title)
@@ -31,8 +37,7 @@
     onFocus=(action "onTriggerFocus")
     onBlur=(action "onTriggerBlur")
     tabindex=(readonly tabindex)
-    aria-activedescendant=(if searchEnabled null ariaActivedescendant)
-    aria-haspopup=(if searchEnabled "true" "listbox")
+    aria-haspopup=(if (or multiSelect searchEnabled) "true" "listbox")
     aria-expanded=(if dropdown.isOpen "true" "false")
   }}
     {{#component triggerComponent
@@ -55,13 +60,13 @@
       ariaLabel=(readonly ariaLabel)
       ariaLabelledBy=(readonly ariaLabelledBy)
       ariaDescribedBy=(readonly ariaDescribedBy)
-      ariaLabelForSelectedList=ariaLabelForSelectedList
-      ariaLabelForInput=ariaLabelForInput
+      ariaLabelForList=ariaLabelForList
       dropdown=dropdown
       as |opt term|}}
       {{yield opt term}}
     {{/component}}
   {{/dropdown.trigger}}
+  {{/trigger}}
   {{#dropdown.content _contentTagName=_contentTagName class=(readonly concatenatedDropdownClasses)}}
     {{component beforeOptionsComponent
       animationEnabled=(readonly animationEnabled)
@@ -107,14 +112,16 @@
         highlightOnHover=(readonly highlightOnHover)
         groupComponent=(readonly groupComponent)
         select=(readonly publicAPI)
-        estimateHeightVC=(readonly estimateHeightVC)
+
+        renderInVC=shouldRenderInVC
         bufferSizeVC=(readonly bufferSizeVC)
         staticHeightVC=(readonly staticHeightVC)
-        renderInVC=shouldRenderInVC
-        searchEnabled=searchEnabled
+        estimateHeightVC=(readonly estimateHeightVC)
+
         multiSelect=(or multiSelect false)
+        searchEnabled=(readonly searchEnabled)
         ariaLabelForList=ariaLabelForList
-        ariaActivedescendant=ariaActivedescendant
+
         as |option term|}}
         {{yield option term}}
       {{/component}}

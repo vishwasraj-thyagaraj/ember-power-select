@@ -11,11 +11,10 @@
 	  renderInPlace=true
 	  onchange=(action "changeName" "name0")
 
-	  ariaLabel="Select Agents"
-	  ariaLabelForList="List of agents"
-	  ariaDescribedByForSelectedList="Selected agents"
+	  allowClear=true
 
-	  placeholder="Type to search"
+	  ariaLabelForList="List of agents"
+	  placeholder="Select Agents"
 	  as |username|
 	}}
 	  {{username.name}}
@@ -31,12 +30,10 @@
 	  renderInPlace=true
 	  onchange=(action "changeName" "name1")
 
+	  allowClear=true
 	  searchEnabled=false
 
-	  ariaLabel="Open Agents Options"
 	  ariaLabelForList="List of agents"
-	  ariaDescribedByForSelectedList="Selected agents"
-
 	  placeholder="Select Agents"
 	  as |username|
 	}}
@@ -53,10 +50,9 @@
 	  selected=name2
 	  onchange=(action "changeName" "name2")
 
-	  ariaLabel="Open Agents Options"
-	  ariaLabelForList="List of agents"
-	  ariaDescribedByForSelectedList="Selected agent"
+	  allowClear=true
 
+	  ariaLabelForList="List of agents"
 	  placeholder="Select Agents"
 	  searchPlaceholder="Type to search"
 	  as |username|
@@ -74,12 +70,10 @@
 	  selected=name3
 	  onchange=(action "changeName" "name3")
 
+	  allowClear=true
 	  searchEnabled=false
 
-	  ariaLabel="Open Agents Options"
 	  ariaLabelForList="List of agents"
-	  ariaDescribedByForSelectedList="Selected agent"
-
 	  placeholder="Select Agents"
 	  as |username|
 	}}

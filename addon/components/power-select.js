@@ -141,29 +141,6 @@ export default Component.extend({
     return this.get('renderInVC') || this.get('options.length') > 500;
   }),
 
-  ariaLabelForInput: computed('selected.length', function() {
-    let selected = this.get('selected');
-
-    if(Array.isArray(selected) && selected.length) {
-      if(this.get('searchField')) {
-        return `Selected ${selected.map(item => item[this.get('searchField')]).join(', ')}`
-      } else {
-        return `Selected ${selected.join(', ')}`
-      }
-    } else if(!isEmpty(selected)) {
-      if(this.get('searchField')) {
-        return `Selected ${selected[this.get('searchField')]}`;
-      } else {
-        return `Selected ${selected}`;
-      }
-    }
-    return '';
-  }),
-
-  ariaDescribedById: computed(function() {
-    return `power-select-selected-items-${this.get('publicAPI.uniqueId')} ${this.ariaDescribedBy || ''}`;
-  }),
-
   inTesting: computed(function() {
     let config = getOwner(this).resolveRegistration('config:environment');
     return config.environment === 'test';
