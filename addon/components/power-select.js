@@ -86,6 +86,7 @@ export default Component.extend({
   noMatchesMessage: fallbackIfUndefined('No results found'),
   searchMessage: fallbackIfUndefined('Type to search'),
   searchPlaceholder: fallbackIfUndefined('Type to search'),
+  ariaLabelForList: fallbackIfUndefined('Options list'),
   closeOnSelect: fallbackIfUndefined(true),
   defaultHighlighted: fallbackIfUndefined(defaultHighlighted),
   typeAheadMatcher: fallbackIfUndefined(defaultTypeAheadMatcher),

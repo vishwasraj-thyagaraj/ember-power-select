@@ -7,6 +7,7 @@ import { assert } from '@ember/debug';
 import { isBlank } from '@ember/utils';
 import { htmlSafe } from '@ember/string';
 import layout from '../../templates/components/power-select-multiple/trigger';
+import fallbackIfUndefined from '../../utils/computed-fallback-if-undefined';
 
 const ua = window && window.navigator ? window.navigator.userAgent : '';
 const isIE = ua.indexOf('MSIE ') > -1 || ua.indexOf('Trident/') > -1;
@@ -15,6 +16,7 @@ const isTouchDevice = !!window && 'ontouchstart' in window;
 export default Component.extend({
   tagName: '',
   layout,
+  ariaLabelForSelectedList: fallbackIfUndefined('Selected options'),
   textMeasurer: inject(),
   _lastIsOpen: false,
 

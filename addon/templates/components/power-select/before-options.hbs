@@ -11,7 +11,7 @@
       value={{select.searchText}}
       role="combobox"
       aria-autocomplete="list"
-      aria-label="Search"
+      aria-labelledby={{or ariaLabelledBy null}}
       aria-haspopup="true"
       aria-expanded={{if dropdown.isOpen "true" "false"}}
       aria-activedescendant={{ariaActivedescendant}}

@@ -26,7 +26,7 @@
     ariaDescribedBy=(readonly ariaDescribedBy)
     ariaInvalid=(readonly ariaInvalid)
     ariaLabel=(readonly ariaLabel)
-    ariaLabelledBy=(readonly ariaLabelledBy)
+    ariaLabelledBy=(if multiSelect null (readonly ariaLabelledBy))
     ariaRequired=(readonly required)
     title=(readonly title)
     class=(readonly concatenatedTriggerClasses)
@@ -60,6 +60,7 @@
       ariaLabel=(readonly ariaLabel)
       ariaLabelledBy=(readonly ariaLabelledBy)
       ariaDescribedBy=(readonly ariaDescribedBy)
+      ariaLabelForSelectedList=ariaLabelForSelectedList
       dropdown=dropdown
       as |opt term|}}
       {{yield opt term}}
@@ -82,6 +83,7 @@
       select=(readonly publicAPI)
       ariaActivedescendant=ariaActivedescendant
       dropdown=dropdown
+      ariaLabelledBy=(readonly ariaLabelledBy)
       selectedItemComponent=(readonly selectedItemComponent)}}
     {{#if mustShowSearchMessage}}
       {{component searchMessageComponent
