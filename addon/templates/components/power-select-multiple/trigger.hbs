@@ -36,7 +36,7 @@
   aria-autocomplete="list"
   aria-activedescendant={{ariaActivedescendant}}
   aria-expanded={{if dropdown.isOpen "true" "false"}}
-  aria-labelledby={{or ariaLabelledBy null}}
+  aria-labelledby="ember-power-select-trigger-multiple-label-{{select.uniqueId}}"
   role="combobox"
   style={{triggerMultipleInputStyle}}
   placeholder={{or maybePlaceholder null}}
@@ -47,4 +47,7 @@
   tabindex={{tabindex}}
   onkeydown={{action "onKeydown"}}>
 
+{{#if labelText}}
+  <span aria-hidden="true" id="ember-power-select-trigger-multiple-label-{{select.uniqueId}}" style="display:none;">{{labelText}}</span>
+{{/if}}
 <span class="ember-power-select-status-icon" role="presentation"></span>

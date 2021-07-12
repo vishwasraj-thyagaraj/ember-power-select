@@ -143,6 +143,15 @@ export default Component.extend({
     return this.get('renderInVC') || this.get('options.length') > 500;
   }),
 
+  ariaLabelledById: computed('labelText', function () {
+    let baseId = this.get('publicAPI.uniqueId');
+    if(this.get('multiSelect')) {
+      return `ember-power-select-trigger-multiple-label-${baseId}`;
+    } else {
+      return `ember-power-select-trigger-label-${baseId}`;
+    }
+  }),
+
   getPlaceholder: computed('placeholder', 'multiSelect', function() {
     if(isBlank(this.get('placeholder'))) {
       return this.get('multiSelect') ? 'Search' : 'Select';

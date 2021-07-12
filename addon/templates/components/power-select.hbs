@@ -26,7 +26,7 @@
     ariaDescribedBy=(readonly ariaDescribedBy)
     ariaInvalid=(readonly ariaInvalid)
     ariaLabel=(readonly ariaLabel)
-    ariaLabelledBy=(if multiSelect null (readonly ariaLabelledBy))
+    ariaLabelledBy=(if (and labelText (not multiSelect)) ariaLabelledById (readonly ariaLabelledBy))
     ariaRequired=(readonly required)
     title=(readonly title)
     class=(readonly concatenatedTriggerClasses)
@@ -61,6 +61,7 @@
       ariaLabelledBy=(readonly ariaLabelledBy)
       ariaDescribedBy=(readonly ariaDescribedBy)
       ariaLabelForSelectedList=ariaLabelForSelectedList
+      labelText=labelText
       dropdown=dropdown
       as |opt term|}}
       {{yield opt term}}
