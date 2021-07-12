@@ -36,7 +36,7 @@
   aria-autocomplete="list"
   aria-activedescendant={{ariaActivedescendant}}
   aria-expanded={{if dropdown.isOpen "true" "false"}}
-  aria-labelledby={{if labelText "ember-power-select-trigger-multiple-label-{{select.uniqueId}}" null}}
+  aria-labelledby={{if labelText (concat "ember-power-select-trigger-multiple-label-" select.uniqueId) null}}
   role="combobox"
   style={{triggerMultipleInputStyle}}
   placeholder={{or maybePlaceholder null}}
