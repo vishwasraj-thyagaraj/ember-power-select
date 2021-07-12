@@ -2,15 +2,14 @@
 	<h1>Sample</h1>
 
 	<p>Multi Select (with search)</p>
-
+	<label id="example0">Agents</label>
 	{{#power-select-multiple
 	  options=names
-	  tabindex="0"
 	  searchField="name"
 	  selected=name0
 	  renderInPlace=true
 	  onchange=(action "changeName" "name0")
-
+	  ariaLabelledBy="example0"
 	  allowClear=true
 	  as |username|
 	}}
@@ -19,14 +18,14 @@
 
 	<br>
 	<p>Multi Select (no search)</p>
-
+	<label id="example1">Agents</label>
 	{{#power-select-multiple
 	  options=names
 	  searchField="name"
 	  selected=name1
 	  renderInPlace=true
 	  onchange=(action "changeName" "name1")
-
+	  ariaLabelledBy="example1"
 	  allowClear=true
 	  searchEnabled=false
 	  as |username|
@@ -36,16 +35,15 @@
 
 	<br>
 	<p>Single Select (with search)</p>
-
+	<label id="example2">Agents</label>
 	{{#power-select
 	  options=names
 	  searchField="name"
 	  renderInPlace=true
 	  selected=name2
 	  onchange=(action "changeName" "name2")
-
+	  ariaLabelledBy="example2"
 	  allowClear=true
-
 	  as |username|
 	}}
 	  {{username.name}}
@@ -53,17 +51,16 @@
 
 	<br>
 	<p>Single Select (no search)</p>
-
+	<label id="example3">Agents</label>
 	{{#power-select
 	  options=names
 	  searchField="name"
 	  renderInPlace=true
 	  selected=name3
 	  onchange=(action "changeName" "name3")
-
+	  ariaLabelledBy="example3"
 	  allowClear=true
 	  searchEnabled=false
-
 	  as |username|
 	}}
 	  {{username.name}}
