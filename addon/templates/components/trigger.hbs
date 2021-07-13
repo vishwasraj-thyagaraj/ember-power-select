@@ -3,7 +3,7 @@
 {{#if (and select.selected allowClear (not select.disabled) (not multiSelect))}}
   <button
     type="button"
-    aria-label="Clear"
+    aria-label={{if labelText (concat "Clear " labelText " field selected option") "Clear"}}
     class="ember-power-select-clear-btn"
     onkeydown={{action "removeOption"}}
     onmousedown={{action "clear"}}

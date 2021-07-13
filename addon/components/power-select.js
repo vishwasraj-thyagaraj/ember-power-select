@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
-import { scheduleOnce } from '@ember/runloop';
+import { scheduleOnce, run } from '@ember/runloop';
 import { getOwner } from '@ember/application';
 import { isEqual, isEmpty } from '@ember/utils';
 import { get, set } from '@ember/object';
@@ -534,6 +534,16 @@ export default Component.extend({
         loading: false
       });
       this.resetHighlighted();
+      // remote search
+      if(this.get('publicAPI.isOpen')) {
+        run.later(() =>{
+          let option = this.get('publicAPI.results')[0];
+          if(this.get('publicAPI.highlighted') !== option) {
+            this.updateState({ highlighted: option });
+          }
+          this._setActiveDescendant(option);
+        }, 300);
+      }
     } catch(e) {
       this.updateState({ lastSearchedText: term, loading: false });
     } finally {
@@ -596,12 +606,12 @@ export default Component.extend({
 
   resetHighlighted() {
     let publicAPI = this.get('publicAPI');
-    let defaultHightlighted = this.get('defaultHighlighted');
+    let defaultHighlighted = this.get('defaultHighlighted');
     let highlighted;
-    if (typeof defaultHightlighted === 'function') {
-      highlighted = defaultHightlighted(publicAPI);
+    if (typeof defaultHighlighted === 'function') {
+      highlighted = defaultHighlighted(publicAPI);
     } else {
-      highlighted = defaultHightlighted;
+      highlighted = defaultHighlighted;
     }
     this.updateState({ highlighted });
   },
@@ -641,12 +651,37 @@ export default Component.extend({
       resultsCount: countOptions(results),
       loading: false
     });
+    // reset search
+    if(this.get('publicAPI.isOpen')) {
+      run.later(() => {
+        let option = this.get('publicAPI.options')[0];
+        if(this.get('publicAPI.highlighted') !== option) {
+          this.updateState({ highlighted: option });
+        }
+        this._setActiveDescendant(option);
+      }, 300);
+    }
   },
 
   _performFilter(term) {
     let results = this.filter(this.get('publicAPI').options, term);
-    this.updateState({ results, searchText: term, lastSearchedText: term, resultsCount: countOptions(results) });
+    this.updateState({ 
+      results, 
+      searchText: term, 
+      lastSearchedText: term, 
+      resultsCount: countOptions(results)
+    });
     this.resetHighlighted();
+    // local search
+    if(this.get('publicAPI.isOpen')) {
+      run.later(() => {
+        let option = this.get('publicAPI.results')[0];
+        if(this.get('publicAPI.highlighted') !== option) {
+          this.updateState({ highlighted: option });
+        }
+        this._setActiveDescendant(option);
+      }, 300);
+    }
   },
 
   _performSearch(term) {
@@ -693,7 +728,9 @@ export default Component.extend({
 
   _setActiveDescendant(newHighlighted) {
     let _highlightedIndex = indexOfOption(this.get('publicAPI.results'), newHighlighted);
-    this.set('ariaActivedescendant', `ember-power-select-options-${this.get('publicAPI.uniqueId')}-${_highlightedIndex}`);
+    if(_highlightedIndex !== -1) {
+      this.set('ariaActivedescendant', `ember-power-select-options-${this.get('publicAPI.uniqueId')}-${_highlightedIndex}`);
+    }
   },
 
   _handleKeyEnter(e) {

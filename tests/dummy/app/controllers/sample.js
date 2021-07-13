@@ -12,6 +12,9 @@ export default Controller.extend({
   actions: {
     changeName(attribute, selected) {
       set(this, attribute, selected);
+    },
+    searchRepo(term) {
+      return ['A', 'B', 'C', 'D'];
     }
   }
 });

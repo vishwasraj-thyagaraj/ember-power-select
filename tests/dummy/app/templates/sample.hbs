@@ -1,6 +1,19 @@
 <main style="width:50%;margin:50px auto;">
 	<h1>Sample</h1>
 
+	<p>Single Select (with url search)</p>
+	{{#power-select
+	  search=(action "searchRepo")
+	  renderInPlace=true
+	  selected=name
+	  onchange=(action (mut name))
+	  as |option|
+	}}
+	  {{option}}
+	{{/power-select}}
+
+	<br>
+
 	<p>Multi Select (with search)</p>
 	<label>Agents</label>
 	{{#power-select-multiple
