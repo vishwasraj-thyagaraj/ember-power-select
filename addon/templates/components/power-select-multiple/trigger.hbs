@@ -16,7 +16,7 @@
           aria-label="Remove {{if searchField (get opt searchField) opt}}"
           class="ember-power-select-multiple-remove-btn"
           data-selected-index={{idx}}>
-          &times;
+          {{svg-jar "cross" class="ember-svg size-18" role="presentation"}}
         </button>
       {{/unless}}
     </li>
