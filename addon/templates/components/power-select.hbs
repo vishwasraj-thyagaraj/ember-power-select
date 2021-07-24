@@ -24,7 +24,7 @@
   {{#dropdown.trigger
     role=(if multiSelect null (readonly triggerRole))
     tagName=(readonly _triggerTagName)
-    ariaDescribedBy=(readonly ariaDescribedBy)
+    ariaDescribedBy=(if multiSelect (readonly ariaDescribedBy) (if errorId (concat (readonly ariaDescribedBy) " " errorId) null))
     ariaInvalid=(readonly ariaInvalid)
     ariaLabel=(readonly ariaLabel)
     ariaLabelledBy=(if (and labelText (not multiSelect)) ariaLabelledById (readonly ariaLabelledBy))
@@ -63,6 +63,7 @@
       ariaDescribedBy=(readonly ariaDescribedBy)
       ariaLabelForSelectedList=ariaLabelForSelectedList
       labelText=labelText
+      errorId=errorId
       dropdown=dropdown
       as |opt term|}}
       {{yield opt term}}

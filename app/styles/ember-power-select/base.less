@@ -242,6 +242,15 @@
   .ember-power-select-group-name { padding-left: @ember-power-select-option-padding; }
 }
 
+.screen-reader-only {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 // RTL styles
 .ember-power-select-trigger[dir=rtl] {
   padding: @ember-power-select-trigger-rtl-padding;
@@ -263,7 +272,6 @@
     right: initial;
   }
 }
-
 
 .ember-power-select-dropdown[dir=rtl] {
   .ember-power-select-group {

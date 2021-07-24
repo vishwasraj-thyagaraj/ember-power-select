@@ -9,7 +9,7 @@
 {{/if}}
 
 {{#if labelText}}
-  <span aria-hidden="true" id="ember-power-select-trigger-label-{{select.uniqueId}}" style="display:none;">
+  <span id="ember-power-select-trigger-label-{{select.uniqueId}}" class="screen-reader-only">
     {{#if select.selected}}
       {{concat labelText ", selected " (if searchField (get select.selected searchField) select.selected)}}
     {{else}}
