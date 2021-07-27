@@ -1,6 +1,7 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { isEqual } from '@ember/utils';
+import { run } from '@ember/runloop';
 
 import layout from '../templates/components/power-select-multiple';
 import fallbackIfUndefined from '../utils/computed-fallback-if-undefined';
@@ -111,8 +112,10 @@ export default Component.extend({
   focusInput(select) {
     if (select) {
       let input = document.querySelector(`#ember-power-select-trigger-multiple-input-${select.uniqueId}`);
-      // focus to combobox input once dropdown is opened
-      if(input && document.activeElement !== input) input.focus();
+      run.next(() => {
+        // focus to combobox input once dropdown is opened
+        if(input && document.activeElement !== input) input.focus();  
+      });
     }
   }
 });
