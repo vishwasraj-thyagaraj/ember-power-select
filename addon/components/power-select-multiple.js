@@ -14,7 +14,7 @@ export default Component.extend({
   triggerComponent: fallbackIfUndefined('power-select-multiple/trigger'),
   beforeOptionsComponent: fallbackIfUndefined(null),
   // by default it is made as true, to render all multi select dropdown as combobox for accessibility concerns
-  searchEnabled: true,
+  searchEnabled: fallbackIfUndefined(true),
 
   // CPs
   shouldRenderInVC: computed('renderInVC', function() {

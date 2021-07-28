@@ -279,7 +279,11 @@ export default Component.extend({
       }
       this.updateState({ highlighted: undefined });
 
-      if(this.get('ariaActivedescendant') !== null) this.set('ariaActivedescendant', null);
+      if(this.get('ariaActivedescendant') !== null) {
+        run.later(() => {
+          this.set('ariaActivedescendant', null);
+        }, 300);
+      }
     },
 
     onInput(e) {

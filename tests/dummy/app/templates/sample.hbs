@@ -14,14 +14,28 @@
 
 	<br>
 
+	<p>Multi Select (with url search)</p>
+	{{#power-select-multiple
+	  search=(action "searchRepo")
+	  renderInPlace=true
+	  selected=name0
+	  onchange=(action "changeName" "name0")
+	  allowClear=true
+	  as |option|
+	}}
+	  {{option}}
+	{{/power-select-multiple}}
+
+	<br>
+
 	<p>Multi Select (with search)</p>
 	<label>Agents</label>
 	{{#power-select-multiple
 	  options=names
 	  searchField="name"
-	  selected=name0
+	  selected=name1
 	  renderInPlace=true
-	  onchange=(action "changeName" "name0")
+	  onchange=(action "changeName" "name1")
 	  labelText="Agents"
 	  allowClear=true
 	  as |username|
@@ -35,9 +49,9 @@
 	{{#power-select-multiple
 	  options=names
 	  searchField="name"
-	  selected=name1
+	  selected=name2
 	  renderInPlace=true
-	  onchange=(action "changeName" "name1")
+	  onchange=(action "changeName" "name2")
 	  labelText="Agents"
 	  allowClear=true
 	  searchEnabled=false
@@ -53,8 +67,8 @@
 	  options=names
 	  searchField="name"
 	  renderInPlace=true
-	  selected=name2
-	  onchange=(action "changeName" "name2")
+	  selected=name3
+	  onchange=(action "changeName" "name3")
 	  labelText="Agents"
 	  allowClear=true
 	  as |username|
@@ -69,8 +83,8 @@
 	  options=names
 	  searchField="name"
 	  renderInPlace=true
-	  selected=name3
-	  onchange=(action "changeName" "name3")
+	  selected=name4
+	  onchange=(action "changeName" "name4")
 	  labelText="Agents"
 	  allowClear=true
 	  searchEnabled=false
