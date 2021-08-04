@@ -30,6 +30,7 @@ export default Component.extend({
   layout,
   tagName: 'ul',
   attributeBindings: ['role', 'aria-multiselectable', 'aria-label'],
+  classNameBindings: ['multiSelect:ember-power-select-multiple-list:ember-power-select-single-list'],
   role: 'listbox',
 
   // Lifecycle hooks
