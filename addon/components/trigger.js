@@ -3,7 +3,7 @@ import layout from '../templates/components/trigger';
 
 export default Component.extend({
   layout,
-  tagName: 'div',
+  tagName: '',
 
   // Actions
   actions: {
