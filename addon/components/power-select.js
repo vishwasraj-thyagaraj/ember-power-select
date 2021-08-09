@@ -281,7 +281,7 @@ export default Component.extend({
 
       if(this.get('ariaActivedescendant') !== null) {
         run.later(() => {
-          this.set('ariaActivedescendant', null);
+          this.get('ariaActivedescendant') && this.set('ariaActivedescendant', null);
         }, 300);
       }
     },
