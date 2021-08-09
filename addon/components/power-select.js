@@ -264,7 +264,7 @@ export default Component.extend({
         if(isPresent(this.get('selected')) && !this.get('multiSelect')) {
           this._setActiveDescendant(this.get('selected'));
         } else {
-          this._setActiveDescendant(this.get('publicAPI').options[0]);
+          this._setActiveDescendant(this.get('publicAPI').options[0], true);
         }
       }
     },
@@ -280,9 +280,7 @@ export default Component.extend({
       this.updateState({ highlighted: undefined });
 
       if(this.get('ariaActivedescendant') !== null) {
-        run.later(() => {
-          this.get('ariaActivedescendant') && this.set('ariaActivedescendant', null);
-        }, 300);
+        this.set('ariaActivedescendant', null);
       }
     },
 
@@ -730,10 +728,12 @@ export default Component.extend({
     }
   },
 
-  _setActiveDescendant(newHighlighted) {
-    let _highlightedIndex = indexOfOption(this.get('publicAPI.results'), newHighlighted);
-    if(_highlightedIndex !== -1) {
-      this.set('ariaActivedescendant', `ember-power-select-options-${this.get('publicAPI.uniqueId')}-${_highlightedIndex}`);
+  _setActiveDescendant(newHighlighted, init = false) {
+    if(this.get('publicAPI.isOpen') || init) {
+      let _highlightedIndex = indexOfOption(this.get('publicAPI.results'), newHighlighted);
+      if(_highlightedIndex !== -1) {
+        this.set('ariaActivedescendant', `ember-power-select-options-${this.get('publicAPI.uniqueId')}-${_highlightedIndex}`);
+      }
     }
   },
 
