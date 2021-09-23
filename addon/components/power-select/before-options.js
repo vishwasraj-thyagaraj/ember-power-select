@@ -1,11 +1,20 @@
 import Component from '@ember/component';
+
+import { isEmpty } from '@ember/utils';
+import { computed } from '@ember/object';
 import { scheduleOnce, later } from '@ember/runloop';
+
 import layout from '../../templates/components/power-select/before-options';
 
 export default Component.extend({
   tagName: '',
   layout,
   autofocus: true,
+
+  getSelectedOption: computed('selectedOption', function() {
+    let field = this.get('searchField');
+    return field ? this.get(`selectedOption.${field}`) : this.get('selectedOption');
+  }),
 
   // Lifecycle hooks
   didInsertElement() {
@@ -33,6 +42,13 @@ export default Component.extend({
       if (e.keyCode === 13) {
         let select = this.get('select');
         select.actions.close(e);
+      }
+    },
+    onBlur(e) {
+      this.sendAction('onBlur', e);
+      if(isEmpty(event.target.value)) {
+        let field = this.get('searchField');
+        event.target.value = field ? this.get(`selectedOption.${field}`) : this.get('selectedOption');
       }
     }
   },
