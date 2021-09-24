@@ -20,6 +20,8 @@
     searchEnabled=searchEnabled
     allowClear=allowClear
     labelText=labelText
+    search=search
+    allowNull=allowNull
   }}
   {{#dropdown.trigger
     role=(if multiSelect null (readonly triggerRole))
@@ -68,18 +70,30 @@
       dropdown=dropdown
       allowNull=allowNull
       allowNullLabel=allowNullLabel
-
-      beforeOptionsComponent=beforeOptionsComponent
-      animationEnabled=(readonly animationEnabled)
-      searchPlaceholder=searchPlaceholder
-
+      search=search
       as |opt term|}}
       {{yield opt term}}
     {{/component}}
   {{/dropdown.trigger}}
   {{/trigger}}
   {{#dropdown.content _contentTagName=_contentTagName class=(readonly concatenatedDropdownClasses)}}
-
+    {{component beforeOptionsComponent
+      animationEnabled=(readonly animationEnabled)
+      extra=(readonly extra)
+      listboxId=(readonly optionsId)
+      onInput=(action "onInput")
+      onKeydown=(action "onKeydown")
+      searchEnabled=(readonly searchEnabled)
+      onFocus=(action "onFocus")
+      onBlur=(action "onBlur")
+      placeholder=getPlaceholder
+      placeholderComponent=(readonly placeholderComponent)
+      searchPlaceholder=(readonly searchPlaceholder)
+      select=(readonly publicAPI)
+      ariaActivedescendant=ariaActivedescendant
+      dropdown=dropdown
+      ariaLabelledBy=(readonly ariaLabelledBy)
+      selectedItemComponent=(readonly selectedItemComponent)}}
     {{#if mustShowSearchMessage}}
       {{component searchMessageComponent
         searchMessage=(readonly searchMessage)
@@ -119,12 +133,11 @@
         ariaLabelForList=ariaLabelForList
         allowNull=allowNull
         allowNullLabel=allowNullLabel
-
+        search=search
         as |option term|}}
         {{yield option term}}
       {{/component}}
     {{/if}}
-
     {{component afterOptionsComponent select=(readonly publicAPI) extra=(readonly extra)}}
   {{/dropdown.content}}
 {{/basic-dropdown}}

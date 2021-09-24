@@ -4,13 +4,13 @@
       {{svg-jar "search" class="ember-svg size-14" role="presentation"}}
     </span>
     <input
-      type="text"
+      type="search"
       autocomplete="off"
       autocorrect="off" 
       autocapitalize="off"
       spellcheck="false"
-      class="ember-power-select-trigger-multiple-input"
-      value={{if selectedOption getSelectedOption select.searchText}}
+      class="ember-power-select-search-input"
+      value={{select.searchText}}
       role="combobox"
       aria-autocomplete="list"
       aria-haspopup="true"
@@ -20,7 +20,7 @@
       placeholder={{or searchPlaceholder null}}
       oninput={{onInput}}
       onfocus={{onFocus}}
-      onblur={{action "onBlur"}}
+      onblur={{onBlur}}
       onkeydown={{action "onKeydown"}}>
   </div>
 {{/if}}

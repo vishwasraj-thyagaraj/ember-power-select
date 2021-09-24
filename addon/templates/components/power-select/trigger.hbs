@@ -1,21 +1,25 @@
-{{component beforeOptionsComponent
-  animationEnabled=(readonly animationEnabled)
-  extra=(readonly extra)
-  listboxId=(readonly optionsId)
-  onInput=onInput
-  onKeydown=onKeydown
-  searchEnabled=(readonly searchEnabled)
-  onFocus=onFocus
-  onBlur=onBlur
-  placeholder=getPlaceholder
-  placeholderComponent=(readonly placeholderComponent)
-  searchPlaceholder=(readonly searchPlaceholder)
-  select=(readonly publicAPI)
-  selectedOption=(readonly select.selected)
-  ariaActivedescendant=ariaActivedescendant
-  dropdown=dropdown
-  searchField=searchField
-  ariaLabelledBy=(readonly ariaLabelledBy)
-  selectedItemComponent=(readonly selectedItemComponent)}}
+{{#if select.selected}}
+  {{#if selectedItemComponent}}
+    {{component selectedItemComponent extra=(readonly extra) option=(readonly select.selected) select=(readonly select)}}
+  {{else}}
+    <span class="ember-power-select-selected-item {{if allowClear "has-clear" ""}}">{{yield select.selected select}}</span>
+  {{/if}}
+{{else}}
+  {{#if (and allowNull (not search))}}
+    <span class="ember-power-select-placeholder">{{allowNullLabel}}</span>
+  {{else}}
+    {{component placeholderComponent placeholder=placeholder}}
+  {{/if}}
+{{/if}}
+
+{{#if labelText}}
+  <span id="ember-power-select-trigger-label-{{select.uniqueId}}" class="screen-reader-only" aria-hidden="true">
+    {{#if select.selected}}
+      {{concat labelText ", selected " (if searchField (get select.selected searchField) select.selected)}}
+    {{else}}
+      {{labelText}}
+    {{/if}}
+  </span>
+{{/if}}
 
 <span class="ember-power-select-status-icon" role="presentation"></span>
