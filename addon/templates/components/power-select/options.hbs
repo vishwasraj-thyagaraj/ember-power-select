@@ -12,7 +12,7 @@
       data-option-index="-1"
       aria-current="{{eq opt select.highlighted}}"
       role={{if (or multiSelect searchEnabled) "option" (if (eq opt select.highlighted) "alert" "option")}}>
-      {{or allowNullLabel "..."}}
+      {{allowNullLabel}}
     </li>
   {{/if}}
   {{!-- by default estimateHeight is 1 & bufferSizeVC is 100 to prevent occluded-content z-index problem --}}
@@ -56,7 +56,7 @@
       data-option-index="-1"
       aria-current="{{eq opt select.highlighted}}"
       role={{if (or multiSelect searchEnabled) "option" (if (eq opt select.highlighted) "alert" "option")}}>
-      {{or allowNullLabel "..."}}
+      {{allowNullLabel}}
     </li>
   {{/if}}
   {{#each options as |opt index|}}
