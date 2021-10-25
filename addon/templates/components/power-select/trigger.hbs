@@ -5,7 +5,11 @@
     <span class="ember-power-select-selected-item {{if allowClear "has-clear" ""}}">{{yield select.selected select}}</span>
   {{/if}}
 {{else}}
-  {{component placeholderComponent placeholder=placeholder}}
+  {{#if (and allowNull (not search))}}
+    <span class="ember-power-select-placeholder">{{allowNullLabel}}</span>
+  {{else}}
+    {{component placeholderComponent placeholder=placeholder}}
+  {{/if}}
 {{/if}}
 
 {{#if labelText}}

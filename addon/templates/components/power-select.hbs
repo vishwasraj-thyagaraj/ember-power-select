@@ -20,6 +20,8 @@
     searchEnabled=searchEnabled
     allowClear=allowClear
     labelText=labelText
+    search=search
+    allowNull=allowNull
   }}
   {{#dropdown.trigger
     role=(if multiSelect null (readonly triggerRole))
@@ -66,6 +68,9 @@
       labelText=labelText
       errorId=errorId
       dropdown=dropdown
+      allowNull=allowNull
+      allowNullLabel=allowNullLabel
+      search=search
       as |opt term|}}
       {{yield opt term}}
     {{/component}}
@@ -126,7 +131,9 @@
         multiSelect=(or multiSelect false)
         searchEnabled=(readonly searchEnabled)
         ariaLabelForList=ariaLabelForList
-
+        allowNull=allowNull
+        allowNullLabel=allowNullLabel
+        search=search
         as |option term|}}
         {{yield option term}}
       {{/component}}

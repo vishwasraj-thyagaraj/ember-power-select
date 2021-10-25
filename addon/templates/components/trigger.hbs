@@ -1,6 +1,7 @@
 {{yield}}
 
-{{#if (and select.selected allowClear (not select.disabled) (not multiSelect))}}
+{{!-- if search is enabled, clearing is allowed as allowNull option will be available only if searched --}}
+{{#if (and select.selected allowClear (not select.disabled) (not multiSelect) (or (not allowNull) search))}}
   <button
     type="button"
     aria-label={{if labelText (concat "Clear " labelText " field selected option") "Clear"}}
