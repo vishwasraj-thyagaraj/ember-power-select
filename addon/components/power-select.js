@@ -341,7 +341,8 @@ export default Component.extend({
         if(this.get('multiSelect')) {
           if(this.get('searchEnabled')) publicAPI.actions.search('');
           // uncommenting below code will close dropdown once selected
-          publicAPI.actions.open(e);
+          document.querySelector("[data-ebd-id=".concat(publicAPI.uniqueId, "-trigger] input")).focus();
+          document.querySelector("[data-ebd-id=".concat(publicAPI.uniqueId, "-trigger] input")).select();
           return false;
         }
 
