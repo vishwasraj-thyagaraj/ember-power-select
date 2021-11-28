@@ -427,7 +427,7 @@ export default Component.extend({
       }
       
       if(this.get('searchEnabled')) {
-        document.querySelector("[data-ebd-id=".concat(publicAPI.uniqueId, "-trigger] input")).focus();
+        this.get('publicAPI').actions.open(event);
       }
     },
 
