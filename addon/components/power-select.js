@@ -342,7 +342,6 @@ export default Component.extend({
           if(this.get('searchEnabled')) publicAPI.actions.search('');
           // uncommenting below code will close dropdown once selected
           document.querySelector("[data-ebd-id=".concat(publicAPI.uniqueId, "-trigger] input")).focus();
-          document.querySelector("[data-ebd-id=".concat(publicAPI.uniqueId, "-trigger] input")).select();
           return false;
         }
 
