@@ -339,10 +339,13 @@ export default Component.extend({
       if (this.get('closeOnSelect')) {
         // for multi select, once selected keep dropdown open
         if(this.get('multiSelect')) {
-          if(this.get('searchEnabled')) publicAPI.actions.search('');
+          if(this.get('searchEnabled')) {
+            publicAPI.actions.search('');
+            document.querySelector("[data-ebd-id=".concat(publicAPI.uniqueId, "-trigger] input")).focus();
+            return false;
+          }
           // uncommenting below code will close dropdown once selected
-          document.querySelector("[data-ebd-id=".concat(publicAPI.uniqueId, "-trigger] input")).focus();
-          return false;
+          // return false;
         }
 
         publicAPI.actions.close(e);
@@ -421,6 +424,10 @@ export default Component.extend({
       let action = this.get('onfocus');
       if (action) {
         action(this.get('publicAPI'), event);
+      }
+      
+      if(this.get('searchEnabled')) {
+        document.querySelector("[data-ebd-id=".concat(publicAPI.uniqueId, "-trigger] input")).focus();
       }
     },
 
