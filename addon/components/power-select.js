@@ -395,7 +395,11 @@ export default Component.extend({
         return;
       }
       let optionElement = optionsList.querySelectorAll('[data-option-index]').item(index);
-      if (!optionElement) {
+      if (!optionElement || this.renderInVC) {
+        // the queried index will not be present in dom due to VC, so using public VC api scrollToItem
+        if(this.renderInVC && index > 0) {
+          this.publicAPI.vcPublicAPI.scrollToItem(index);
+        }
         return;
       }
       let optionTopScroll = optionElement.offsetTop - optionsList.offsetTop;

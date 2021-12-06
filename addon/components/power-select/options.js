@@ -112,5 +112,11 @@ export default Component.extend({
       option = option.options[parseInt(parts[i], 10)];
     }
     return option;
+  },
+
+  actions: {
+    registerAPI(vcPublicAPI) {
+      this.select.vcPublicAPI = vcPublicAPI;
+    }
   }
 });
