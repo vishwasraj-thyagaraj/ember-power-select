@@ -49,7 +49,7 @@
     "ember-concurrency": "^0.8.27 || ^0.9.0 || ^0.10.0 || ^1.0.0",
     "ember-text-measurer": "^0.5.0",
     "ember-truth-helpers": "^2.1.0",
-    "@html-next/vertical-collection": "git+ssh://git@github.com:vishwasraj-thyagaraj/vertical-collection.git#8b96d92ea082e5d2173bec6e8ba9fa50f123e242",
+    "@html-next/vertical-collection": "git+ssh://git@github.com:vishwasraj-thyagaraj/vertical-collection.git#e9a8b83c2ec5b894cd59e6a160b8805ec3910e96",
     "ember-svg-jar": "2.2.3"
   },
   "devDependencies": {
