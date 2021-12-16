@@ -341,8 +341,6 @@ export default Component.extend({
         if(this.get('multiSelect')) {
           if(this.get('searchEnabled')) {
             publicAPI.actions.search('');
-            let trigger = document.querySelector('#ember-power-select-trigger-multiple-input-' + publicAPI.uniqueId);
-            if(trigger) trigger.focus();
             return false;
           }
           // uncommenting below code will close dropdown once selected
@@ -421,10 +419,6 @@ export default Component.extend({
     },
 
     onFocus(event) {     
-      if(this.get('searchEnabled')) {
-        this.get('publicAPI').actions.open(event);
-      }
-
       this.send('activate');
       let action = this.get('onfocus');
       if (action) {
