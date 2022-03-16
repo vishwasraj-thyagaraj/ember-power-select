@@ -93,7 +93,7 @@ export default Component.extend({
 
     onInput(e) {
       let action = this.get('onInput');
-      if (action &&  action(e) === false) {
+      if (action && action(e) === false) {
         return;
       }
       this.get('select').actions.open(e);
@@ -127,7 +127,8 @@ export default Component.extend({
             }
           }
         }
-      } else if (e.keyCode >= 48 && e.keyCode <= 90 || e.keyCode === 32) { // Keys 0-9, a-z or SPACE
+      } else if (e.keyCode >= 48 && e.keyCode <= 90 || e.keyCode === 32 || e.keyCode >= 96 && e.keyCode <= 105) {
+        // Keys 0-9, a-z or SPACE or numpad
         e.stopPropagation();
       }
     }

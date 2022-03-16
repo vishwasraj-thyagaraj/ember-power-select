@@ -110,12 +110,12 @@ export default Component.extend({
 
   // Methods
   focusInput(select) {
-    if (select) {
-      let input = document.querySelector(`#ember-power-select-trigger-multiple-input-${select.uniqueId}`);
-      run.next(() => {
-        // focus to combobox input once dropdown is opened
-        if(input && document.activeElement !== input) input.focus();  
-      });
-    }
+    // if (select) {
+    //   let input = document.querySelector(`#ember-power-select-trigger-multiple-input-${select.uniqueId}`);
+    //   run.next(() => {
+    //     // focus to combobox input once dropdown is opened
+    //     if(input && document.activeElement !== input) input.focus();  
+    //   });
+    // }
   }
 });
