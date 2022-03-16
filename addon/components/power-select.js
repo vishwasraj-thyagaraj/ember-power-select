@@ -495,7 +495,7 @@ export default Component.extend({
 
     // The char is always appended. That way, searching for words like "Aaron" will work even
     // if "Aa" would cycle through the results.
-    console.log('line 499'); this.updateState({ _expirableSearchText: publicAPI._expirableSearchText + c, _repeatingChar: repeatingChar });
+    this.updateState({ _expirableSearchText: publicAPI._expirableSearchText + c, _repeatingChar: repeatingChar });
     let match = this.findWithOffset(publicAPI.options, term, searchStartOffset, true);
     if (match !== undefined) {
       if (publicAPI.isOpen) {
@@ -506,7 +506,6 @@ export default Component.extend({
       }
     }
     yield timeout(1000);
-    console.log('line 510');
     this.updateState({ _expirableSearchText: '', _repeatingChar: '' });
   }).restartable(),
 
@@ -651,7 +650,6 @@ export default Component.extend({
   _resetSearch() {
     let results = this.get('publicAPI').options;
     this.get('handleAsyncSearchTask').cancelAll();
-    console.log('line 655');
     this.updateState({
       results,
       searchText: '',
@@ -673,7 +671,6 @@ export default Component.extend({
 
   _performFilter(term) {
     let results = this.filter(this.get('publicAPI').options, term);
-    console.log('line 677');
     this.updateState({ 
       results, 
       searchText: term, 
@@ -695,11 +692,9 @@ export default Component.extend({
 
   _performSearch(term) {
     let searchAction = this.get('search');
-    console.log('line 699');
     let publicAPI = this.updateState({ searchText: term });
     let search = searchAction(term, publicAPI);
     if (!search) {
-      console.log('line 703');
       publicAPI = this.updateState({ lastSearchedText: term });
     } else if (get(search, 'then')) {
       this.get('handleAsyncSearchTask').perform(term, search);
