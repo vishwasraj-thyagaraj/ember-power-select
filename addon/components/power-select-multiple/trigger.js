@@ -101,7 +101,6 @@ export default Component.extend({
 
     onKeydown(e) {
       let { onKeydown, select } = this.getProperties('onKeydown', 'select');
-      let keyCode = e.keyCode;
       if (onKeydown && onKeydown(e) === false) {
         e.stopPropagation();
         return false;
@@ -130,7 +129,7 @@ export default Component.extend({
         }
       } 
       // Keys 0-9, a-z, SPACE or Numpad keys
-      else if ((keyCode >= 48 && keyCode <= 90) || keyCode === 32 || (keyCode >= 96 && keyCode <= 105)) {
+      else if (e.keyCode >= 48 && e.keyCode <= 90 || e.keyCode === 32 || e.keyCode >= 96 && e.keyCode <= 105) {
         e.stopPropagation();
       }
     }
