@@ -127,8 +127,7 @@ export default Component.extend({
             }
           }
         }
-      }
-      else if (e.keyCode >= 48 && e.keyCode <= 90 || e.keyCode === 32 || e.keyCode >= 96 && e.keyCode <= 105) { // Keys 0-9, a-z, SPACE or Numpad keys
+      } else if (e.keyCode >= 48 && e.keyCode <= 90 || e.keyCode === 32 || e.keyCode >= 96 && e.keyCode <= 105) { // Keys 0-9, a-z, SPACE or Numpad keys
         e.stopPropagation();
       }
     }
