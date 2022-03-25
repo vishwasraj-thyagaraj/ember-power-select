@@ -1,25 +1,48 @@
-{{#if select.selected}}
-  {{#if selectedItemComponent}}
-    {{component selectedItemComponent extra=(readonly extra) option=(readonly select.selected) select=(readonly select)}}
-  {{else}}
-    <span class="ember-power-select-selected-item {{if allowClear "has-clear" ""}}">{{yield select.selected select}}</span>
-  {{/if}}
+{{#if (and select.isOpen searchEnabled)}}
+  <input 
+    type="search" 
+    class="ember-power-select-trigger-multiple-input"
+    autocomplete="off" 
+    autocorrect="off" 
+    autocapitalize="off" 
+    spellcheck="false"
+    id="ember-power-select-trigger-multiple-input-{{select.uniqueId}}"
+    value={{select.searchText}}
+    aria-owns={{listboxId}}
+    aria-autocomplete="list"
+    aria-activedescendant={{ariaActivedescendant}}
+    aria-expanded={{if dropdown.isOpen "true" "false"}}
+    aria-label={{if labelText labelText null}}
+    aria-labelledby={{if labelText (concat "ember-power-select-trigger-multiple-label-" select.uniqueId) null}}
+    aria-describedby={{if errorId errorId null}}
+    role="combobox"
+    style={{triggerMultipleInputStyle}}
+    placeholder={{or maybePlaceholder null}}
+    disabled={{select.disabled}}
+    oninput={{onInput}}
+    onfocus={{onFocus}}
+    onblur={{onBlur}}
+    tabindex={{tabindex}}
+    onkeydown={{onKeydown}}>
 {{else}}
-  {{#if (and allowNull (not search))}}
-    <span class="ember-power-select-placeholder">{{allowNullLabel}}</span>
+  {{#if select.selected}}
+    {{#if selectedItemComponent}}
+      {{component selectedItemComponent extra=(readonly extra) option=(readonly select.selected) select=(readonly select)}}
+    {{else}}
+      <span class="ember-power-select-selected-item {{if allowClear "has-clear" ""}}">{{yield select.selected select}}</span>
+    {{/if}}
   {{else}}
-    {{component placeholderComponent placeholder=placeholder}}
-  {{/if}}
+    {{#if (and allowNull (not search))}}
+      <span class="ember-power-select-placeholder">{{allowNullLabel}}</span>
+    {{else}}
+      {{component placeholderComponent placeholder=placeholder}}
+    {{/if}}
+  {{/if}} 
 {{/if}}
 
 {{#if labelText}}
-  <span id="ember-power-select-trigger-label-{{select.uniqueId}}" class="screen-reader-only" aria-hidden="true">
-    {{#if select.selected}}
-      {{concat labelText ", selected " (if searchField (get select.selected searchField) select.selected)}}
-    {{else}}
-      {{labelText}}
-    {{/if}}
-  </span>
+  <span id="ember-power-select-trigger-multiple-label-{{select.uniqueId}}" class="screen-reader-only" aria-hidden="true">{{labelText}}</span>
 {{/if}}
-
-<span class="ember-power-select-status-icon" role="presentation"></span>
+{{#if (and select.isOpen searchEnabled)}}
+<p>public api open - {{select.isOpen}}</p>
+{{/if}}
