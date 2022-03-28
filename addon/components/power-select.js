@@ -114,7 +114,6 @@ export default Component.extend({
   // Lifecycle hooks
   init() {
     this._super(...arguments);
-    debugger
     this._publicAPIActions = {
       search: (...args) => {
         if (this.get('isDestroying')) {
@@ -250,7 +249,6 @@ export default Component.extend({
     },
 
     onOpen(_, e) {
-      debugger
       let action = this.get('onopen');
       if (action && action(this.get('publicAPI'), e) === false) {
         return false;
@@ -261,6 +259,8 @@ export default Component.extend({
           e.preventDefault();
         }
       }
+
+      this.set('publicAPI.isOpen', true);
       this.focusInput(_);
 
       this.resetHighlighted();
@@ -415,7 +415,6 @@ export default Component.extend({
     },
 
     onTriggerFocus(_, event) {
-      debugger
       this.send('activate');
       let action = this.get('onfocus');
       if (action) {
@@ -424,7 +423,6 @@ export default Component.extend({
     },
 
     onFocus(event) {    
-      debugger 
       this.send('activate');
       let action = this.get('onfocus');
       if (action) {
@@ -461,17 +459,14 @@ export default Component.extend({
     }
   },
 
+  // focus to combobox input once dropdown is opened
   focusInput(select) {
-    debugger
     if (select) {
-      let input = document.querySelector(`#ember-power-select-trigger-multiple-input-${select.uniqueId}`);
       run.next(() => {
-        // focus to combobox input once dropdown is opened
+        let input = document.querySelector(`#ember-power-select-trigger-multiple-input-${select.uniqueId}`);
         if(input && document.activeElement !== input) input.focus();  
       });
     }
-    this.set('publicAPI.isOpen', true);
-    debugger
   },
 
   // Tasks

@@ -5,10 +5,6 @@ export default Component.extend({
   layout,
   tagName: '',
 
-  init() {
-    this._super(...arguments);
-    debugger
-  },
   // Actions
   actions: {
     onKeydown(e) {
