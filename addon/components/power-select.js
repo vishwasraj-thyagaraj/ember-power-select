@@ -13,6 +13,7 @@ import ObjectProxy from '@ember/object/proxy';
 import layout from '../templates/components/power-select';
 import fallbackIfUndefined from '../utils/computed-fallback-if-undefined';
 import optionsMatcher from '../utils/computed-options-matcher';
+import { typeOf } from '@ember/utils';
 import {
   defaultMatcher,
   indexOfOption,
@@ -181,7 +182,10 @@ export default Component.extend({
 
   searchValue: computed('publicAPI.selected', function() {
     let selected = get(this, 'publicAPI.selected');
-    return this.get('searchEnabled') && selected && selected.name;
+    let searchField = get(this, 'searchField');
+
+    return searchField && selected ?  get(this, `publicAPI.selected.${searchField}`)
+      : typeOf(selected) == 'string' ? selected : get(this, 'publicAPI.searchText');
   }),
 
   options: computed({
