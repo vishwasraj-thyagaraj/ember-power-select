@@ -179,6 +179,11 @@ export default Component.extend({
     }
   }),
 
+  searchValue: computed('publicAPI.selected', function() {
+    let selected = get(this, 'publicAPI.selected');
+    return this.get('searchEnabled') && selected && selected.name;
+  }),
+
   options: computed({
     get() {
       return [];
@@ -463,7 +468,7 @@ export default Component.extend({
   focusInput(select) {
     if (select) {
       run.next(() => {
-        let input = document.querySelector(`#ember-power-select-trigger-multiple-input-${select.uniqueId}`);
+        let input = document.querySelector(`#ember-power-select-search-input-trigger-${select.uniqueId}`);
         if(input && document.activeElement !== input) input.focus();  
       });
     }
