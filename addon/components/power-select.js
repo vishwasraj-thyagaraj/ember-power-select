@@ -269,9 +269,6 @@ export default Component.extend({
         }
       }
 
-      this.set('publicAPI.isOpen', true);
-      this.focusInput(_);
-
       this.resetHighlighted();
 
       if(this.get('ariaActivedescendant') === null) {
@@ -465,16 +462,6 @@ export default Component.extend({
 
     deactivate() {
       scheduleOnce('actions', this, 'setIsActive', false);
-    }
-  },
-
-  // focus to combobox input once dropdown is opened
-  focusInput(select) {
-    if (select) {
-      run.next(() => {
-        let input = document.querySelector(`#ember-power-select-search-input-trigger-${select.uniqueId}`);
-        if(input && document.activeElement !== input) input.focus();  
-      });
     }
   },
 
