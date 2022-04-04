@@ -268,7 +268,6 @@ export default Component.extend({
           e.preventDefault();
         }
       }
-
       this.resetHighlighted();
 
       if(this.get('ariaActivedescendant') === null) {
@@ -428,7 +427,7 @@ export default Component.extend({
       }
     },
 
-    onFocus(event) {    
+    onFocus(event) {
       this.send('activate');
       let action = this.get('onfocus');
       if (action) {

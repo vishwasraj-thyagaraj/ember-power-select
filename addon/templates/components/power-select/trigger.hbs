@@ -29,6 +29,13 @@
 {{/if}}
 
 {{#if labelText}}
-  <span id="ember-power-select-trigger-single-label-{{select.uniqueId}}" class="screen-reader-only" aria-hidden="true">{{labelText}}</span>
+  <span id="ember-power-select-trigger-label-{{select.uniqueId}}" class="screen-reader-only" aria-hidden="true">
+    {{#if select.selected}}
+      {{concat labelText ", selected " (if searchField (get select.selected searchField) select.selected)}}
+    {{else}}
+      {{labelText}}
+    {{/if}}
+  </span>
 {{/if}}
-<span class="ember-power-select-status-icon"></span>
+
+<span class="ember-power-select-status-icon" role="presentation"></span>
