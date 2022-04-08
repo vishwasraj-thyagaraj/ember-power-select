@@ -2,6 +2,7 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import layout from '../../templates/components/power-select/options';
+import { later } from '@ember/runloop';
 
 const isTouchDevice = (!!window && 'ontouchstart' in window);
 if(typeof FastBoot === 'undefined'){
@@ -52,7 +53,9 @@ export default Component.extend({
     };
     this.element.addEventListener('mouseup', (e) => findOptionAndPerform(this.get('select.actions.choose'), e));
     if (this.get('highlightOnHover')) {
-      this.element.addEventListener('mouseover', (e) => findOptionAndPerform(this.get('select.actions.highlight'), e));
+      later(() => {
+        this.element.addEventListener('mouseover', (e) => findOptionAndPerform(this.get('select.actions.highlight'), e));
+      })
     }
     if (this.get('isTouchDevice')) {
       this._addTouchEvents();

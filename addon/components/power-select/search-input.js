@@ -13,18 +13,11 @@ export default Component.extend({
     this._super(...arguments);
     let select = this.select;
     let selectInput = document.querySelector(`#ember-power-select-search-input-trigger-${get(select, 'uniqueId')}`);
-    scheduleOnce('actions', null, select.actions.search, '');
     later(() => {
       if (get(select, 'isOpen')) {
         selectInput.select();
       }
     })
     ;
-  },
-  willDestroyElement() {
-    this._super(...arguments);
-    if (this.get('searchEnabled')) {
-      scheduleOnce('actions', this, this.get('select').actions.search, '');
-    }
   }
 });
