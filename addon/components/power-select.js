@@ -185,7 +185,7 @@ export default Component.extend({
     let searchField = get(this, 'searchField');
 
     return searchField && selected ?  get(this, `publicAPI.selected.${searchField}`)
-      : typeOf(selected) == 'string' ? selected : get(this, 'publicAPI.searchText');
+      : typeOf(selected) === 'string' ? selected : get(this, 'publicAPI.searchText');
   }),
 
   options: computed({

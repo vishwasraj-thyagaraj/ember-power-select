@@ -17,7 +17,6 @@ export default Component.extend({
       if (get(select, 'isOpen')) {
         selectInput.select();
       }
-    })
-    ;
+    });
   }
 });

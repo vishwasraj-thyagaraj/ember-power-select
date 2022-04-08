@@ -13,8 +13,7 @@ export default Component.extend({
         return false;
       }
       if (e.keyCode === 13) {
-        let select = this.get('select');
-        select.actions.close(e);
+        this.get('select').actions.close(e);
       }
     }
   }
