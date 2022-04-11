@@ -15,9 +15,7 @@ export default Component.extend({
     let selectInput = document.querySelector(`#ember-power-select-search-input-trigger-${get(select, 'uniqueId')}`);
     scheduleOnce('actions', null, select.actions.search, '');
     later(() => {
-      if (get(select, 'isOpen')) {
-        selectInput.select();
-      }
+      get(select, 'isOpen') && selectInput.select();
     });
   }
 });
