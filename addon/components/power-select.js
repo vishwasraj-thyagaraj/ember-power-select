@@ -666,16 +666,6 @@ export default Component.extend({
       resultsCount: countOptions(results),
       loading: false
     });
-    // reset search
-    if(this.get('publicAPI.isOpen')) {
-      run.later(() => {
-        let option = this.get('publicAPI.options')[0];
-        if(this.get('publicAPI.highlighted') !== option) {
-          this.updateState({ highlighted: option });
-        }
-        this._setActiveDescendant(option);
-      }, 300);
-    }
   },
 
   _performFilter(term) {
