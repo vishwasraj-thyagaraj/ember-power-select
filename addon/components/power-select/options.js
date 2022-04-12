@@ -2,7 +2,6 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import layout from '../../templates/components/power-select/options';
-import { later } from '@ember/runloop';
 
 const isTouchDevice = (!!window && 'ontouchstart' in window);
 if(typeof FastBoot === 'undefined'){
