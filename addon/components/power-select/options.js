@@ -53,10 +53,7 @@ export default Component.extend({
     };
     this.element.addEventListener('mouseup', (e) => findOptionAndPerform(this.get('select.actions.choose'), e));
     if (this.get('highlightOnHover')) {
-      //Adding later to fix bug: because the event listener gets appended before the dropdown is animated down, the first option is highlighted even though there could be another chosen option somewhere below.(first option and the trigger overlaps)
-      later(() => {
-        this.element.addEventListener('mouseover', (e) => findOptionAndPerform(this.get('select.actions.highlight'), e));
-      });
+      this.element.addEventListener('mouseover', (e) => findOptionAndPerform(this.get('select.actions.highlight'), e));
     }
     if (this.get('isTouchDevice')) {
       this._addTouchEvents();
