@@ -13,6 +13,7 @@ import ObjectProxy from '@ember/object/proxy';
 import layout from '../templates/components/power-select';
 import fallbackIfUndefined from '../utils/computed-fallback-if-undefined';
 import optionsMatcher from '../utils/computed-options-matcher';
+import { typeOf } from '@ember/utils';
 import {
   defaultMatcher,
   indexOfOption,
@@ -78,7 +79,7 @@ export default Component.extend({
   // Options
   ariaActivedescendant: null,
   allowNullLabel: fallbackIfUndefined('--'),
-  triggerRole: fallbackIfUndefined('button'),
+  triggerRole: fallbackIfUndefined(''),
   searchEnabled: fallbackIfUndefined(true),
   matchTriggerWidth: fallbackIfUndefined(true),
   preventScroll: fallbackIfUndefined(false),
@@ -94,7 +95,7 @@ export default Component.extend({
   highlightOnHover: fallbackIfUndefined(true),
 
   afterOptionsComponent: fallbackIfUndefined(null),
-  beforeOptionsComponent: fallbackIfUndefined('power-select/before-options'),
+  beforeOptionsComponent: fallbackIfUndefined(null),
   optionsComponent: fallbackIfUndefined('power-select/options'),
   groupComponent: fallbackIfUndefined('power-select/power-select-group'),
   selectedItemComponent: fallbackIfUndefined(null),
@@ -177,6 +178,14 @@ export default Component.extend({
       }
       return selected;
     }
+  }),
+
+  searchValue: computed('publicAPI.selected', function() {
+    let selected = get(this, 'publicAPI.selected');
+    let searchField = get(this, 'searchField');
+
+    return searchField && selected ?  get(this, `publicAPI.selected.${searchField}`)
+      : typeOf(selected) === 'string' ? selected : get(this, 'publicAPI.searchText');
   }),
 
   options: computed({
@@ -418,7 +427,7 @@ export default Component.extend({
       }
     },
 
-    onFocus(event) {     
+    onFocus(event) {
       this.send('activate');
       let action = this.get('onfocus');
       if (action) {

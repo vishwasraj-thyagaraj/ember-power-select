@@ -59,6 +59,7 @@
       searchEnabled=(readonly searchEnabled)
       searchField=(readonly searchField)
       select=(readonly publicAPI)
+      searchValue=searchValue
       selectedItemComponent=(readonly selectedItemComponent)
       ariaActivedescendant=ariaActivedescendant
       ariaLabel=(readonly ariaLabel)
@@ -71,6 +72,8 @@
       allowNull=allowNull
       allowNullLabel=allowNullLabel
       search=search
+      animationEnabled=(readonly animationEnabled)
+      searchPlaceholder=(readonly searchPlaceholder)
       as |opt term|}}
       {{yield opt term}}
     {{/component}}

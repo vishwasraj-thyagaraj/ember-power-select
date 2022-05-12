@@ -1,15 +1,32 @@
-{{#if select.selected}}
-  {{#if selectedItemComponent}}
-    {{component selectedItemComponent extra=(readonly extra) option=(readonly select.selected) select=(readonly select)}}
-  {{else}}
-    <span class="ember-power-select-selected-item {{if allowClear "has-clear" ""}}">{{yield select.selected select}}</span>
-  {{/if}}
+{{#if (and select.isOpen searchEnabled)}}
+  {{#component "power-select/search-input"
+    searchValue=searchValue
+    searchEnabled=searchEnabled
+    listboxId=listboxId
+    ariaActivedescendant=ariaActivedescendant
+    searchPlaceholder=searchPlaceholder
+    labelText=labelText
+    select=select
+    errorId=errorId
+    onInput=onInput
+    onFocus=onFocus
+    onBlur=onBlur
+    tabindex=tabindex}}
+  {{/component}}
 {{else}}
-  {{#if (and allowNull (not search))}}
-    <span class="ember-power-select-placeholder">{{allowNullLabel}}</span>
+  {{#if select.selected}}
+    {{#if selectedItemComponent}}
+      {{component selectedItemComponent extra=(readonly extra) option=(readonly select.selected) select=(readonly select)}}
+    {{else}}
+      <span class="ember-power-select-selected-item {{if allowClear "has-clear" ""}}">{{yield select.selected select}}</span>
+    {{/if}}
   {{else}}
-    {{component placeholderComponent placeholder=placeholder}}
-  {{/if}}
+    {{#if (and allowNull (not search))}}
+      <span class="ember-power-select-placeholder">{{allowNullLabel}}</span>
+    {{else}}
+      {{component placeholderComponent placeholder=placeholder}}
+    {{/if}}
+  {{/if}} 
 {{/if}}
 
 {{#if labelText}}
