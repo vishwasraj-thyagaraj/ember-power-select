@@ -30,7 +30,7 @@ export default Component.extend({
   layout,
   tagName: 'ul',
   attributeBindings: ['role', 'aria-multiselectable', 'aria-label'],
-  classNameBindings: ['multiSelect:ember-power-select-multiple-list:ember-power-select-single-list'],
+  classNameBindings: ['multiSelect:ember-power-select-multiple-list:ember-power-select-single-list', 'hasResults:has-results:no-results'],
   role: 'listbox',
 
   // Lifecycle hooks
@@ -69,6 +69,12 @@ export default Component.extend({
   }),
 
   'aria-label': reads('ariaLabelForList'),
+
+  hasResults: computed('options.length', function() {
+    let options = this.get('options');
+    if(options.length === 0 || (options.length === 1 && options[0].__isSuggestion__)) return false;
+    return true;
+  }),
 
   // Methods
   _addTouchEvents() {

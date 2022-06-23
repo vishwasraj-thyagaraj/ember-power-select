@@ -39,7 +39,7 @@
         {{/component}}
       {{/component}}
     {{else}}
-      {{#unless allowCreateOnBlur}}
+      {{#if (or (and allowCreateOnBlur (not opt.__isSuggestion__)) (not allowCreateOnBlur))}}
         <li id="{{concat id "-" index}}" class="ember-power-select-option"
           aria-selected="{{ember-power-select-is-selected opt select.selected}}"
           aria-disabled={{ember-power-select-true-string-if-present opt.disabled}}
@@ -48,7 +48,7 @@
           role={{if (or multiSelect searchEnabled) "option" (if (eq opt select.highlighted) "alert" "option")}}>
           {{yield opt select}}
         </li>
-      {{/unless}}
+      {{/if}}
     {{/if}}
   {{/vertical-collection}}
 {{else}}
@@ -81,7 +81,7 @@
         {{/component}}
       {{/component}}
     {{else}}
-      {{#unless allowCreateOnBlur}}
+      {{#if (or (and allowCreateOnBlur (not opt.__isSuggestion__)) (not allowCreateOnBlur))}}
         <li id="{{concat id "-" index}}" class="ember-power-select-option"
           aria-selected="{{ember-power-select-is-selected opt select.selected}}"
           aria-disabled={{ember-power-select-true-string-if-present opt.disabled}}
@@ -90,7 +90,7 @@
           role={{if (or multiSelect searchEnabled) "option" (if (eq opt select.highlighted) "alert" "option")}}>
           {{yield opt select}}
         </li>
-      {{/unless}}
+      {{/if}}
     {{/if}}
   {{/each}}
 {{/if}}
