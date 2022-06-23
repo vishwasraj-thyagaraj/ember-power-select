@@ -39,14 +39,16 @@
         {{/component}}
       {{/component}}
     {{else}}
-      <li id="{{concat id "-" index}}" class="ember-power-select-option"
-        aria-selected="{{ember-power-select-is-selected opt select.selected}}"
-        aria-disabled={{ember-power-select-true-string-if-present opt.disabled}}
-        aria-current="{{eq opt select.highlighted}}"
-        data-option-index="{{groupIndex}}{{index}}"
-        role={{if (or multiSelect searchEnabled) "option" (if (eq opt select.highlighted) "alert" "option")}}>
-        {{yield opt select}}
-      </li>
+      {{#if (or (and allowCreateOnBlur (not opt.__isSuggestion__)) (not allowCreateOnBlur))}}
+        <li id="{{concat id "-" index}}" class="ember-power-select-option"
+          aria-selected="{{ember-power-select-is-selected opt select.selected}}"
+          aria-disabled={{ember-power-select-true-string-if-present opt.disabled}}
+          aria-current="{{eq opt select.highlighted}}"
+          data-option-index="{{groupIndex}}{{index}}"
+          role={{if (or multiSelect searchEnabled) "option" (if (eq opt select.highlighted) "alert" "option")}}>
+          {{yield opt select}}
+        </li>
+      {{/if}}
     {{/if}}
   {{/vertical-collection}}
 {{else}}
@@ -79,14 +81,16 @@
         {{/component}}
       {{/component}}
     {{else}}
-      <li id="{{concat id "-" index}}" class="ember-power-select-option"
-        aria-selected="{{ember-power-select-is-selected opt select.selected}}"
-        aria-disabled={{ember-power-select-true-string-if-present opt.disabled}}
-        aria-current="{{eq opt select.highlighted}}"
-        data-option-index="{{groupIndex}}{{index}}"
-        role={{if (or multiSelect searchEnabled) "option" (if (eq opt select.highlighted) "alert" "option")}}>
-        {{yield opt select}}
-      </li>
+      {{#if (or (and allowCreateOnBlur (not opt.__isSuggestion__)) (not allowCreateOnBlur))}}
+        <li id="{{concat id "-" index}}" class="ember-power-select-option"
+          aria-selected="{{ember-power-select-is-selected opt select.selected}}"
+          aria-disabled={{ember-power-select-true-string-if-present opt.disabled}}
+          aria-current="{{eq opt select.highlighted}}"
+          data-option-index="{{groupIndex}}{{index}}"
+          role={{if (or multiSelect searchEnabled) "option" (if (eq opt select.highlighted) "alert" "option")}}>
+          {{yield opt select}}
+        </li>
+      {{/if}}
     {{/if}}
   {{/each}}
 {{/if}}

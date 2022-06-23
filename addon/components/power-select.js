@@ -453,6 +453,10 @@ export default Component.extend({
       if (action) {
         action(this.get('publicAPI'), event);
       }
+
+      if(this.get('allowCreateOnBlur') && event && event.target && isPresent(event.target.value)) {
+        this.get('onchange')({ __isSuggestion__: true, __value__: event.target.value }, this.get('publicAPI'), event);
+      }
     },
 
     activate() {
