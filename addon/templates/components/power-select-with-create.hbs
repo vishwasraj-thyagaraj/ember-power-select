@@ -54,10 +54,12 @@
   triggerRole=triggerRole
   typeAheadMatcher=typeAheadMatcher
   verticalPosition=verticalPosition
+  labelText=labelText
+  errorId=errorId
   as |option term|
 }}
   {{#if option.__isSuggestion__}}
-    {{component suggestedOptionComponent option=option term=term}}
+    {{component suggestedOptionComponent option=option term=term suggestionOptionComponent=suggestionOptionComponent}}
   {{else}}
     {{yield option term}}
   {{/if}}

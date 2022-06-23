@@ -1,1 +1,5 @@
-{{option.text}}
+{{#if suggestionOptionComponent}}
+	{{component suggestionOptionComponent}}
+{{else}}
+	{{option.text}}
+{{/if}}
