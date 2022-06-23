@@ -1,1 +1,1 @@
-export { default } from 'ember-power-select-with-create/components/power-select-multiple-with-create';
+export { default } from 'ember-power-select/components/power-select-multiple-with-create';
