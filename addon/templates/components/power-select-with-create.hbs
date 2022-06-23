@@ -25,6 +25,7 @@
   matcher=matcher
   noMatchesMessage=noMatchesMessage
   onblur=onblur
+  allowCreateOnBlur=allowCreateOnBlur
   onchange=(action selectOrCreate)
   onclose=onclose
   onfocus=onfocus
@@ -59,7 +60,7 @@
   as |option term|
 }}
   {{#if option.__isSuggestion__}}
-    {{component suggestedOptionComponent option=option term=term suggestionOptionComponent=suggestionOptionComponent}}
+    {{component suggestedOptionComponent allowCreateOnBlur=allowCreateOnBlur option=option term=term suggestionOptionComponent=suggestionOptionComponent}}
   {{else}}
     {{yield option term}}
   {{/if}}

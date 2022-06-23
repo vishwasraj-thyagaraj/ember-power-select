@@ -20,23 +20,13 @@ export default Component.extend({
   },
 
   // CPs
-  optionsArray: computed('options.[]', function () {
+  optionsArray: computed('options.[]', function() {
     let options = this.get('options');
-    if (!options) { options = A(); }
+    if (!options) { return A(); }
     if (options.then) {
-      return options.then(value => {
-        value = A(value).toArray();
-        if (!value.length && this.showSuggestionwhenNoOptions) {
-          this.addCreateOption('', value);
-        }
-        return value;
-      });
+      return options.then(value => A(value).toArray());
     } else {
-      options = A(options).toArray();
-      if (!options.length && this.showSuggestionwhenNoOptions) {
-        this.addCreateOption('', options);
-      }
-      return options;
+      return A(options).toArray();
     }
   }),
 
