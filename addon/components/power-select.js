@@ -454,8 +454,20 @@ export default Component.extend({
         action(this.get('publicAPI'), event);
       }
 
-      if(this.get('allowCreateOnBlur') && event && event.target && isPresent(event.target.value)) {
-        this.get('onchange')({ __isSuggestion__: true, __value__: event.target.value }, this.get('publicAPI'), event);
+      if(this.get('allowCreateOnBlur')) {
+        let text = this.get('publicAPI.text');
+
+        if(this.get('multiSelect') && this.get('allowCommaSeparatedValues') && !this.get('publicAPI.highlighted')) {
+          text.split(',').forEach(str => {
+            this.get('onchange')([{ __isSuggestion__: true, __value__: str.trim() }], this.get('publicAPI'), event);
+          });
+        }
+
+        if(!this.get('multiSelect')) {
+          this.get('onchange')({ __isSuggestion__: true, __value__: text }, this.get('publicAPI'), event);
+        }
+
+        this.updateState({ text: '' });
       }
     },
 
@@ -668,7 +680,8 @@ export default Component.extend({
       searchText: '',
       lastSearchedText: '',
       resultsCount: countOptions(results),
-      loading: false
+      loading: false,
+      text: this.get('allowCreateOnBlur') ? this.get('publicAPI').searchText : ''
     });
     // reset search
     if(this.get('publicAPI.isOpen')) {
