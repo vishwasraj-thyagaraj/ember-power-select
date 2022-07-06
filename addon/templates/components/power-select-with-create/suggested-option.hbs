@@ -1,7 +1,5 @@
-{{#unless allowCreateOnBlur}}
-	{{#if suggestionOptionComponent}}
-		{{component suggestionOptionComponent}}
-	{{else}}
-		{{option.text}}
-	{{/if}}
-{{/unless}}
+{{#if suggestionOptionComponent}}
+	{{component suggestionOptionComponent}}
+{{else}}
+	{{option.text}}
+{{/if}}

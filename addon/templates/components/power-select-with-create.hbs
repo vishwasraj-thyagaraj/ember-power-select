@@ -61,7 +61,7 @@
   as |option term|
 }}
   {{#if option.__isSuggestion__}}
-    {{component suggestedOptionComponent allowCreateOnBlur=allowCreateOnBlur option=option term=term suggestionOptionComponent=suggestionOptionComponent}}
+    {{component suggestedOptionComponent option=option term=term suggestionOptionComponent=suggestionOptionComponent}}
   {{else}}
     {{yield option term}}
   {{/if}}

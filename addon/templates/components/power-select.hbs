@@ -106,7 +106,7 @@
     {{else if mustShowNoMessages}}
       {{#if (hasBlock "inverse")}}
         {{yield to="inverse"}}
-      {{else if noMatchesMessage}}
+      {{else if (and noMatchesMessage (not allowCreateOnBlur))}}
         <ul class="ember-power-select-options" role="listbox" id={{optionsId}}>
           <li aria-live="assertive" class="ember-power-select-option ember-power-select-option--no-matches-message" role="option">
             {{noMatchesMessage}}
@@ -135,7 +135,6 @@
         searchEnabled=(readonly searchEnabled)
         ariaLabelForList=ariaLabelForList
         allowNull=allowNull
-        allowCreateOnBlur=allowCreateOnBlur
         allowNullLabel=allowNullLabel
         search=search
         as |option term|}}
