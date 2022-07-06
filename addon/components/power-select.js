@@ -350,6 +350,7 @@ export default Component.extend({
         if(this.get('multiSelect')) {
           if(this.get('searchEnabled')) {
             publicAPI.actions.search('');
+            this.focusInput();
             return false;
           }
           // uncommenting below code will close dropdown once selected
@@ -583,6 +584,13 @@ export default Component.extend({
   }).restartable(),
 
   // Methods
+  focusInput() {
+    if(this.get('multiSelect')) {
+      let input = document.querySelector(`#ember-power-select-trigger-multiple-input-${this.get('publicAPI.uniqueId')}`);
+      run.next(() => input && document.activeElement !== input && input.focus());
+    }
+  },
+
   setIsActive(isActive) {
     this.updateState({ isActive });
   },
