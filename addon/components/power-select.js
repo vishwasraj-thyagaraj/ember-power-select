@@ -458,7 +458,10 @@ export default Component.extend({
 
         if(this.get('multiSelect') && this.get('allowCommaSeparatedValues') && this.get('publicAPI.text') && !this.get('publicAPI.highlighted')) {
           this.get('publicAPI.text').split(',').forEach(str => {
-            this.get('onchange')([{ __isSuggestion__: true, __value__: str.trim() }], this.get('publicAPI'), event);
+            str = str.trim();
+            if(isPresent(str)) {
+              this.get('onchange')([{ __isSuggestion__: true, __value__: str }], this.get('publicAPI'), event);
+            }
           });
           this.updateState({ text: '' });
         }
