@@ -460,13 +460,12 @@ export default Component.extend({
           this.get('publicAPI.text').split(',').forEach(str => {
             this.get('onchange')([{ __isSuggestion__: true, __value__: str.trim() }], this.get('publicAPI'), event);
           });
+          this.updateState({ text: '' });
         }
 
         if(!this.get('multiSelect') && get(event, 'target.value')) {
           this.get('onchange')({ __isSuggestion__: true, __value__: get(event, 'target.value') }, this.get('publicAPI'), event);
         }
-
-        run.next(() => this.updateState({ text: '' }));
       }
     },
 
