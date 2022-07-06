@@ -35,7 +35,7 @@ export default Component.extend({
   },
 
   addCreateOption(term, results){
-    if (this.shouldShowCreateOption(term, results)) {
+    if (this.shouldShowCreateOption(term, results) && !this.get('allowCreateOnBlur')) {
       if(this.get('showCreatePosition') === 'bottom'){
         results.push(this.buildSuggestionForTerm(term));
       }
