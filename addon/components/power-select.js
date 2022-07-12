@@ -459,9 +459,10 @@ export default Component.extend({
 
         let isMultiSelect = this.get('multiSelect');
         let inputValue = this.get('publicAPI.text');
+        let isHighlighted = this.get('publicAPI.highlighted');
         let allowCommaSeparatedValues = this.get('allowCommaSeparatedValues');
 
-        if(isMultiSelect && allowCommaSeparatedValues && inputValue && !this.get('publicAPI.highlighted')) {
+        if(!isHighlighted && isMultiSelect && inputValue && allowCommaSeparatedValues) {
           inputValue.split(',').forEach(str => {
             this.buildCustomSuggestion(str.trim());
           });
