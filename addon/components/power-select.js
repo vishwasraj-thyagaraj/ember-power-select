@@ -457,17 +457,26 @@ export default Component.extend({
 
       if(this.get('allowCreateOnBlur')) {
 
-        if(this.get('multiSelect') && this.get('allowCommaSeparatedValues') && this.get('publicAPI.text') && !this.get('publicAPI.highlighted')) {
-          this.get('publicAPI.text').split(',').forEach(str => {
-            this.get('onchange')([{ __isSuggestion__: true, __value__: str.trim() }], this.get('publicAPI'), event);
+        let isMultiSelect = this.get('multiSelect');
+        let inputValue = this.get('publicAPI.text');
+        let allowCommaSeparatedValues = this.get('allowCommaSeparatedValues');
+
+        if(isMultiSelect && allowCommaSeparatedValues && inputValue && !this.get('publicAPI.highlighted')) {
+          inputValue.split(',').forEach(str => {
+            this.buildCustomSuggestion(str.trim());
           });
           this.updateState({ text: '' });
         }
 
-        if(!this.get('multiSelect') && get(event, 'target.value')) {
-          this.get('onchange')({ __isSuggestion__: true, __value__: get(event, 'target.value') }, this.get('publicAPI'), event);
+        if(!isMultiSelect && get(event, 'target.value')) {
+          this.buildCustomSuggestion(get(event, 'target.value').trim());
         }
       }
+    },
+
+    buildCustomSuggestion(str) {
+      let value = { __isSuggestion__: true, __value__: str };
+      this.get('onchange')(this.get('multiSelect') ? [value] : value, this.get('publicAPI'), event);
     },
 
     activate() {
