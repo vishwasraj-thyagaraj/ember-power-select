@@ -597,7 +597,7 @@ export default Component.extend({
   focusInput() {
     if(this.get('multiSelect')) {
       let input = document.querySelector(`#ember-power-select-trigger-multiple-input-${this.get('publicAPI.uniqueId')}`);
-      run.next(() => input && document.activeElement !== input && input.focus());
+      input && run.next(() => (document.activeElement !== input) && input.focus());
     }
   },
 
