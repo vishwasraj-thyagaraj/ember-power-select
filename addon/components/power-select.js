@@ -457,18 +457,20 @@ export default Component.extend({
 
       if(this.get('allowCreateOnBlur')) {
 
-        if(this.get('multiSelect') && this.get('allowCommaSeparatedValues') && this.get('publicAPI.text') && !this.get('publicAPI.highlighted')) {
-          this.get('publicAPI.text').split(',').forEach(str => {
-            str = str.trim();
-            if(isPresent(str)) {
-              this.get('onchange')([{ __isSuggestion__: true, __value__: str }], this.get('publicAPI'), event);
-            }
+        let isMultiSelect = this.get('multiSelect');
+        let inputValue = this.get('publicAPI.text');
+        let isHighlighted = this.get('publicAPI.highlighted');
+        let allowCommaSeparatedValues = this.get('allowCommaSeparatedValues');
+
+        if(!isHighlighted && isMultiSelect && allowCommaSeparatedValues && inputValue) {
+          inputValue.split(',').forEach(str => {
+            this.buildCustomSuggestion(str.trim());
           });
           this.updateState({ text: '' });
         }
 
-        if(!this.get('multiSelect') && get(event, 'target.value')) {
-          this.get('onchange')({ __isSuggestion__: true, __value__: get(event, 'target.value') }, this.get('publicAPI'), event);
+        if(!isMultiSelect && get(event, 'target.value')) {
+          this.buildCustomSuggestion(get(event, 'target.value').trim());
         }
       }
     },
@@ -590,8 +592,13 @@ export default Component.extend({
   focusInput() {
     if(this.get('multiSelect')) {
       let input = document.querySelector(`#ember-power-select-trigger-multiple-input-${this.get('publicAPI.uniqueId')}`);
-      run.next(() => input && document.activeElement !== input && input.focus());
+      input && run.next(() => (document.activeElement !== input) && input.focus());
     }
+  },
+
+  buildCustomSuggestion(str) {
+    let value = { __isSuggestion__: true, __value__: str };
+    this.get('onchange')(this.get('multiSelect') ? [value] : value, this.get('publicAPI'), event);
   },
 
   setIsActive(isActive) {
