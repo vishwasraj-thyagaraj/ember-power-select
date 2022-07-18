@@ -287,7 +287,7 @@ export default Component.extend({
         this.set('openingEvent', null);
       }
 
-      if(isEmpty('allowCreateOnBlur')) this.updateState({ highlighted: undefined });
+      this.updateState({ highlighted: undefined });
 
       if(this.get('ariaActivedescendant') !== null) {
         this.set('ariaActivedescendant', null);
@@ -673,18 +673,12 @@ export default Component.extend({
     let results = this.get('publicAPI').options;
     this.get('handleAsyncSearchTask').cancelAll();
 
-    if(this.get('allowCreateOnBlur') && isPresent(this.get('publicAPI.searchText'))) {
-      let hasHighlighted = this.get('publicAPI.highlighted');
-
-      if(this.get('publicAPI.results.length') && hasHighlighted) {
-        this.publicAPI.actions.select(this.get('multiSelect') ? [hasHighlighted]: hasHighlighted);
+    if(this.get('allowCreateOnBlur') && isPresent(this.get('publicAPI.searchText')) && !this.get('publicAPI.results.length')) {
+      if(this.get('multiSelect')) {
+        this.get('allowCommaSeparatedValues') && 
+        this.get('publicAPI.searchText').split(',').forEach(str => this.buildCustomSuggestion(str.trim()));
       } else {
-        if(this.get('multiSelect')) {
-          this.get('allowCommaSeparatedValues') && 
-          this.get('publicAPI.searchText').split(',').forEach(str => this.buildCustomSuggestion(str.trim()));
-        } else {
-          this.buildCustomSuggestion(this.get('publicAPI.searchText').trim());
-        }
+        this.buildCustomSuggestion(this.get('publicAPI.searchText').trim());
       }
     }
 
@@ -693,8 +687,7 @@ export default Component.extend({
       searchText: '',
       lastSearchedText: '',
       resultsCount: countOptions(results),
-      loading: false,
-      highlighted: undefined
+      loading: false
     });
     // reset search
     if(this.get('publicAPI.isOpen')) {
@@ -801,6 +794,13 @@ export default Component.extend({
   },
 
   _handleKeyTab(e) {
+    if(this.get('allowCreateOnBlur')) {
+      let hasHighlighted = this.get('publicAPI.highlighted');
+      if(this.get('publicAPI.results.length') && hasHighlighted) {
+        this.publicAPI.actions.choose(hasHighlighted);
+      }
+    }
+
     this.get('publicAPI').actions.close(e);
   },
 
