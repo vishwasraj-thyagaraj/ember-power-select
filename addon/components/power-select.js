@@ -462,7 +462,7 @@ export default Component.extend({
         let isHighlighted = this.get('publicAPI.highlighted');
         let allowCommaSeparatedValues = this.get('allowCommaSeparatedValues');
 
-        if(!isHighlighted && isMultiSelect && inputValue && allowCommaSeparatedValues) {
+        if(!isHighlighted && isMultiSelect && allowCommaSeparatedValues && inputValue) {
           inputValue.split(',').forEach(str => {
             this.buildCustomSuggestion(str.trim());
           });
@@ -473,11 +473,6 @@ export default Component.extend({
           this.buildCustomSuggestion(get(event, 'target.value').trim());
         }
       }
-    },
-
-    buildCustomSuggestion(str) {
-      let value = { __isSuggestion__: true, __value__: str };
-      this.get('onchange')(this.get('multiSelect') ? [value] : value, this.get('publicAPI'), event);
     },
 
     activate() {
@@ -599,6 +594,11 @@ export default Component.extend({
       let input = document.querySelector(`#ember-power-select-trigger-multiple-input-${this.get('publicAPI.uniqueId')}`);
       input && run.next(() => (document.activeElement !== input) && input.focus());
     }
+  },
+
+  buildCustomSuggestion(str) {
+    let value = { __isSuggestion__: true, __value__: str };
+    this.get('onchange')(this.get('multiSelect') ? [value] : value, this.get('publicAPI'), event);
   },
 
   setIsActive(isActive) {
