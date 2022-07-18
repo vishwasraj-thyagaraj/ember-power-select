@@ -2,11 +2,10 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { scheduleOnce, run } from '@ember/runloop';
 import { getOwner } from '@ember/application';
-import { isEqual, isEmpty } from '@ember/utils';
 import { get, set } from '@ember/object';
 import { assert } from '@ember/debug';
 import { DEBUG } from '@glimmer/env';
-import { isBlank, isPresent } from '@ember/utils';
+import { isEqual, isEmpty, isBlank, isPresent } from '@ember/utils';
 import { isArray as isEmberArray } from '@ember/array';
 import ArrayProxy from '@ember/array/proxy';
 import ObjectProxy from '@ember/object/proxy';
@@ -287,7 +286,8 @@ export default Component.extend({
       if (e) {
         this.set('openingEvent', null);
       }
-      this.updateState({ highlighted: undefined });
+
+      if(isEmpty('allowCreateOnBlur')) this.updateState({ highlighted: undefined });
 
       if(this.get('ariaActivedescendant') !== null) {
         this.set('ariaActivedescendant', null);
@@ -319,6 +319,7 @@ export default Component.extend({
       let publicAPI = this.get('publicAPI');
       if (!isEqual(publicAPI.selected, selected)) {
         this.get('onchange')(selected, publicAPI, e);
+        run.next(() => this.get('multiSelect') && this.get('searchEnabled') && publicAPI.actions.search(''));
       }
     },
 
@@ -349,7 +350,6 @@ export default Component.extend({
         // for multi select, once selected keep dropdown open
         if(this.get('multiSelect')) {
           if(this.get('searchEnabled')) {
-            publicAPI.actions.search('');
             this.focusInput();
             return false;
           }
@@ -453,25 +453,6 @@ export default Component.extend({
       let action = this.get('onblur');
       if (action) {
         action(this.get('publicAPI'), event);
-      }
-
-      if(this.get('allowCreateOnBlur')) {
-
-        let isMultiSelect = this.get('multiSelect');
-        let inputValue = this.get('publicAPI.text');
-        let isHighlighted = this.get('publicAPI.highlighted');
-        let allowCommaSeparatedValues = this.get('allowCommaSeparatedValues');
-
-        if(!isHighlighted && isMultiSelect && allowCommaSeparatedValues && inputValue) {
-          inputValue.split(',').forEach(str => {
-            this.buildCustomSuggestion(str.trim());
-          });
-          this.updateState({ text: '' });
-        }
-
-        if(!isMultiSelect && get(event, 'target.value')) {
-          this.buildCustomSuggestion(get(event, 'target.value').trim());
-        }
       }
     },
 
@@ -691,13 +672,29 @@ export default Component.extend({
   _resetSearch() {
     let results = this.get('publicAPI').options;
     this.get('handleAsyncSearchTask').cancelAll();
+
+    if(this.get('allowCreateOnBlur') && isPresent(this.get('publicAPI.searchText'))) {
+      let hasHighlighted = this.get('publicAPI.highlighted');
+
+      if(this.get('publicAPI.results.length') && hasHighlighted) {
+        this.publicAPI.actions.select(this.get('multiSelect') ? [hasHighlighted]: hasHighlighted);
+      } else {
+        if(this.get('multiSelect')) {
+          this.get('allowCommaSeparatedValues') && 
+          this.get('publicAPI.searchText').split(',').forEach(str => this.buildCustomSuggestion(str.trim()));
+        } else {
+          this.buildCustomSuggestion(this.get('publicAPI.searchText').trim());
+        }
+      }
+    }
+
     this.updateState({
       results,
       searchText: '',
       lastSearchedText: '',
       resultsCount: countOptions(results),
       loading: false,
-      text: this.get('allowCreateOnBlur') ? this.get('publicAPI').searchText : ''
+      highlighted: undefined
     });
     // reset search
     if(this.get('publicAPI.isOpen')) {
