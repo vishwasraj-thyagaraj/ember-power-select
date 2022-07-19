@@ -686,7 +686,7 @@ export default Component.extend({
     if(this.get('allowCreateOnBlur') && isPresent(searchText) && (searchText.length >= 2) && !this.get('publicAPI.results.length')) {
       if(this.get('multiSelect')) {
         this.get('allowCommaSeparatedValues') && 
-        searchText.split(',').forEach(str => this.buildCustomSuggestion(str.trim()));
+        searchText.split(',').forEach(str => (str.length >= 2) && this.buildCustomSuggestion(str.trim()));
         this.focusInput();
       } else {
         this.buildCustomSuggestion(searchText.trim());
