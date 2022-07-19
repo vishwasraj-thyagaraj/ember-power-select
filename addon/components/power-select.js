@@ -287,6 +287,14 @@ export default Component.extend({
         this.set('openingEvent', null);
       }
 
+      // support for adding value when clicked outside
+      if(this.get('allowCreateOnBlur')) {
+        let publicAPI = this.get('publicAPI');
+        if(publicAPI.highlighted && publicAPI.results.length) {
+          publicAPI.actions[this.get('multiSelect') ? 'choose' : 'select'](publicAPI.highlighted, e);
+        }
+      }
+
       this.updateState({ highlighted: undefined });
 
       if(this.get('ariaActivedescendant') !== null) {
@@ -673,6 +681,7 @@ export default Component.extend({
     let results = this.get('publicAPI').options;
     this.get('handleAsyncSearchTask').cancelAll();
 
+    // support for adding values that is not present in results
     if(this.get('allowCreateOnBlur') && isPresent(this.get('publicAPI.searchText')) && !this.get('publicAPI.results.length')) {
       if(this.get('multiSelect')) {
         this.get('allowCommaSeparatedValues') && 
@@ -794,6 +803,7 @@ export default Component.extend({
   },
 
   _handleKeyTab(e) {
+    // support for adding value when tab key is pressed
     if(this.get('allowCreateOnBlur')) {
       let hasHighlighted = this.get('publicAPI.highlighted');
       if(this.get('publicAPI.results.length') && hasHighlighted) {
