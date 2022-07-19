@@ -327,7 +327,6 @@ export default Component.extend({
       let publicAPI = this.get('publicAPI');
       if (!isEqual(publicAPI.selected, selected)) {
         this.get('onchange')(selected, publicAPI, e);
-        run.next(() => this.get('multiSelect') && this.get('searchEnabled') && publicAPI.actions.search(''));
       }
     },
 
@@ -358,6 +357,7 @@ export default Component.extend({
         // for multi select, once selected keep dropdown open
         if(this.get('multiSelect')) {
           if(this.get('searchEnabled')) {
+            run.next(() => publicAPI.actions.search(''));
             this.focusInput();
             return false;
           }
