@@ -682,12 +682,14 @@ export default Component.extend({
     this.get('handleAsyncSearchTask').cancelAll();
 
     // support for adding values that is not present in results
-    if(this.get('allowCreateOnBlur') && isPresent(this.get('publicAPI.searchText')) && !this.get('publicAPI.results.length')) {
+    let searchText = this.get('publicAPI.searchText');
+    if(this.get('allowCreateOnBlur') && isPresent(searchText) && (searchText.length >= 2) && !this.get('publicAPI.results.length')) {
       if(this.get('multiSelect')) {
         this.get('allowCommaSeparatedValues') && 
-        this.get('publicAPI.searchText').split(',').forEach(str => this.buildCustomSuggestion(str.trim()));
+        searchText.split(',').forEach(str => this.buildCustomSuggestion(str.trim()));
+        this.focusInput();
       } else {
-        this.buildCustomSuggestion(this.get('publicAPI.searchText').trim());
+        this.buildCustomSuggestion(searchText.trim());
       }
     }
 
