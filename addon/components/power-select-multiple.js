@@ -2,6 +2,7 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { isEqual } from '@ember/utils';
 import { run } from '@ember/runloop';
+import { isEmpty } from '@ember/utils';
 
 import layout from '../templates/components/power-select-multiple';
 import fallbackIfUndefined from '../utils/computed-fallback-if-undefined';
@@ -84,8 +85,20 @@ export default Component.extend({
             return false;
           }
         } else {
-          select.actions.close(e);
-          return false;
+          if(this.get('allowCreateOnBlur')) {
+            if(this.get('allowCommaSeparatedValues') && select.searchText.length >= 0 && select.results.length === 0) {
+              select.searchText.split(',').forEach(str => {
+                str.length >= 2 && this.buildCustomSuggestion(select, str.trim(), e);
+              });
+              run.next(() => {
+                select.actions.search('');
+                this.focusInput();
+              });
+            }
+          } else {
+            select.actions.close(e);
+            return false;
+          }
         }
       }
     },
@@ -106,6 +119,11 @@ export default Component.extend({
       }
       return newSelection;
     }
+  },
+
+  buildCustomSuggestion(select, str, e) {
+    let value = { __isSuggestion__: true, __value__: str };
+    this.get('onchange')([value], select, event);
   },
 
   // Methods

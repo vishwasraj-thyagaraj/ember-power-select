@@ -287,7 +287,7 @@ export default Component.extend({
         this.set('openingEvent', null);
       }
 
-      // support for adding value when clicked outside
+      // support for adding value when clicked outside and result is highlighted
       if(this.get('allowCreateOnBlur')) {
         let publicAPI = this.get('publicAPI');
         if(publicAPI.highlighted && publicAPI.results.length) {
@@ -461,6 +461,23 @@ export default Component.extend({
       let action = this.get('onblur');
       if (action) {
         action(this.get('publicAPI'), event);
+      }
+
+      // support for adding values that is not present in results
+      let searchText = this.get('publicAPI.text') || event.target.value;
+      let hasResults = this.get('publicAPI.count') || this.get('publicAPI.results.length');
+      if(this.get('allowCreateOnBlur') && (searchText.length >= 2) && !hasResults) {
+        if(this.get('multiSelect')) {
+          this.get('allowCommaSeparatedValues') && 
+          searchText.split(',').forEach(str => (str.length >= 2) && this.buildCustomSuggestion(str.trim()));
+          run.next(() => {
+            this.focusInput();
+            this.get('publicAPI.actions').open();
+          });
+        } else {
+          this.buildCustomSuggestion(searchText.trim());
+        }
+        run.next(() => this.updateState({ text: '', count: 0 }));
       }
     },
 
@@ -681,24 +698,14 @@ export default Component.extend({
     let results = this.get('publicAPI').options;
     this.get('handleAsyncSearchTask').cancelAll();
 
-    // support for adding values that is not present in results
-    let searchText = this.get('publicAPI.searchText');
-    if(this.get('allowCreateOnBlur') && isPresent(searchText) && (searchText.length >= 2) && !this.get('publicAPI.results.length')) {
-      if(this.get('multiSelect')) {
-        this.get('allowCommaSeparatedValues') && 
-        searchText.split(',').forEach(str => (str.length >= 2) && this.buildCustomSuggestion(str.trim()));
-        this.focusInput();
-      } else {
-        this.buildCustomSuggestion(searchText.trim());
-      }
-    }
-
     this.updateState({
       results,
       searchText: '',
       lastSearchedText: '',
       resultsCount: countOptions(results),
-      loading: false
+      loading: false,
+      text: this.get('allowCreateOnBlur') ? this.get('publicAPI.searchText') : '',
+      count: this.get('allowCreateOnBlur') ? this.get('publicAPI.results').length : 0
     });
     // reset search
     if(this.get('publicAPI.isOpen')) {
@@ -805,14 +812,6 @@ export default Component.extend({
   },
 
   _handleKeyTab(e) {
-    // support for adding value when tab key is pressed
-    if(this.get('allowCreateOnBlur')) {
-      let hasHighlighted = this.get('publicAPI.highlighted');
-      if(this.get('publicAPI.results.length') && hasHighlighted) {
-        this.publicAPI.actions.choose(hasHighlighted);
-      }
-    }
-
     this.get('publicAPI').actions.close(e);
   },
 
