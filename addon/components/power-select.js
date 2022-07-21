@@ -287,14 +287,7 @@ export default Component.extend({
         this.set('openingEvent', null);
       }
 
-      // support for adding value when clicked outside and result is highlighted
-      if(this.get('allowCreateOnBlur')) {
-        let publicAPI = this.get('publicAPI');
-        if(publicAPI.highlighted && publicAPI.results.length) {
-          publicAPI.actions[this.get('multiSelect') ? 'choose' : 'select'](publicAPI.highlighted, e);
-        }
-      }
-
+      this.get('allowCreateOnBlur') && this.handleFocusOut(this.get('publicAPI'), e);
       this.updateState({ highlighted: undefined });
 
       if(this.get('ariaActivedescendant') !== null) {
@@ -462,23 +455,6 @@ export default Component.extend({
       if (action) {
         action(this.get('publicAPI'), event);
       }
-
-      // support for adding values that is not present in results
-      let searchText = this.get('publicAPI.text') || event.target.value;
-      let hasResults = this.get('publicAPI.count') || this.get('publicAPI.results.length');
-      if(this.get('allowCreateOnBlur') && (searchText.length >= 2) && !hasResults) {
-        if(this.get('multiSelect')) {
-          this.get('allowCommaSeparatedValues') && 
-          searchText.split(',').forEach(str => (str.length >= 2) && this.buildCustomSuggestion(str.trim()));
-          run.next(() => {
-            this.focusInput();
-            this.get('publicAPI.actions').open();
-          });
-        } else {
-          this.buildCustomSuggestion(searchText.trim());
-        }
-        run.next(() => this.updateState({ text: '', count: 0 }));
-      }
     },
 
     activate() {
@@ -602,7 +578,43 @@ export default Component.extend({
     }
   },
 
-  buildCustomSuggestion(str) {
+  handleMultiSelect(publicAPI, e) {
+    let hasResults = publicAPI.results.length;
+    let isHighlighted = publicAPI.highlighted;
+    let isValidTerm = publicAPI.searchText.length >= 2;
+
+    if(hasResults && isHighlighted) {
+      publicAPI.actions.choose(isHighlighted, e);
+    } else if(!hasResults && isValidTerm) {
+      if(this.get('allowCommaSeparatedValues')) {
+        publicAPI.searchText.split(',').forEach(str => str.length >= 2 && this.customSuggestion(str.trim()))
+      } else {
+        this.customSuggestion(publicAPI.searchText.trim());
+      }
+      publicAPI.actions.open();
+      this.focusInput();
+    }
+  },
+
+  handleSingleSelect(publicAPI, e) {
+    let hasResults = publicAPI.results.length;
+    let isHighlighted = publicAPI.highlighted;
+    let isValidTerm = publicAPI.searchText.length >= 2;
+
+    if(hasResults && isHighlighted) {
+      publicAPI.actions.select(isHighlighted, e);
+    } else if(!hasResults && isValidTerm) {
+      this.customSuggestion(publicAPI.searchText.trim());
+    }
+  },
+
+  handleFocusOut(publicAPI, e) {
+    // 1. support for adding values when clicked outside & when result is highlighted
+    // 2. support for adding values that is not present in results
+    this.get('multiSelect') ? this.handleMultiSelect(publicAPI, e) : this.handleSingleSelect(publicAPI, e);
+  },
+
+  customSuggestion(str) {
     let value = { __isSuggestion__: true, __value__: str };
     this.get('onchange')(this.get('multiSelect') ? [value] : value, this.get('publicAPI'), event);
   },
@@ -703,9 +715,7 @@ export default Component.extend({
       searchText: '',
       lastSearchedText: '',
       resultsCount: countOptions(results),
-      loading: false,
-      text: this.get('allowCreateOnBlur') ? this.get('publicAPI.searchText') : '',
-      count: this.get('allowCreateOnBlur') ? this.get('publicAPI.results').length : 0
+      loading: false
     });
     // reset search
     if(this.get('publicAPI.isOpen')) {
