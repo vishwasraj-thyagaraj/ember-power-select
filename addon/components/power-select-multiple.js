@@ -86,10 +86,12 @@ export default Component.extend({
           }
         } else {
           if(this.get('allowCreateOnBlur')) {
-            if(this.get('allowCommaSeparatedValues') && select.searchText.length >= 0 && select.results.length === 0) {
-              select.searchText.split(',').forEach(str => {
-                str.length >= 2 && this.buildCustomSuggestion(select, str.trim(), e);
-              });
+            if(select.searchText.length >= 0 && select.results.length === 0) {
+              if(this.get('allowCommaSeparatedValues')) {
+                select.searchText.split(',').forEach(str => str.length >= 2 && this.customSuggestion(select, str.trim(), e));
+              } else {
+                this.customSuggestion(select, select.searchText.trim(), e);
+              }
               run.next(() => {
                 select.actions.search('');
                 this.focusInput();
@@ -121,7 +123,7 @@ export default Component.extend({
     }
   },
 
-  buildCustomSuggestion(select, str, e) {
+  customSuggestion(select, str, e) {
     let value = { __isSuggestion__: true, __value__: str };
     this.get('onchange')([value], select, event);
   },
