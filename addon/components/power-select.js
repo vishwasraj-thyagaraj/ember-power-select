@@ -587,7 +587,7 @@ export default Component.extend({
       publicAPI.actions.choose(isHighlighted, e);
     } else if(!hasResults && isValidTerm) {
       if(this.get('allowCommaSeparatedValues')) {
-        publicAPI.searchText.split(',').forEach(str => str.length >= 2 && this.customSuggestion(str.trim()))
+        publicAPI.searchText.split(',').forEach(str => str.length >= 2 && this.customSuggestion(str.trim()));
       } else {
         this.customSuggestion(publicAPI.searchText.trim());
       }
