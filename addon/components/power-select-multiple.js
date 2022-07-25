@@ -2,7 +2,6 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { isEqual } from '@ember/utils';
 import { run } from '@ember/runloop';
-import { isEmpty } from '@ember/utils';
 
 import layout from '../templates/components/power-select-multiple';
 import fallbackIfUndefined from '../utils/computed-fallback-if-undefined';
