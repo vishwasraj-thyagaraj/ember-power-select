@@ -84,8 +84,22 @@ export default Component.extend({
             return false;
           }
         } else {
-          select.actions.close(e);
-          return false;
+          if(this.get('allowCreateOnBlur')) {
+            if(select.searchText.length >= 0 && select.results.length === 0) {
+              if(this.get('allowCommaSeparatedValues')) {
+                select.searchText.split(',').forEach(str => str.length >= 2 && this.customSuggestion(select, str.trim(), e));
+              } else {
+                this.customSuggestion(select, select.searchText.trim(), e);
+              }
+              run.next(() => {
+                select.actions.search('');
+                this.focusInput();
+              });
+            }
+          } else {
+            select.actions.close(e);
+            return false;
+          }
         }
       }
     },
@@ -106,6 +120,11 @@ export default Component.extend({
       }
       return newSelection;
     }
+  },
+
+  customSuggestion(select, str, e) {
+    let value = { __isSuggestion__: true, __value__: str };
+    this.get('onchange')([value], select, event);
   },
 
   // Methods

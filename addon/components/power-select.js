@@ -2,11 +2,10 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { scheduleOnce, run } from '@ember/runloop';
 import { getOwner } from '@ember/application';
-import { isEqual, isEmpty } from '@ember/utils';
 import { get, set } from '@ember/object';
 import { assert } from '@ember/debug';
 import { DEBUG } from '@glimmer/env';
-import { isBlank, isPresent } from '@ember/utils';
+import { isEqual, isEmpty, isBlank, isPresent } from '@ember/utils';
 import { isArray as isEmberArray } from '@ember/array';
 import ArrayProxy from '@ember/array/proxy';
 import ObjectProxy from '@ember/object/proxy';
@@ -287,6 +286,8 @@ export default Component.extend({
       if (e) {
         this.set('openingEvent', null);
       }
+
+      this.get('allowCreateOnBlur') && this.handleFocusOut(this.get('publicAPI'), e);
       this.updateState({ highlighted: undefined });
 
       if(this.get('ariaActivedescendant') !== null) {
@@ -350,6 +351,7 @@ export default Component.extend({
         if(this.get('multiSelect')) {
           if(this.get('searchEnabled')) {
             publicAPI.actions.search('');
+            this.focusInput();
             return false;
           }
           // uncommenting below code will close dropdown once selected
@@ -569,6 +571,54 @@ export default Component.extend({
   }).restartable(),
 
   // Methods
+  focusInput() {
+    if(this.get('multiSelect')) {
+      let input = document.querySelector(`#ember-power-select-trigger-multiple-input-${this.get('publicAPI.uniqueId')}`);
+      input && run.next(() => (document.activeElement !== input) && input.focus());
+    }
+  },
+
+  handleMultiSelect(publicAPI, e) {
+    let hasResults = publicAPI.results.length;
+    let isHighlighted = publicAPI.highlighted;
+    let isValidTerm = publicAPI.searchText.length >= 2;
+
+    if(hasResults && isHighlighted) {
+      publicAPI.actions.choose(isHighlighted, e);
+    } else if(!hasResults && isValidTerm) {
+      if(this.get('allowCommaSeparatedValues')) {
+        publicAPI.searchText.split(',').forEach(str => str.length >= 2 && this.customSuggestion(str.trim()))
+      } else {
+        this.customSuggestion(publicAPI.searchText.trim());
+      }
+      publicAPI.actions.open();
+      this.focusInput();
+    }
+  },
+
+  handleSingleSelect(publicAPI, e) {
+    let hasResults = publicAPI.results.length;
+    let isHighlighted = publicAPI.highlighted;
+    let isValidTerm = publicAPI.searchText.length >= 2;
+
+    if(hasResults && isHighlighted) {
+      publicAPI.actions.select(isHighlighted, e);
+    } else if(!hasResults && isValidTerm) {
+      this.customSuggestion(publicAPI.searchText.trim());
+    }
+  },
+
+  handleFocusOut(publicAPI, e) {
+    // 1. support for adding values when clicked outside & when result is highlighted
+    // 2. support for adding values that is not present in results
+    this.get('multiSelect') ? this.handleMultiSelect(publicAPI, e) : this.handleSingleSelect(publicAPI, e);
+  },
+
+  customSuggestion(str) {
+    let value = { __isSuggestion__: true, __value__: str };
+    this.get('onchange')(this.get('multiSelect') ? [value] : value, this.get('publicAPI'), event);
+  },
+
   setIsActive(isActive) {
     this.updateState({ isActive });
   },
@@ -659,6 +709,7 @@ export default Component.extend({
   _resetSearch() {
     let results = this.get('publicAPI').options;
     this.get('handleAsyncSearchTask').cancelAll();
+
     this.updateState({
       results,
       searchText: '',
