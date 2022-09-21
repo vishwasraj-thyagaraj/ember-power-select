@@ -39,4 +39,10 @@
   </span>
 {{/if}}
 
-<span class="ember-power-select-status-icon" role="presentation"></span>
+{{#if statusIcon}}
+  <span class="ember-power-select-custom-status-icon">
+    {{svg-jar statusIcon class="ember-svg size-16" role="presentation"}}
+  </span>
+{{else}}
+  <span class="ember-power-select-status-icon" role="presentation"></span>
+{{/if}}
