@@ -32,7 +32,7 @@
 {{#if labelText}}
   <span id="ember-power-select-trigger-label-{{select.uniqueId}}" class="screen-reader-only" aria-hidden="true">
     {{#if select.selected}}
-      {{concat labelText ", selected " (if searchField (get select.selected searchField) select.selected)}}
+      {{concat (if searchField (get select.selected searchField) select.selected) ", " labelText}}
     {{else}}
       {{labelText}}
     {{/if}}

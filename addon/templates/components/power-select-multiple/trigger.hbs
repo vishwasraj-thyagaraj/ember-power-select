@@ -24,7 +24,7 @@
 </ul>
 
 <input 
-  type="search" 
+  type="text" 
   class="ember-power-select-trigger-multiple-input"
   autocomplete="off" 
   autocorrect="off" 
@@ -36,7 +36,6 @@
   aria-autocomplete="list"
   aria-activedescendant={{ariaActivedescendant}}
   aria-expanded={{if dropdown.isOpen "true" "false"}}
-  aria-label={{if labelText labelText null}}
   aria-labelledby={{if labelText (concat "ember-power-select-trigger-multiple-label-" select.uniqueId) null}}
   aria-describedby={{if errorId errorId null}}
   role="combobox"

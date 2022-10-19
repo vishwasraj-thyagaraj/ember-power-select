@@ -1,5 +1,5 @@
 <input 
-  type="search" 
+  type="text" 
   class="ember-power-select-search-input ember-power-select-search-input-trigger"
   autocomplete="off" 
   autocorrect="off" 
@@ -8,15 +8,11 @@
   id="ember-power-select-search-input-trigger-{{select.uniqueId}}"
   value={{searchValue}}
   aria-owns={{listboxId}}
-  aria-haspopup="true"
-  aria-expanded="true"
   aria-autocomplete="list"
   placeholder={{or searchPlaceholder null}}
   autofocus
   aria-activedescendant={{ariaActivedescendant}}
   aria-label={{if labelText labelText null}}
-  aria-labelledby={{if labelText (concat "ember-power-select-trigger-single-label-" select.uniqueId) null}}
-  aria-describedby={{if errorId errorId null}}
   role="combobox"
   disabled={{select.disabled}}
   oninput={{onInput}}

@@ -78,7 +78,7 @@ export default Component.extend({
   // Options
   ariaActivedescendant: null,
   allowNullLabel: fallbackIfUndefined('--'),
-  triggerRole: fallbackIfUndefined(''),
+  triggerRole: fallbackIfUndefined('button'),
   searchEnabled: fallbackIfUndefined(true),
   matchTriggerWidth: fallbackIfUndefined(true),
   preventScroll: fallbackIfUndefined(false),
