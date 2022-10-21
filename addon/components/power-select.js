@@ -78,7 +78,6 @@ export default Component.extend({
   // Options
   ariaActivedescendant: null,
   allowNullLabel: fallbackIfUndefined('--'),
-  triggerRole: fallbackIfUndefined('combobox'),
   searchEnabled: fallbackIfUndefined(true),
   matchTriggerWidth: fallbackIfUndefined(true),
   preventScroll: fallbackIfUndefined(false),
@@ -139,6 +138,10 @@ export default Component.extend({
   },
 
   // CPs
+  triggerRole: computed('renderInVC', function() {
+    return this.get('searchEnabled') ? 'button' : 'combobox';
+  }),
+
   shouldRenderInVC: computed('renderInVC', function() {
     return this.get('renderInVC') || this.get('options.length') > 500;
   }),

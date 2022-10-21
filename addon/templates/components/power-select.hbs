@@ -41,7 +41,7 @@
     onBlur=(action "onTriggerBlur")
     tabindex=(readonly tabindex)
     aria-haspopup=(if (or multiSelect searchEnabled) null "listbox")
-    aria-expanded=(if multiSelect null (if dropdown.isOpen "true" "false")) 
+    aria-expanded=(if multiSelect null (if dropdown.isOpen "true" "false"))
     allowClear=(readonly allowClear)
     aria-activedescendant=(if (and (not multiSelect) (not searchEnabled)) ariaActivedescendant null)
   }}
