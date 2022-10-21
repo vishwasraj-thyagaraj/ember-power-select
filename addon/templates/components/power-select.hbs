@@ -40,8 +40,8 @@
     onFocus=(action "onTriggerFocus")
     onBlur=(action "onTriggerBlur")
     tabindex=(readonly tabindex)
-    aria-haspopup=(if (or multiSelect searchEnabled) "true" "listbox")
-    aria-expanded=(if multiSelect null (if dropdown.isOpen "true" "false"))
+    aria-haspopup=(if (or multiSelect searchEnabled) null "listbox")
+    aria-expanded=(if multiSelect null (if dropdown.isOpen "true" "false")) 
     allowClear=(readonly allowClear)
   }}
     {{#component triggerComponent
@@ -65,7 +65,6 @@
       ariaLabel=(readonly ariaLabel)
       ariaLabelledBy=(readonly ariaLabelledBy)
       ariaDescribedBy=(readonly ariaDescribedBy)
-      ariaLabelForSelectedList=ariaLabelForSelectedList
       labelText=labelText
       errorId=errorId
       dropdown=dropdown
@@ -75,6 +74,7 @@
       search=search
       animationEnabled=(readonly animationEnabled)
       searchPlaceholder=(readonly searchPlaceholder)
+      allowCreateOnBlur=allowCreateOnBlur
       as |opt term|}}
       {{yield opt term}}
     {{/component}}
