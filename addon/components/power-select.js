@@ -78,7 +78,7 @@ export default Component.extend({
   // Options
   ariaActivedescendant: null,
   allowNullLabel: fallbackIfUndefined('--'),
-  triggerRole: fallbackIfUndefined('button'),
+  triggerRole: fallbackIfUndefined('combobox'),
   searchEnabled: fallbackIfUndefined(true),
   matchTriggerWidth: fallbackIfUndefined(true),
   preventScroll: fallbackIfUndefined(false),
@@ -87,7 +87,6 @@ export default Component.extend({
   noMatchesMessage: fallbackIfUndefined('No results found'),
   searchMessage: fallbackIfUndefined('Type to search'),
   searchPlaceholder: fallbackIfUndefined('Type to search'),
-  ariaLabelForList: fallbackIfUndefined('Options list'),
   closeOnSelect: fallbackIfUndefined(true),
   defaultHighlighted: fallbackIfUndefined(defaultHighlighted),
   typeAheadMatcher: fallbackIfUndefined(defaultTypeAheadMatcher),

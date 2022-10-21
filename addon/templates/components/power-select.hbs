@@ -43,6 +43,7 @@
     aria-haspopup=(if (or multiSelect searchEnabled) null "listbox")
     aria-expanded=(if multiSelect null (if dropdown.isOpen "true" "false")) 
     allowClear=(readonly allowClear)
+    aria-activedescendant=(if (and (not multiSelect) (not searchEnabled)) ariaActivedescendant null)
   }}
     {{#component triggerComponent
       allowClear=(readonly allowClear)
@@ -126,15 +127,13 @@
         highlightOnHover=(readonly highlightOnHover)
         groupComponent=(readonly groupComponent)
         select=(readonly publicAPI)
-
+        labelText=labelText
         renderInVC=shouldRenderInVC
         bufferSizeVC=(readonly bufferSizeVC)
         staticHeightVC=(readonly staticHeightVC)
         estimateHeightVC=(readonly estimateHeightVC)
-
         multiSelect=(or multiSelect false)
         searchEnabled=(readonly searchEnabled)
-        ariaLabelForList=ariaLabelForList
         allowNull=allowNull
         allowNullLabel=allowNullLabel
         search=search
