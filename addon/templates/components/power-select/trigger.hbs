@@ -20,7 +20,7 @@
     {{#if selectedItemComponent}}
       {{component selectedItemComponent extra=(readonly extra) option=(readonly select.selected) select=(readonly select)}}
     {{else}}
-      <span class="ember-power-select-selected-item {{if allowClear "has-clear" ""}}">{{yield select.selected select}}</span>
+      <span aria-hidden={{if searchEnabled undefined "true"}} class="ember-power-select-selected-item {{if allowClear "has-clear" ""}}">{{yield select.selected select}}</span>
     {{/if}}
   {{else}}
     {{#if (and allowNull (not search))}}
