@@ -138,8 +138,22 @@ export default Component.extend({
   },
 
   // CPs
-  triggerRole: computed('renderInVC', function() {
+  triggerRole: computed('multiSelect', 'searchEnabled', function() {
     return this.get('searchEnabled') ? 'button' : 'combobox';
+  }),
+
+  popUpType: computed('multiSelect', 'searchEnabled', function() {
+    let type = null;
+    let hasSearch = this.get('searchEnabled');
+    let isMultipleSelect = this.get('multiSelect');
+
+    if(!hasSearch && !isMultipleSelect) {
+      type = 'listbox';
+    } else if(hasSearch) {
+      type = 'true';
+    }
+
+    return type;
   }),
 
   shouldRenderInVC: computed('renderInVC', function() {
