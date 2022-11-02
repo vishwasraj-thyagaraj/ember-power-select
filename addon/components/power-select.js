@@ -787,6 +787,7 @@ export default Component.extend({
     } else if (e.keyCode === 13) {  // ENTER
       return this._handleKeyEnter(e);
     } else if (e.keyCode === 9) {   // Tab
+      return this._handleKeyEnter(e);
       return this._handleKeyTab(e);
     } else if (e.keyCode === 27) {  // ESC
       return this._handleKeyESC(e);
