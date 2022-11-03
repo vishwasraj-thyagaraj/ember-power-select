@@ -287,7 +287,8 @@ export default Component.extend({
 
       if(this.get('ariaActivedescendant') === null) {
         if(isPresent(this.get('selected')) && !this.get('multiSelect')) {
-          this._setActiveDescendant(this.get('selected'));
+          // dropdown not yet open scenario
+          run.next(() => this._setActiveDescendant(this.get('selected')));
         } else {
           this._setActiveDescendant(this.get('publicAPI').options[0], true);
         }
