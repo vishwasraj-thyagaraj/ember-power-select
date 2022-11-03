@@ -784,11 +784,8 @@ export default Component.extend({
   _routeKeydown(e) {
     if (e.keyCode === 38 || e.keyCode === 40) { // Up & Down
       return this._handleKeyUpDown(e);
-    } else if (e.keyCode === 13) {  // ENTER
+    } else if (e.keyCode === 9 || e.keyCode === 13) {  // ENTER
       return this._handleKeyEnter(e);
-    } else if (e.keyCode === 9) {   // Tab
-      return this._handleKeyEnter(e);
-      return this._handleKeyTab(e);
     } else if (e.keyCode === 27) {  // ESC
       return this._handleKeyESC(e);
     }
@@ -822,6 +819,7 @@ export default Component.extend({
     let publicAPI = this.get('publicAPI');
     if (publicAPI.isOpen && publicAPI.highlighted !== undefined) {
       publicAPI.actions.choose(publicAPI.highlighted, e);
+      publicAPI.actions.close(e);
       return false;
     }
   },
