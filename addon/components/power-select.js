@@ -600,9 +600,7 @@ export default Component.extend({
     let isHighlighted = publicAPI.highlighted;
     let isValidTerm = publicAPI.searchText.length >= 2;
 
-    if(hasResults && isHighlighted) {
-      publicAPI.actions.choose(isHighlighted, e);
-    } else if(!hasResults && isValidTerm) {
+    if(!hasResults && isValidTerm) {
       if(this.get('allowCommaSeparatedValues')) {
         publicAPI.searchText.split(',').forEach(str => str.length >= 2 && this.customSuggestion(str.trim()))
       } else {
@@ -618,9 +616,7 @@ export default Component.extend({
     let isHighlighted = publicAPI.highlighted;
     let isValidTerm = publicAPI.searchText.length >= 2;
 
-    if(hasResults && isHighlighted) {
-      publicAPI.actions.select(isHighlighted, e);
-    } else if(!hasResults && isValidTerm) {
+    if(!hasResults && isValidTerm) {
       this.customSuggestion(publicAPI.searchText.trim());
     }
   },

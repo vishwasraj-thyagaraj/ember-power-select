@@ -65,6 +65,10 @@ export default Component.extend({
       if (action) {
         action(select, e);
       }
+
+      if(this.get('searchEnabled')) {
+        select.actions.open(e);
+      }
     },
 
     handleKeydown(select, e) {
@@ -73,7 +77,7 @@ export default Component.extend({
         e.stopPropagation();
         return false;
       }
-      if (e.keyCode === 13 && select.isOpen) {
+      if ((e.keyCode === 9 || e.keyCode === 13) && select.isOpen) {
         e.stopPropagation();
         if (select.highlighted !== undefined) {
           if (!select.selected || select.selected.indexOf(select.highlighted) === -1) {
