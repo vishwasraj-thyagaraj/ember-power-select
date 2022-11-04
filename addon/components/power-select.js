@@ -624,7 +624,7 @@ export default Component.extend({
   handleFocusOut(publicAPI, e) {
     // 1. support for adding values when clicked outside & when result is highlighted
     // 2. support for adding values that is not present in results
-    this.get('multiSelect') ? this.handleMultiSelect(publicAPI, e) : this.handleSingleSelect(publicAPI, e);
+    this.get('multiSelect') ? (e.type !== 'keydown' && this.handleMultiSelect(publicAPI, e)) : this.handleSingleSelect(publicAPI, e);
   },
 
   customSuggestion(str) {
@@ -781,7 +781,9 @@ export default Component.extend({
   _routeKeydown(e) {
     if (e.keyCode === 38 || e.keyCode === 40) { // Up & Down
       return this._handleKeyUpDown(e);
-    } else if (e.keyCode === 9 || e.keyCode === 13) {  // ENTER or TAB - perform selection & close
+    } else if (e.keyCode === 13) {  // ENTER
+      return this._handleKeyEnter(e);
+    } else if(e.keyCode === 9) { // TAB - perform selection & close
       this._handleKeyEnter(e);
       return this._handleKeyTab(e);
     } else if (e.keyCode === 27) {  // ESC

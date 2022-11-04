@@ -65,10 +65,6 @@ export default Component.extend({
       if (action) {
         action(select, e);
       }
-
-      if(this.get('searchEnabled')) {
-        select.actions.open(e);
-      }
     },
 
     handleKeydown(select, e) {
