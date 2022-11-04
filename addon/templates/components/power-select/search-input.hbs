@@ -14,7 +14,6 @@
   autofocus
   aria-activedescendant={{ariaActivedescendant}}
   aria-label={{if labelText labelText null}}
-  aria-labelledby={{if labelText (concat "ember-power-select-trigger-single-label-" select.uniqueId) null}}
   role="combobox"
   disabled={{select.disabled}}
   oninput={{onInput}}
