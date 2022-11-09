@@ -597,11 +597,7 @@ export default Component.extend({
   },
 
   handleMultiSelect(publicAPI, e) {
-    let hasResults = publicAPI.results.length;
-    let isHighlighted = publicAPI.highlighted;
-    let isValidTerm = publicAPI.searchText.length >= 2;
-
-    if(!hasResults && isValidTerm) {
+    if(publicAPI.searchText.length >= 2) {
       if(this.get('allowCommaSeparatedValues')) {
         publicAPI.searchText.split(',').forEach(str => str.length >= 2 && this.customSuggestion(str.trim()))
       } else {
@@ -613,11 +609,7 @@ export default Component.extend({
   },
 
   handleSingleSelect(publicAPI, e) {
-    let hasResults = publicAPI.results.length;
-    let isHighlighted = publicAPI.highlighted;
-    let isValidTerm = publicAPI.searchText.length >= 2;
-
-    if(!hasResults && isValidTerm) {
+    if(publicAPI.searchText.length >= 2) {
       this.customSuggestion(publicAPI.searchText.trim());
     }
   },
