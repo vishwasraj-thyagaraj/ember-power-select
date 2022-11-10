@@ -21,6 +21,7 @@
     allowClear=allowClear
     labelText=labelText
     search=search
+    clearMessage=(readonly clearMessage)
     allowNull=allowNull
   }}
   {{#dropdown.trigger
@@ -40,9 +41,10 @@
     onFocus=(action "onTriggerFocus")
     onBlur=(action "onTriggerBlur")
     tabindex=(readonly tabindex)
-    aria-haspopup=(if (or multiSelect searchEnabled) "true" "listbox")
-    aria-expanded=(if dropdown.isOpen "true" "false")
+    aria-haspopup=popUpType
+    aria-expanded=(if multiSelect null (if dropdown.isOpen "true" "false"))
     allowClear=(readonly allowClear)
+    aria-activedescendant=(if (and (not multiSelect) (not searchEnabled)) ariaActivedescendant null)
   }}
     {{#component triggerComponent
       allowClear=(readonly allowClear)
@@ -65,7 +67,6 @@
       ariaLabel=(readonly ariaLabel)
       ariaLabelledBy=(readonly ariaLabelledBy)
       ariaDescribedBy=(readonly ariaDescribedBy)
-      ariaLabelForSelectedList=ariaLabelForSelectedList
       labelText=labelText
       errorId=errorId
       dropdown=dropdown
@@ -75,6 +76,7 @@
       search=search
       animationEnabled=(readonly animationEnabled)
       searchPlaceholder=(readonly searchPlaceholder)
+      allowCreateOnBlur=allowCreateOnBlur
       as |opt term|}}
       {{yield opt term}}
     {{/component}}
@@ -126,15 +128,13 @@
         highlightOnHover=(readonly highlightOnHover)
         groupComponent=(readonly groupComponent)
         select=(readonly publicAPI)
-
+        labelText=labelText
         renderInVC=shouldRenderInVC
         bufferSizeVC=(readonly bufferSizeVC)
         staticHeightVC=(readonly staticHeightVC)
         estimateHeightVC=(readonly estimateHeightVC)
-
         multiSelect=(or multiSelect false)
         searchEnabled=(readonly searchEnabled)
-        ariaLabelForList=ariaLabelForList
         allowNull=allowNull
         allowNullLabel=allowNullLabel
         search=search

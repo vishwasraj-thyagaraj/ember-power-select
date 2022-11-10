@@ -3,6 +3,8 @@
     searchValue=searchValue
     searchEnabled=searchEnabled
     listboxId=listboxId
+    allowCreateOnBlur=allowCreateOnBlur
+    dropdown=dropdown
     ariaActivedescendant=ariaActivedescendant
     searchPlaceholder=searchPlaceholder
     labelText=labelText
@@ -18,7 +20,7 @@
     {{#if selectedItemComponent}}
       {{component selectedItemComponent extra=(readonly extra) option=(readonly select.selected) select=(readonly select)}}
     {{else}}
-      <span class="ember-power-select-selected-item {{if allowClear "has-clear" ""}}">{{yield select.selected select}}</span>
+      <span aria-hidden={{if searchEnabled undefined "true"}} class="ember-power-select-selected-item {{if allowClear "has-clear" ""}}">{{yield select.selected select}}</span>
     {{/if}}
   {{else}}
     {{#if (and allowNull (not search))}}
@@ -26,13 +28,13 @@
     {{else}}
       {{component placeholderComponent placeholder=placeholder}}
     {{/if}}
-  {{/if}} 
+  {{/if}}
 {{/if}}
 
 {{#if labelText}}
   <span id="ember-power-select-trigger-label-{{select.uniqueId}}" class="screen-reader-only" aria-hidden="true">
     {{#if select.selected}}
-      {{concat labelText ", selected " (if searchField (get select.selected searchField) select.selected)}}
+      {{concat (if searchField (get select.selected searchField) select.selected) ", " labelText}}
     {{else}}
       {{labelText}}
     {{/if}}

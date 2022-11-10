@@ -1,5 +1,5 @@
 <ul
-  aria-label={{if select.selected.length ariaLabelForSelectedList null}}
+  aria-label={{labelText}}
   id="ember-power-select-multiple-options-{{select.uniqueId}}" 
   class="ember-power-select-multiple-options">
   {{#each select.selected as |opt idx|}}
@@ -24,7 +24,7 @@
 </ul>
 
 <input 
-  type="search" 
+  type="text" 
   class="ember-power-select-trigger-multiple-input"
   autocomplete="off" 
   autocorrect="off" 
@@ -32,12 +32,11 @@
   spellcheck="false"
   id="ember-power-select-trigger-multiple-input-{{select.uniqueId}}"
   value={{select.searchText}}
-  aria-owns={{listboxId}}
-  aria-autocomplete="list"
+  aria-controls={{listboxId}}
+  aria-autocomplete={{if allowCreateOnBlur "both" "list"}}
   aria-activedescendant={{ariaActivedescendant}}
   aria-expanded={{if dropdown.isOpen "true" "false"}}
   aria-label={{if labelText labelText null}}
-  aria-labelledby={{if labelText (concat "ember-power-select-trigger-multiple-label-" select.uniqueId) null}}
   aria-describedby={{if errorId errorId null}}
   role="combobox"
   style={{triggerMultipleInputStyle}}

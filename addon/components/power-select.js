@@ -78,7 +78,6 @@ export default Component.extend({
   // Options
   ariaActivedescendant: null,
   allowNullLabel: fallbackIfUndefined('--'),
-  triggerRole: fallbackIfUndefined(''),
   searchEnabled: fallbackIfUndefined(true),
   matchTriggerWidth: fallbackIfUndefined(true),
   preventScroll: fallbackIfUndefined(false),
@@ -87,7 +86,7 @@ export default Component.extend({
   noMatchesMessage: fallbackIfUndefined('No results found'),
   searchMessage: fallbackIfUndefined('Type to search'),
   searchPlaceholder: fallbackIfUndefined('Type to search'),
-  ariaLabelForList: fallbackIfUndefined('Options list'),
+  clearMessage: fallbackIfUndefined('Clear'),
   closeOnSelect: fallbackIfUndefined(true),
   defaultHighlighted: fallbackIfUndefined(defaultHighlighted),
   typeAheadMatcher: fallbackIfUndefined(defaultTypeAheadMatcher),
@@ -140,6 +139,24 @@ export default Component.extend({
   },
 
   // CPs
+  triggerRole: computed('multiSelect', 'searchEnabled', function() {
+    return this.get('searchEnabled') ? 'button' : 'combobox';
+  }),
+
+  popUpType: computed('multiSelect', 'searchEnabled', function() {
+    let type = null;
+    let hasSearch = this.get('searchEnabled');
+    let isMultipleSelect = this.get('multiSelect');
+
+    if(!hasSearch && !isMultipleSelect) {
+      type = 'listbox';
+    } else if(hasSearch) {
+      type = 'true';
+    }
+
+    return type;
+  }),
+
   shouldRenderInVC: computed('renderInVC', function() {
     return this.get('renderInVC') || this.get('options.length') > 500;
   }),
@@ -271,7 +288,8 @@ export default Component.extend({
 
       if(this.get('ariaActivedescendant') === null) {
         if(isPresent(this.get('selected')) && !this.get('multiSelect')) {
-          this._setActiveDescendant(this.get('selected'));
+          // dropdown not yet open scenario
+          run.next(() => this._setActiveDescendant(this.get('selected')));
         } else {
           this._setActiveDescendant(this.get('publicAPI').options[0], true);
         }
@@ -580,12 +598,9 @@ export default Component.extend({
 
   handleMultiSelect(publicAPI, e) {
     let hasResults = publicAPI.results.length;
-    let isHighlighted = publicAPI.highlighted;
     let isValidTerm = publicAPI.searchText.length >= 2;
 
-    if(hasResults && isHighlighted) {
-      publicAPI.actions.choose(isHighlighted, e);
-    } else if(!hasResults && isValidTerm) {
+    if(!hasResults && isValidTerm) {
       if(this.get('allowCommaSeparatedValues')) {
         publicAPI.searchText.split(',').forEach(str => str.length >= 2 && this.customSuggestion(str.trim()))
       } else {
@@ -598,12 +613,9 @@ export default Component.extend({
 
   handleSingleSelect(publicAPI, e) {
     let hasResults = publicAPI.results.length;
-    let isHighlighted = publicAPI.highlighted;
     let isValidTerm = publicAPI.searchText.length >= 2;
 
-    if(hasResults && isHighlighted) {
-      publicAPI.actions.select(isHighlighted, e);
-    } else if(!hasResults && isValidTerm) {
+    if(!hasResults && isValidTerm) {
       this.customSuggestion(publicAPI.searchText.trim());
     }
   },
@@ -611,7 +623,7 @@ export default Component.extend({
   handleFocusOut(publicAPI, e) {
     // 1. support for adding values when clicked outside & when result is highlighted
     // 2. support for adding values that is not present in results
-    this.get('multiSelect') ? this.handleMultiSelect(publicAPI, e) : this.handleSingleSelect(publicAPI, e);
+    this.get('multiSelect') ? (e.type !== 'keydown' && this.handleMultiSelect(publicAPI, e)) : this.handleSingleSelect(publicAPI, e);
   },
 
   customSuggestion(str) {
@@ -770,7 +782,8 @@ export default Component.extend({
       return this._handleKeyUpDown(e);
     } else if (e.keyCode === 13) {  // ENTER
       return this._handleKeyEnter(e);
-    } else if (e.keyCode === 9) {   // Tab
+    } else if(e.keyCode === 9) { // TAB - perform selection & close
+      this._handleKeyEnter(e);
       return this._handleKeyTab(e);
     } else if (e.keyCode === 27) {  // ESC
       return this._handleKeyESC(e);

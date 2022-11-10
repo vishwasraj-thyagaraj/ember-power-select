@@ -73,7 +73,7 @@ export default Component.extend({
         e.stopPropagation();
         return false;
       }
-      if (e.keyCode === 13 && select.isOpen) {
+      if ((e.keyCode === 9 || e.keyCode === 13) && select.isOpen) {
         e.stopPropagation();
         if (select.highlighted !== undefined) {
           if (!select.selected || select.selected.indexOf(select.highlighted) === -1) {
@@ -133,7 +133,7 @@ export default Component.extend({
       let input = document.querySelector(`#ember-power-select-trigger-multiple-input-${select.uniqueId}`);
       run.next(() => {
         // focus to combobox input once dropdown is opened
-        if(input && document.activeElement !== input) input.focus();  
+        if(input && document.activeElement !== input) input.focus();
       });
     }
   }

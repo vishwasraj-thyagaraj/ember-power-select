@@ -16,7 +16,6 @@ const isTouchDevice = !!window && 'ontouchstart' in window;
 export default Component.extend({
   tagName: '',
   layout,
-  ariaLabelForSelectedList: fallbackIfUndefined('Selected options'),
   textMeasurer: inject(),
   _lastIsOpen: false,
 
