@@ -74,7 +74,9 @@ export default Component.extend({
         return false;
       }
       if ((e.keyCode === 9 || e.keyCode === 13) && select.isOpen) {
-        e.stopPropagation();
+        let isCtrlKeyPressed = e.metaKey || e.ctrlKey;
+        !isCtrlKeyPressed && e.stopPropagation(); // We should not stop propagation when ctrl key is pressed otherwise form submt will not work when ctrl + enter is pressed
+
         if (select.highlighted !== undefined) {
           if (!select.selected || select.selected.indexOf(select.highlighted) === -1) {
             select.actions.choose(select.highlighted, e);
