@@ -14,7 +14,7 @@
   disabled=(readonly disabled)
   as |dropdown|}}
 
-  {{#trigger 
+  {{#trigger
     select=(readonly publicAPI)
     multiSelect=multiSelect
     searchEnabled=searchEnabled
@@ -27,7 +27,7 @@
   {{#dropdown.trigger
     role=(if multiSelect null (readonly triggerRole))
     tagName=(readonly _triggerTagName)
-    ariaDescribedBy=(if multiSelect (readonly ariaDescribedBy) (if errorId (concat (readonly ariaDescribedBy) " " errorId) null))
+    ariaDescribedBy=(if multiSelect (readonly ariaDescribedBy) (if errorId (concat (readonly ariaDescribedBy) " " errorId) (readonly ariaDescribedBy)))
     ariaInvalid=(readonly ariaInvalid)
     ariaLabel=(readonly ariaLabel)
     ariaLabelledBy=(if (and labelText (not multiSelect)) ariaLabelledById (readonly ariaLabelledBy))
