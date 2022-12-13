@@ -694,6 +694,10 @@ export default Component.extend({
       this._updateSelectedArray(selection);
     } else if (selection !== this.get('publicAPI').selected) {
       this.updateState({ selected: selection, highlighted: selection });
+      // clearing input search text and restore original state, when allowCreateOnBlur is allowed
+      if(this.get('allowCreateOnBlur') && isEmpty(selection)) {
+        this._resetSearch();
+      }
     }
   },
 
