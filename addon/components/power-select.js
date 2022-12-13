@@ -197,8 +197,6 @@ export default Component.extend({
         this.get('_updateSelectedTask').perform(selected);
       } else {
         scheduleOnce('actions', this, this.updateSelection, selected);
-        // reset search required to restore options count if present
-        this._resetSearch();
       }
       return selected;
     }
