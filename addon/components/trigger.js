@@ -11,11 +11,13 @@ export default Component.extend({
       if(e && e.keyCode === 13) {
         e.stopPropagation();
         this.get('select').actions.select(null);
+        this.get('select').actions.search('');
       }
     },
     clear(e) {
       e.stopPropagation();
       this.get('select').actions.select(null);
+      this.get('select').actions.search('');
       if (e.type === 'touchstart') {
         return false;
       }

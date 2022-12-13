@@ -13,7 +13,7 @@
         <button
           onkeydown={{action "removeOption"}}
           type="button"
-          aria-label="Remove {{if searchField (get opt searchField) opt}}"
+          aria-label="{{concat removeOptionMessage (if searchField (get opt searchField) opt)}}"
           class="ember-power-select-multiple-remove-btn"
           data-selected-index={{idx}}>
           {{svg-jar "cross" class="ember-svg size-18" role="presentation"}}

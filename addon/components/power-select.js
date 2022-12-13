@@ -87,6 +87,7 @@ export default Component.extend({
   searchMessage: fallbackIfUndefined('Type to search'),
   searchPlaceholder: fallbackIfUndefined('Type to search'),
   clearMessage: fallbackIfUndefined('Clear'),
+  removeOptionMessage: fallbackIfUndefined('Remove'),
   closeOnSelect: fallbackIfUndefined(true),
   defaultHighlighted: fallbackIfUndefined(defaultHighlighted),
   typeAheadMatcher: fallbackIfUndefined(defaultTypeAheadMatcher),
@@ -139,6 +140,10 @@ export default Component.extend({
   },
 
   // CPs
+  computedTabIndex: computed('tabindex', 'searchEnabled', function() {
+    return this.get('searchEnabled') && isPresent(this.search) && !this.get('options.length') ? '-1' : this.get('tabindex');
+  }),
+
   triggerRole: computed('multiSelect', 'searchEnabled', function() {
     return this.get('searchEnabled') ? 'button' : 'combobox';
   }),
@@ -199,9 +204,11 @@ export default Component.extend({
   searchValue: computed('publicAPI.selected', function() {
     let selected = get(this, 'publicAPI.selected');
     let searchField = get(this, 'searchField');
+    let searchText = get(this, 'publicAPI.searchText');
+    let selectedValueWithSearchField = get(this, `publicAPI.selected.${searchField}`);
+    let isSelectedString = typeOf(selected) === 'string';
 
-    return searchField && selected ?  get(this, `publicAPI.selected.${searchField}`)
-      : typeOf(selected) === 'string' ? selected : get(this, 'publicAPI.searchText');
+    return selected ? (isSelectedString ? selected : searchField ? selectedValueWithSearchField : selected) : searchText;
   }),
 
   options: computed({
@@ -324,6 +331,8 @@ export default Component.extend({
           return;
         }
       }
+
+      if(e.target.value === '') this.get('publicAPI').actions.select(null);
       publicAPI.actions.search(typeof correctedTerm === 'string' ? correctedTerm : term);
     },
 
@@ -377,6 +386,7 @@ export default Component.extend({
         }
 
         publicAPI.actions.close(e);
+        publicAPI.actions.search('');
         return false;
       }
     },
@@ -452,6 +462,10 @@ export default Component.extend({
       let action = this.get('onfocus');
       if (action) {
         action(this.get('publicAPI'), event);
+      }
+
+      if(this.get('searchEnabled') && isPresent(this.search) && !this.get('options.length')) {
+        this.get('publicAPI').actions.open();
       }
     },
 
