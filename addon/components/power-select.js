@@ -141,7 +141,8 @@ export default Component.extend({
 
   // CPs
   computedTabIndex: computed('tabindex', 'searchEnabled', function() {
-    return this.get('searchEnabled') && isPresent(this.search) && !this.get('options.length') ? '-1' : this.get('tabindex');
+    // need more strong checks
+    return this.get('searchEnabled') ? '-1' : this.get('tabindex');
   }),
 
   triggerRole: computed('multiSelect', 'searchEnabled', function() {
@@ -196,6 +197,8 @@ export default Component.extend({
         this.get('_updateSelectedTask').perform(selected);
       } else {
         scheduleOnce('actions', this, this.updateSelection, selected);
+        // reset search required to restore options count if present
+        this._resetSearch();
       }
       return selected;
     }
@@ -464,7 +467,8 @@ export default Component.extend({
         action(this.get('publicAPI'), event);
       }
 
-      if(this.get('searchEnabled') && isPresent(this.search) && !this.get('options.length')) {
+      // need more strong checks
+      if(this.get('searchEnabled')) {
         this.get('publicAPI').actions.open();
       }
     },
@@ -795,6 +799,7 @@ export default Component.extend({
     if (e.keyCode === 38 || e.keyCode === 40) { // Up & Down
       return this._handleKeyUpDown(e);
     } else if (e.keyCode === 13) {  // ENTER
+      e.preventDefault();
       return this._handleKeyEnter(e);
     } else if(e.keyCode === 9) { // TAB - perform selection & close
       this._handleKeyEnter(e);

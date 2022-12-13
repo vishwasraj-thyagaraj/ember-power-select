@@ -41,7 +41,7 @@
     onKeyDown=(action "onTriggerKeydown")
     onFocus=(action "onTriggerFocus")
     onBlur=(action "onTriggerBlur")
-    tabindex=(readonly tabindex)
+    tabindex=(readonly computedTabIndex)
     aria-haspopup=popUpType
     aria-expanded=(if multiSelect null (if dropdown.isOpen "true" "false"))
     allowClear=(readonly allowClear)
