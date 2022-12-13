@@ -141,8 +141,8 @@ export default Component.extend({
 
   // CPs
   computedTabIndex: computed('tabindex', 'searchEnabled', function() {
-    // need more strong checks
-    return this.get('searchEnabled') ? '-1' : this.get('tabindex');
+    // for autocomplete fields alone
+    return this.get('searchEnabled') && this.get('mustShowSearchMessage') ? '-1' : this.get('tabindex');
   }),
 
   triggerRole: computed('multiSelect', 'searchEnabled', function() {
@@ -467,8 +467,8 @@ export default Component.extend({
         action(this.get('publicAPI'), event);
       }
 
-      // need more strong checks
-      if(this.get('searchEnabled')) {
+      // for autocomplete fields alone
+      if(this.get('searchEnabled') && this.get('mustShowSearchMessage')) {
         this.get('publicAPI').actions.open();
       }
     },
