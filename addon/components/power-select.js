@@ -333,7 +333,12 @@ export default Component.extend({
         }
       }
 
-      if(e.target.value === '') this.get('publicAPI').actions.select(null);
+      // once the values are removed and the input still has focus, type to search will be hidden.
+      // as refocus wont be trigger, we open the type to search after the input has 2 chars
+      if(this.get('allowCreateOnBlur') && e.target.value.length >= 2 && !this.get('publicAPI').isOpen) {
+        this.get('publicAPI').actions.open();
+      }
+
       publicAPI.actions.search(typeof correctedTerm === 'string' ? correctedTerm : term);
     },
 
@@ -801,6 +806,8 @@ export default Component.extend({
     if (e.keyCode === 38 || e.keyCode === 40) { // Up & Down
       return this._handleKeyUpDown(e);
     } else if (e.keyCode === 13) {  // ENTER
+      // after moving to inline search, enter is submitting the form, as we have cmd+enter behaviour, 
+      // ignoring this as per addon behaviour
       e.preventDefault();
       return this._handleKeyEnter(e);
     } else if(e.keyCode === 9) { // TAB - perform selection & close
@@ -808,6 +815,20 @@ export default Component.extend({
       return this._handleKeyTab(e);
     } else if (e.keyCode === 27) {  // ESC
       return this._handleKeyESC(e);
+    } else if(e.keyCode === 8) {
+      run.next(() => {
+        // to capture meta key + a and pressing backspace which removes all chars we have put inside run loop
+        return this._handleKeyBackspace(e);
+      });
+    }
+  },
+
+  _handleKeyBackspace(e) {
+    let publicAPI = this.get('publicAPI');
+    let inputField = document.getElementById(`ember-power-select-search-input-trigger-${publicAPI.uniqueId}`);
+
+    if(inputField && isEmpty(inputField.value) && isPresent(publicAPI.selected)) {
+      this.get('publicAPI').actions.select(null);
     }
   },
 
