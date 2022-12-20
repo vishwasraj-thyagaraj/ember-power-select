@@ -26,12 +26,12 @@
     allowNull=allowNull
   }}
   {{#dropdown.trigger
-    role=(if multiSelect null (readonly triggerRole))
+    role=(if (or multiSelect searchEnabled) null "combobox")
     tagName=(readonly _triggerTagName)
-    ariaDescribedBy=(if multiSelect (readonly ariaDescribedBy) (if errorId (concat (readonly ariaDescribedBy) " " errorId) null))
+    ariaDescribedBy=(if (or multiSelect searchEnabled) undefined ariaDescribedBy)
     ariaInvalid=(readonly ariaInvalid)
     ariaLabel=(readonly ariaLabel)
-    ariaLabelledBy=(if (and labelText (not multiSelect)) ariaLabelledById (readonly ariaLabelledBy))
+    ariaLabelledBy=(if (and labelText (or multiSelect searchEnabled)) ariaLabelledBy ariaLabelledById)
     ariaRequired=(readonly required)
     title=(readonly title)
     class=(readonly concatenatedTriggerClasses)
@@ -45,7 +45,7 @@
     aria-haspopup=popUpType
     aria-expanded=(if multiSelect null (if dropdown.isOpen "true" "false"))
     allowClear=(readonly allowClear)
-    aria-activedescendant=(if (and (not multiSelect) (not searchEnabled)) ariaActivedescendant null)
+    aria-activedescendant=(if (or multiSelect searchEnabled) undefined ariaActivedescendant)
   }}
     {{#component triggerComponent
       allowClear=(readonly allowClear)

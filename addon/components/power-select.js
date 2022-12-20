@@ -141,12 +141,17 @@ export default Component.extend({
 
   // CPs
   computedTabIndex: computed('tabindex', 'searchEnabled', function() {
-    // for autocomplete fields alone
-    return this.get('searchEnabled') && this.get('mustShowSearchMessage') ? '-1' : this.get('tabindex');
+    // for all multi select and single select with search enabled the input is now visible by default,
+    // so we are removing the tabindex for the basic dropdown trigger
+    // while tabbing the focus directly enters the search input
+    return this.get('multiSelect') || this.get('searchEnabled') ? '-1' : this.get('tabindex');
   }),
 
   triggerRole: computed('multiSelect', 'searchEnabled', function() {
-    return this.get('searchEnabled') ? 'button' : 'combobox';
+    // for all multi select and single select with search enabled the input is now visible by default,
+    // so we are removing the role for the basic dropdown trigger
+    // the search input will act as a combobox and takes care of aria-activedescendant 
+    return this.get('multiSelect') || this.get('searchEnabled') ? undefined : 'combobox';
   }),
 
   popUpType: computed('multiSelect', 'searchEnabled', function() {
