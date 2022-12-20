@@ -2,13 +2,13 @@ import { click, fillIn, settled } from '@ember/test-helpers';
 import { warn } from '@ember/debug';
 
 async function openIfClosedAndGetContentId(trigger) {
-  let contentId = trigger.attributes['aria-owns'] && `${trigger.attributes['aria-owns'].value}`;
+  let dataId = trigger.attributes['data-ebd-id'];
+  let contentId = dataId ? `ember-basic-dropdown-content-${dataId.value.replace('-trigger', '')}` : undefined;
   let content = contentId ? document.querySelector(`#${contentId}`) : undefined;
   // If the dropdown is closed, open it
   if (!content || content.classList.contains('ember-basic-dropdown-content-placeholder')) {
     await click(trigger);
     await settled();
-    contentId = `${trigger.attributes['aria-owns'].value}`;
   }
   return contentId;
 }
