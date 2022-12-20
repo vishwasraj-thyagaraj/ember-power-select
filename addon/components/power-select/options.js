@@ -61,6 +61,11 @@ export default Component.extend({
       let select = this.get('select');
       select.actions.scrollTo(select.highlighted);
     }
+
+    if(!this.get('multiSelect') && !this.get('search')) {
+      // scroll to option, adding it as it is broken after inline input changes
+      this.get('select.selected') && this.get('select.actions').scrollTo(this.get('select.selected'));
+    }
   },
 
   // CPs
