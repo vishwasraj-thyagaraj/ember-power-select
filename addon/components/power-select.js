@@ -209,9 +209,11 @@ export default Component.extend({
 
   searchValue: computed('publicAPI.selected', function() {
     let selected = get(this, 'publicAPI.selected');
-    let searchField = get(this, 'searchField');
     let searchText = get(this, 'publicAPI.searchText');
+
+    let searchField = get(this, 'searchField');
     let selectedValueWithSearchField = get(this, `publicAPI.selected.${searchField}`);
+
     let isSelectedString = typeOf(selected) === 'string';
 
     return selected ? (isSelectedString ? selected : searchField ? selectedValueWithSearchField : selected) : searchText;
@@ -324,6 +326,12 @@ export default Component.extend({
       if(this.get('ariaActivedescendant') !== null) {
         this.set('ariaActivedescendant', null);
       }
+
+      // remove chars when dropdown is closed, searchText needs to be changed based on selection value
+      if(this.get('searchEnabled') && !this.get('multiSelect')) {
+        this._resetSearch();
+        if(isPresent(this.get('publicAPI.selected'))) this.updateInput();
+      }
     },
 
     onInput(e) {
@@ -338,9 +346,8 @@ export default Component.extend({
         }
       }
 
-      // once the values are removed and the input still has focus, type to search will be hidden.
-      // as refocus wont be trigger, we open the type to search after the input has 2 chars
-      if(this.get('allowCreateOnBlur') && e.target.value.length >= 2 && !this.get('publicAPI').isOpen) {
+      // search enabled non auto complete fields on input auto open dropdown
+      if(!this.get('publicAPI').isOpen && this.get('searchEnabled') && !this.get('mustShowSearchMessage')) {
         this.get('publicAPI').actions.open();
       }
 
@@ -397,6 +404,7 @@ export default Component.extend({
         }
 
         publicAPI.actions.close(e);
+        // after choosing an option, clear the search text input
         publicAPI.actions.search('');
         return false;
       }
@@ -475,7 +483,7 @@ export default Component.extend({
         action(this.get('publicAPI'), event);
       }
 
-      // for autocomplete fields alone
+      // for autocomplete fields alone, auto open dropdown when the input field receives focus
       if(this.get('searchEnabled') && this.get('mustShowSearchMessage')) {
         this.get('publicAPI').actions.open();
       }
@@ -557,7 +565,8 @@ export default Component.extend({
         publicAPI.actions.highlight(match, e);
         publicAPI.actions.scrollTo(match, e);
       } else {
-        publicAPI.actions.select(match, e);
+        // do no select if dropdown is not open, as search input is visible now, typing char itself selects value
+        publicAPI.isOpen && publicAPI.actions.select(match, e);
       }
     }
     yield timeout(1000);
@@ -620,6 +629,11 @@ export default Component.extend({
       let input = document.querySelector(`#ember-power-select-trigger-multiple-input-${this.get('publicAPI.uniqueId')}`);
       input && run.next(() => (document.activeElement !== input) && input.focus());
     }
+  },
+
+  updateInput() {
+    let input = document.getElementById(`ember-power-select-search-input-trigger-${this.get('publicAPI.uniqueId')}`);
+    input.value = this.get('searchValue');
   },
 
   handleMultiSelect(publicAPI, e) {
@@ -819,8 +833,11 @@ export default Component.extend({
       this._handleKeyEnter(e);
       return this._handleKeyTab(e);
     } else if (e.keyCode === 27) {  // ESC
+      // after moving to inline search, pressing escape caused the input to be cleared 
+      // so added prevent default to avoid clearing the input
+      e.preventDefault()
       return this._handleKeyESC(e);
-    } else if(e.keyCode === 8) {
+    } else if(this.get('allowCreateOnBlur') && e.keyCode === 8) {
       run.next(() => {
         // to capture meta key + a and pressing backspace which removes all chars we have put inside run loop
         return this._handleKeyBackspace(e);
