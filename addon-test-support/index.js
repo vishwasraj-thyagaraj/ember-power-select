@@ -2,6 +2,7 @@ import { click, fillIn, settled } from '@ember/test-helpers';
 import { warn } from '@ember/debug';
 
 async function openIfClosedAndGetContentId(trigger) {
+  // removing aria-owns as screen reader does not read single dropdown options when navigating
   let dataId = trigger.attributes['data-ebd-id'];
   let contentId = dataId ? `ember-basic-dropdown-content-${dataId.value.replace('-trigger', '')}` : undefined;
   let content = contentId ? document.querySelector(`#${contentId}`) : undefined;
