@@ -571,7 +571,9 @@ export default Component.extend({
         publicAPI.actions.scrollTo(match, e);
       } else {
         // do no select if dropdown is not open, as search input is visible now, typing char itself selects value
-        publicAPI.isOpen && publicAPI.actions.select(match, e);
+        if(publicAPI.isOpen || !this.get('searchEnabled')) {
+          publicAPI.actions.select(match, e);
+        }
       }
     }
     yield timeout(1000);
