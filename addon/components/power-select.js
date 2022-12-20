@@ -379,6 +379,11 @@ export default Component.extend({
     },
 
     choose(selected, e) {
+      // null values are to remove selected values for single selection
+      if(isEmpty(selected?.id) && this.get('allowNull')) {
+        selected = undefined;
+      }
+
       if (!this.get('inTesting')) {
         if (e && e.clientY) {
           if (this.openingEvent && this.openingEvent.clientY) {
@@ -741,6 +746,11 @@ export default Component.extend({
     if (get(this, 'isDestroying')) {
       return;
     }
+    if(!this.get('multiSelect') && !this.get('search') && this.get('allowNull') && opts.length) {
+      let labelKey = this.get('searchField');
+      opts.unshift(isPresent(labelKey) ? { id: undefined, [labelKey]: this.get('allowNullLabel') } : this.get('allowNullLabel'));
+    }
+
     let options = toPlainArray(opts);
     let publicAPI;
     if (this.get('search')) { // external search
