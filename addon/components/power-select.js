@@ -140,18 +140,34 @@ export default Component.extend({
   },
 
   // CPs
+
+  // based on selectedItemComponent, the logic to render will change, selectedItemComponent + input with searchEnabled
+  // in single select cannot exist next to next
+  hasSIC: computed('selectedItemComponent', function() {
+    return isPresent(this.get('selectedItemComponent'));
+  }),
+
+  // single select + inline search (autocomplete or more than 10 options) + no custom selected item component
+  canInlineSearch: computed('hasSIC', 'searchEnabled', function() {
+    return !this.get('hasSIC') && this.get('searchEnabled') && !this.get('multiSelect');
+  }),
+
   computedTabIndex: computed('tabindex', 'searchEnabled', function() {
-    // for all multi select and single select with search enabled the input is now visible by default,
-    // so we are removing the tabindex for the basic dropdown trigger
-    // while tabbing the focus directly enters the search input
-    return this.get('multiSelect') || this.get('searchEnabled') ? '-1' : this.get('tabindex');
+    if(this.get('multiSelect')) {
+      return '-1';
+    } else if(this.get('searchEnabled')) {
+      return this.get('hasSIC') ? '0' : '-1';
+    }
+    return this.get('tabindex');
   }),
 
   triggerRole: computed('multiSelect', 'searchEnabled', function() {
-    // for all multi select and single select with search enabled the input is now visible by default,
-    // so we are removing the role for the basic dropdown trigger
-    // the search input will act as a combobox and takes care of aria-activedescendant 
-    return this.get('multiSelect') || this.get('searchEnabled') ? undefined : 'combobox';
+    if(this.get('multiSelect')) {
+      return null;
+    } else if(this.get('searchEnabled')) {
+      return this.get('hasSIC') ? 'button' : null;
+    }
+    return 'combobox';
   }),
 
   popUpType: computed('multiSelect', 'searchEnabled', function() {
@@ -207,6 +223,7 @@ export default Component.extend({
     }
   }),
 
+  // the value is consumed only by single select search input
   searchValue: computed('publicAPI.selected', function() {
     let selected = get(this, 'publicAPI.selected');
     let searchText = get(this, 'publicAPI.searchText');
@@ -328,7 +345,7 @@ export default Component.extend({
       }
 
       // remove chars when dropdown is closed, searchText needs to be changed based on selection value
-      if(this.get('searchEnabled') && !this.get('multiSelect')) {
+      if(this.get('canInlineSearch')) {
         this._resetSearch();
         if(isPresent(this.get('publicAPI.selected'))) this.updateInput();
       }
@@ -570,7 +587,7 @@ export default Component.extend({
         publicAPI.actions.highlight(match, e);
         publicAPI.actions.scrollTo(match, e);
       } else {
-        // do no select if dropdown is not open, as search input is visible now, typing char itself selects value
+        // do not select if dropdown is not open, as search input is visible now, typing char itself selects value
         if(publicAPI.isOpen || !this.get('searchEnabled')) {
           publicAPI.actions.select(match, e);
         }
