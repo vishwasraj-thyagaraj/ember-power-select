@@ -5,7 +5,7 @@
   {{#each select.selected as |opt idx|}}
     <li data-selected-index={{idx}} class="ember-power-select-multiple-option {{if opt.disabled "ember-power-select-multiple-option--disabled"}}">
       {{#if selectedItemComponent}}
-        {{component selectedItemComponent extra=(readonly extra) option=(readonly opt) select=(readonly select)}}
+        {{component selectedItemComponent searchEnabled=true extra=(readonly extra) option=(readonly opt) select=(readonly select)}}
       {{else}}
         {{yield opt select}}
       {{/if}}
