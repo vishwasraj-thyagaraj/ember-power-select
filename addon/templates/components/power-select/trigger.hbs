@@ -13,9 +13,14 @@
     onInput=onInput
     onFocus=onFocus
     onBlur=onBlur
-    searchField=searchField
     tabindex=tabindex}}
   {{/component}}
+
+  {{#if (and select.selected (not selectedItemComponent))}}
+    <span class="ember-power-select-selected-item screen-reader-only">
+      {{if searchField (get select.selected searchField) select.selected}}
+    </span>
+  {{/if}}
 {{else}}
   {{#if select.selected}}
     {{#if selectedItemComponent}}
