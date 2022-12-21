@@ -1,4 +1,4 @@
-{{#if searchEnabled}}
+{{#if (or (and searchEnabled (not selectedItemComponent)) (and select.isOpen searchEnabled selectedItemComponent))}}
   {{#component "power-select/search-input"
     searchValue=searchValue
     searchEnabled=searchEnabled
@@ -14,7 +14,6 @@
     onFocus=onFocus
     onBlur=onBlur
     searchField=searchField
-    selectedItemComponent=selectedItemComponent
     tabindex=tabindex}}
   {{/component}}
 {{else}}
