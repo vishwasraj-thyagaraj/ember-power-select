@@ -143,12 +143,12 @@ export default Component.extend({
 
   // based on selectedItemComponent, the logic to render will change, selectedItemComponent + input with searchEnabled
   // in single select cannot exist next to next
-  hasSIC: computed('selectedItemComponent', function() {
+  hasSIC: computed(function() {
     return isPresent(this.get('selectedItemComponent'));
   }),
 
   // single select + inline search (autocomplete or more than 10 options) + no custom selected item component
-  canInlineSearch: computed('hasSIC', 'searchEnabled', function() {
+  canInlineSearch: computed(function() {
     return !this.get('hasSIC') && this.get('searchEnabled') && !this.get('multiSelect');
   }),
 
@@ -765,10 +765,10 @@ export default Component.extend({
     if (get(this, 'isDestroying')) {
       return;
     }
-    if(!this.get('multiSelect') && !this.get('search') && this.get('allowNull') && opts.length) {
-      let labelKey = this.get('searchField');
-      opts.unshift(isPresent(labelKey) ? { id: undefined, [labelKey]: this.get('allowNullLabel') } : this.get('allowNullLabel'));
-    }
+    // if(!this.get('multiSelect') && !this.get('search') && this.get('allowNull') && opts.length) {
+    //   let labelKey = this.get('searchField');
+    //   opts.unshift(isPresent(labelKey) ? { id: undefined, [labelKey]: this.get('allowNullLabel') } : this.get('allowNullLabel'));
+    // }
 
     let options = toPlainArray(opts);
     let publicAPI;
