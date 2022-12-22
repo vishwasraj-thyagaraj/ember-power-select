@@ -22,9 +22,5 @@ export default Component.extend({
   willDestroyElement() {
     this._super(...arguments);
     scheduleOnce('actions', this, this.select.actions.search, '');
-  },
-
-  hasSIC: computed('selectedItemComponent', function() {
-    return isPresent(this.get('selectedItemComponent'));
-  }),
+  }
 });

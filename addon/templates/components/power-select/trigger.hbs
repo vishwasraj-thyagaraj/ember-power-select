@@ -13,6 +13,7 @@
     onInput=onInput
     onFocus=onFocus
     onBlur=onBlur
+    hasSIC=hasSIC
     selectedItemComponent=selectedItemComponent
     tabindex=tabindex}}
   {{/component}}
@@ -39,7 +40,7 @@
 {{/if}}
 
 {{#if labelText}}
-  <span id="ember-power-select-trigger-label-{{select.uniqueId}}" class="screen-reader-only">
+  <span id="ember-power-select-trigger-label-{{select.uniqueId}}" class="screen-reader-only" aria-hidden="true">
     {{#if select.selected}}
       {{concat (if searchField (get select.selected searchField) select.selected) ", " labelText}}
     {{else}}

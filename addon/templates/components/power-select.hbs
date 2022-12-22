@@ -78,6 +78,8 @@
       animationEnabled=(readonly animationEnabled)
       searchPlaceholder=(readonly searchPlaceholder)
       allowCreateOnBlur=allowCreateOnBlur
+      removeOptionMessage=removeOptionMessage
+      hasSIC=hasSIC
       as |opt term|}}
       {{yield opt term}}
     {{/component}}
@@ -104,6 +106,7 @@
     {{#if mustShowSearchMessage}}
       {{component searchMessageComponent
         searchMessage=(readonly searchMessage)
+        hasSIC=hasSIC
         optionsId=optionsId
         select=(readonly publicAPI)
       }}
