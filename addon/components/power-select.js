@@ -397,9 +397,9 @@ export default Component.extend({
 
     choose(selected, e) {
       // null values are to remove selected values for single selection
-      if(isEmpty(selected?.id) && this.get('allowNull')) {
-        selected = undefined;
-      }
+      // if(isEmpty(selected?.id) && this.get('allowNull')) {
+      //   selected = undefined;
+      // }
 
       if (!this.get('inTesting')) {
         if (e && e.clientY) {
