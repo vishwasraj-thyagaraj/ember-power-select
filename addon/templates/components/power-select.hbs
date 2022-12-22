@@ -26,7 +26,7 @@
     allowNull=allowNull
   }}
   {{#dropdown.trigger
-    role=triggerRole
+    role=(or triggerRole null)
     tagName=(readonly _triggerTagName)
     ariaDescribedBy=computedAriaDescribedBy
     ariaInvalid=(readonly ariaInvalid)
