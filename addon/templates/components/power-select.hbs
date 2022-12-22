@@ -28,7 +28,7 @@
   {{#dropdown.trigger
     role=triggerRole
     tagName=(readonly _triggerTagName)
-    ariaDescribedBy=(if (or multiSelect canInlineSearch) undefined ariaDescribedBy)
+    ariaDescribedBy=computedAriaDescribedBy
     ariaInvalid=(readonly ariaInvalid)
     ariaLabel=(readonly ariaLabel)
     ariaLabelledBy=(if (and labelText (or multiSelect canInlineSearch)) undefined ariaLabelledById)
@@ -67,7 +67,7 @@
       ariaActivedescendant=ariaActivedescendant
       ariaLabel=(readonly ariaLabel)
       ariaLabelledBy=(readonly ariaLabelledBy)
-      ariaDescribedBy=(readonly ariaDescribedBy)
+      ariaDescribedBy=(readonly computedAriaDescribedBy)
       labelText=labelText
       errorId=errorId
       dropdown=dropdown

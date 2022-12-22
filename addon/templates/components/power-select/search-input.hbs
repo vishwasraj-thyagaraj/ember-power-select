@@ -13,7 +13,7 @@
   aria-expanded={{if dropdown.isOpen "true" "false"}}
   aria-activedescendant={{ariaActivedescendant}}
   aria-label={{if labelText labelText null}}
-  aria-describedby={{if (and errorId (not hasSIC)) errorId null}}
+  aria-describedby={{computedAriaDescribedBy}}
   role="combobox"
   disabled={{select.disabled}}
   oninput={{onInput}}

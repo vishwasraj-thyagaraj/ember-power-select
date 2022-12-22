@@ -143,12 +143,12 @@ export default Component.extend({
 
   // based on selectedItemComponent, the logic to render will change, selectedItemComponent + input with searchEnabled
   // in single select cannot exist next to next
-  hasSIC: computed(function() {
+  hasSIC: computed('selectedItemComponent', function() {
     return isPresent(this.get('selectedItemComponent'));
   }),
 
   // single select + inline search (autocomplete or more than 10 options) + no custom selected item component
-  canInlineSearch: computed(function() {
+  canInlineSearch: computed('hasSIC', 'searchEnabled', function() {
     return !this.get('hasSIC') && this.get('searchEnabled') && !this.get('multiSelect');
   }),
 
@@ -159,6 +159,18 @@ export default Component.extend({
       return this.get('hasSIC') ? '0' : '-1';
     }
     return this.get('tabindex');
+  }),
+
+  computedAriaDescribedBy: computed('errorId', 'ariaDescribedBy', function() {
+    let errorId = this.get('errorId') || '';
+    let ariaDescribedBy = this.get('ariaDescribedBy') || '';
+    let mergedID = `${errorId} ${ariaDescribedBy}`;
+
+    if(this.get('multiSelect') || this.get('canInlineSearch')) {
+      return undefined;
+    }
+
+    return isPresent(mergedID) ? mergedID.trim() : undefined;
   }),
 
   triggerRole: computed('multiSelect', 'searchEnabled', function() {
