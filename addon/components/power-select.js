@@ -166,10 +166,6 @@ export default Component.extend({
     let ariaDescribedBy = this.get('ariaDescribedBy') || '';
     let mergedID = `${errorId} ${ariaDescribedBy}`;
 
-    if(this.get('multiSelect') || this.get('canInlineSearch')) {
-      return undefined;
-    }
-
     return isPresent(mergedID) ? mergedID.trim() : undefined;
   }),
 

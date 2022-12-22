@@ -28,7 +28,7 @@
   {{#dropdown.trigger
     role=(or triggerRole null)
     tagName=(readonly _triggerTagName)
-    ariaDescribedBy=computedAriaDescribedBy
+    ariaDescribedBy=(if (or multiSelect canInlineSearch) undefined computedAriaDescribedBy)
     ariaInvalid=(readonly ariaInvalid)
     ariaLabel=(readonly ariaLabel)
     ariaLabelledBy=(if (and labelText (or multiSelect canInlineSearch)) undefined ariaLabelledById)
