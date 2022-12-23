@@ -734,7 +734,7 @@ export default Component.extend({
       })(options);
     }
 
-    if(this.get('allowNull') && options.length && !this.get('mustShowSearchMessage')) {
+    if(!this.get('multiSelect') && this.get('allowNull') && options.length && !this.get('mustShowSearchMessage')) {
       let labelKey = this.get('searchField');
       options.unshift(isPresent(labelKey) ? { id: undefined, [labelKey]: this.get('allowNullLabel') } : this.get('allowNullLabel'));
     }
