@@ -252,12 +252,6 @@ export default Component.extend({
       if (options === oldOptions) {
         return options;
       }
-
-      if(this.get('allowNull') && options.length && !this.get('mustShowSearchMessage')) {
-        let labelKey = this.get('searchField');
-        options.unshift(isPresent(labelKey) ? { id: undefined, [labelKey]: this.get('allowNullLabel') } : this.get('allowNullLabel'));
-      }
-
       if (options && get(options, 'then')) {
         this.get('_updateOptionsTask').perform(options);
       } else {
@@ -739,6 +733,12 @@ export default Component.extend({
         }
       })(options);
     }
+
+    if(this.get('allowNull') && options.length && !this.get('mustShowSearchMessage')) {
+      let labelKey = this.get('searchField');
+      options.unshift(isPresent(labelKey) ? { id: undefined, [labelKey]: this.get('allowNullLabel') } : this.get('allowNullLabel'));
+    }
+
     if (options && options.addObserver) {
       options.addObserver('[]', this, this._updateOptionsAndResults);
       this._observedOptions = options;
