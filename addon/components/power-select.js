@@ -252,6 +252,12 @@ export default Component.extend({
       if (options === oldOptions) {
         return options;
       }
+
+      if(this.get('allowNull') && options.length && !this.get('mustShowSearchMessage')) {
+        let labelKey = this.get('searchField');
+        options.unshift(isPresent(labelKey) ? { id: undefined, [labelKey]: this.get('allowNullLabel') } : this.get('allowNullLabel'));
+      }
+
       if (options && get(options, 'then')) {
         this.get('_updateOptionsTask').perform(options);
       } else {
@@ -404,6 +410,11 @@ export default Component.extend({
     },
 
     choose(selected, e) {
+      // null values are to remove selected values for single selection
+      if(isEmpty(selected?.id) && this.get('allowNull')) {
+        selected = undefined;
+      }
+
       if (!this.get('inTesting')) {
         if (e && e.clientY) {
           if (this.openingEvent && this.openingEvent.clientY) {
