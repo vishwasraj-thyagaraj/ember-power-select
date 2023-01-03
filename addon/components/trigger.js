@@ -10,11 +10,13 @@ export default Component.extend({
     removeOption(e) {
       if(e && e.keyCode === 13) {
         e.stopPropagation();
+        this.get('select').actions.search('');
         this.get('select').actions.select(null);
       }
     },
     clear(e) {
       e.stopPropagation();
+      this.get('select').actions.search('');
       this.get('select').actions.select(null);
       if (e.type === 'touchstart') {
         return false;

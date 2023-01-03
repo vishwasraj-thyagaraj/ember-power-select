@@ -5,7 +5,7 @@
   {{#each select.selected as |opt idx|}}
     <li data-selected-index={{idx}} class="ember-power-select-multiple-option {{if opt.disabled "ember-power-select-multiple-option--disabled"}}">
       {{#if selectedItemComponent}}
-        {{component selectedItemComponent extra=(readonly extra) option=(readonly opt) select=(readonly select)}}
+        {{component selectedItemComponent searchEnabled=true extra=(readonly extra) option=(readonly opt) select=(readonly select)}}
       {{else}}
         {{yield opt select}}
       {{/if}}
@@ -13,7 +13,7 @@
         <button
           onkeydown={{action "removeOption"}}
           type="button"
-          aria-label="Remove {{if searchField (get opt searchField) opt}}"
+          aria-label="{{concat removeOptionMessage " " (if searchField (get opt searchField) opt)}}"
           class="ember-power-select-multiple-remove-btn"
           data-selected-index={{idx}}>
           {{svg-jar "cross" class="ember-svg size-18" role="presentation"}}
@@ -37,7 +37,7 @@
   aria-activedescendant={{ariaActivedescendant}}
   aria-expanded={{if dropdown.isOpen "true" "false"}}
   aria-label={{if labelText labelText null}}
-  aria-describedby={{if errorId errorId null}}
+  aria-describedby={{ariaDescribedBy}}
   role="combobox"
   style={{triggerMultipleInputStyle}}
   placeholder={{or maybePlaceholder null}}
@@ -49,5 +49,7 @@
   onkeydown={{action "onKeydown"}}>
 
 {{#if labelText}}
-  <span id="ember-power-select-trigger-multiple-label-{{select.uniqueId}}" class="screen-reader-only" aria-hidden="true">{{labelText}}</span>
+  <span id="ember-power-select-trigger-multiple-label-{{select.uniqueId}}" class="screen-reader-only" aria-hidden="true">
+    {{labelText}}
+  </span>
 {{/if}}

@@ -22,15 +22,16 @@
     labelText=labelText
     search=search
     clearMessage=(readonly clearMessage)
+    removeOptionMessage=(readonly removeOptionMessage)
     allowNull=allowNull
   }}
   {{#dropdown.trigger
-    role=(if multiSelect null (readonly triggerRole))
+    role=(or triggerRole null)
     tagName=(readonly _triggerTagName)
-    ariaDescribedBy=(if multiSelect (readonly ariaDescribedBy) (if errorId (concat (readonly ariaDescribedBy) " " errorId) null))
+    ariaDescribedBy=(if (or multiSelect canInlineSearch) undefined computedAriaDescribedBy)
     ariaInvalid=(readonly ariaInvalid)
     ariaLabel=(readonly ariaLabel)
-    ariaLabelledBy=(if (and labelText (not multiSelect)) ariaLabelledById (readonly ariaLabelledBy))
+    ariaLabelledBy=(if (and labelText (or multiSelect canInlineSearch)) undefined ariaLabelledById)
     ariaRequired=(readonly required)
     title=(readonly title)
     class=(readonly concatenatedTriggerClasses)
@@ -40,11 +41,12 @@
     onKeyDown=(action "onTriggerKeydown")
     onFocus=(action "onTriggerFocus")
     onBlur=(action "onTriggerBlur")
-    tabindex=(readonly tabindex)
+    tabindex=(readonly computedTabIndex)
     aria-haspopup=popUpType
-    aria-expanded=(if multiSelect null (if dropdown.isOpen "true" "false"))
+    data-expanded=(if dropdown.isOpen "true" "false")
+    aria-expanded=(if (or multiSelect canInlineSearch) null (if dropdown.isOpen "true" "false"))
     allowClear=(readonly allowClear)
-    aria-activedescendant=(if (and (not multiSelect) (not searchEnabled)) ariaActivedescendant null)
+    aria-activedescendant=(if (or multiSelect canInlineSearch) undefined ariaActivedescendant)
   }}
     {{#component triggerComponent
       allowClear=(readonly allowClear)
@@ -66,7 +68,7 @@
       ariaActivedescendant=ariaActivedescendant
       ariaLabel=(readonly ariaLabel)
       ariaLabelledBy=(readonly ariaLabelledBy)
-      ariaDescribedBy=(readonly ariaDescribedBy)
+      ariaDescribedBy=(readonly computedAriaDescribedBy)
       labelText=labelText
       errorId=errorId
       dropdown=dropdown
@@ -77,6 +79,8 @@
       animationEnabled=(readonly animationEnabled)
       searchPlaceholder=(readonly searchPlaceholder)
       allowCreateOnBlur=allowCreateOnBlur
+      removeOptionMessage=removeOptionMessage
+      hasSIC=hasSIC
       as |opt term|}}
       {{yield opt term}}
     {{/component}}
@@ -103,6 +107,7 @@
     {{#if mustShowSearchMessage}}
       {{component searchMessageComponent
         searchMessage=(readonly searchMessage)
+        hasSIC=hasSIC
         optionsId=optionsId
         select=(readonly publicAPI)
       }}

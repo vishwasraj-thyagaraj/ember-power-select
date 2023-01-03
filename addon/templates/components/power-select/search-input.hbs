@@ -1,6 +1,6 @@
 <input 
   type="search" 
-  class="ember-power-select-search-input ember-power-select-search-input-trigger"
+  class="ember-power-select-search-input ember-power-select-search-input-trigger {{if hasSIC "has-selected-item-component" ""}}"
   autocomplete="off" 
   autocorrect="off" 
   autocapitalize="off" 
@@ -9,11 +9,11 @@
   value={{searchValue}}
   aria-controls={{listboxId}}
   aria-autocomplete={{if allowCreateOnBlur "both" "list"}}
-  placeholder={{or searchPlaceholder null}}
+  placeholder={{if allowNull allowNullLabel (or searchPlaceholder null)}}
   aria-expanded={{if dropdown.isOpen "true" "false"}}
-  autofocus
   aria-activedescendant={{ariaActivedescendant}}
   aria-label={{if labelText labelText null}}
+  aria-describedby={{ariaDescribedBy}}
   role="combobox"
   disabled={{select.disabled}}
   oninput={{onInput}}

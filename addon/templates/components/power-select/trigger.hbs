@@ -1,4 +1,4 @@
-{{#if (and select.isOpen searchEnabled)}}
+{{#if (or (and searchEnabled (not selectedItemComponent)) (and select.isOpen searchEnabled selectedItemComponent))}}
   {{#component "power-select/search-input"
     searchValue=searchValue
     searchEnabled=searchEnabled
@@ -13,12 +13,23 @@
     onInput=onInput
     onFocus=onFocus
     onBlur=onBlur
+    hasSIC=hasSIC
+    allowNull=allowNull
+    allowNullLabel=allowNullLabel
+    ariaDescribedBy=ariaDescribedBy
+    selectedItemComponent=selectedItemComponent
     tabindex=tabindex}}
   {{/component}}
+
+  {{#if (and select.selected (not selectedItemComponent))}}
+    <span class="ember-power-select-selected-item screen-reader-only">
+      {{if searchField (get select.selected searchField) select.selected}}
+    </span>
+  {{/if}}
 {{else}}
   {{#if select.selected}}
     {{#if selectedItemComponent}}
-      {{component selectedItemComponent extra=(readonly extra) option=(readonly select.selected) select=(readonly select)}}
+      {{component selectedItemComponent searchEnabled=searchEnabled extra=(readonly extra) option=(readonly select.selected) select=(readonly select)}}
     {{else}}
       <span aria-hidden={{if searchEnabled undefined "true"}} class="ember-power-select-selected-item {{if allowClear "has-clear" ""}}">{{yield select.selected select}}</span>
     {{/if}}
