@@ -85,13 +85,14 @@ export default Component.extend({
   loadingMessage: fallbackIfUndefined('Loading options...'),
   noMatchesMessage: fallbackIfUndefined('No results found'),
   searchMessage: fallbackIfUndefined('Type to search'),
-  searchPlaceholder: fallbackIfUndefined('Type to search'),
+  searchPlaceholder: fallbackIfUndefined('Search'),
   clearMessage: fallbackIfUndefined('Clear'),
+  removeOptionMessage: fallbackIfUndefined('Remove'),
   closeOnSelect: fallbackIfUndefined(true),
   defaultHighlighted: fallbackIfUndefined(defaultHighlighted),
   typeAheadMatcher: fallbackIfUndefined(defaultTypeAheadMatcher),
   highlightOnHover: fallbackIfUndefined(true),
-
+  allowRenderLikeSIC: fallbackIfUndefined(true),
   afterOptionsComponent: fallbackIfUndefined(null),
   beforeOptionsComponent: fallbackIfUndefined(null),
   optionsComponent: fallbackIfUndefined('power-select/options'),
@@ -128,6 +129,11 @@ export default Component.extend({
     assert('{{power-select}} requires an `onchange` function', this.get('onchange') && typeof this.get('onchange') === 'function');
   },
 
+  didInsertElement() {
+    let dropdownTrigger = document.querySelector(`[aria-owns="ember-basic-dropdown-content-${this.get('publicAPI.uniqueId')}"]`);
+    dropdownTrigger.removeAttribute('aria-owns');
+  },
+
   willDestroy() {
     this._super(...arguments);
     this._removeObserversInOptions();
@@ -139,8 +145,42 @@ export default Component.extend({
   },
 
   // CPs
+
+  // based on selectedItemComponent, the logic to render will change, selectedItemComponent + input with searchEnabled
+  // in single select cannot exist next to next
+  hasSIC: computed('selectedItemComponent', function() {
+    return isPresent(this.get('selectedItemComponent')) || this.get('allowRenderLikeSIC');
+  }),
+
+  // single select + inline search (autocomplete or more than 10 options) + no custom selected item component
+  canInlineSearch: computed('hasSIC', 'searchEnabled', function() {
+    return !this.get('hasSIC') && this.get('searchEnabled') && !this.get('multiSelect');
+  }),
+
+  computedTabIndex: computed('tabindex', 'searchEnabled', function() {
+    if(this.get('multiSelect')) {
+      return '-1';
+    } else if(this.get('searchEnabled')) {
+      return this.get('hasSIC') ? '0' : '-1';
+    }
+    return this.get('tabindex');
+  }),
+
+  computedAriaDescribedBy: computed('errorId', 'ariaDescribedBy', function() {
+    let errorId = this.get('errorId') || '';
+    let ariaDescribedBy = this.get('ariaDescribedBy') || '';
+    let mergedID = `${errorId} ${ariaDescribedBy}`;
+
+    return isPresent(mergedID) ? mergedID.trim() : undefined;
+  }),
+
   triggerRole: computed('multiSelect', 'searchEnabled', function() {
-    return this.get('searchEnabled') ? 'button' : 'combobox';
+    if(this.get('multiSelect')) {
+      return null;
+    } else if(this.get('searchEnabled')) {
+      return this.get('hasSIC') ? 'button' : null;
+    }
+    return 'combobox';
   }),
 
   popUpType: computed('multiSelect', 'searchEnabled', function() {
@@ -161,7 +201,7 @@ export default Component.extend({
     return this.get('renderInVC') || this.get('options.length') > 500;
   }),
 
-  ariaLabelledById: computed('labelText', function () {
+  ariaLabelledById: computed('labelText', 'publicAPI.uniqueId', function () {
     let baseId = this.get('publicAPI.uniqueId');
     if(this.get('multiSelect')) {
       return `ember-power-select-trigger-multiple-label-${baseId}`;
@@ -196,12 +236,23 @@ export default Component.extend({
     }
   }),
 
+  // the value is consumed only by single select search input
   searchValue: computed('publicAPI.selected', function() {
     let selected = get(this, 'publicAPI.selected');
-    let searchField = get(this, 'searchField');
+    let searchText = get(this, 'publicAPI.searchText');
 
-    return searchField && selected ?  get(this, `publicAPI.selected.${searchField}`)
-      : typeOf(selected) === 'string' ? selected : get(this, 'publicAPI.searchText');
+    let searchField = get(this, 'searchField');
+    let selectedValueWithSearchField = get(this, `publicAPI.selected.${searchField}`);
+
+    let isSelectedString = typeOf(selected) === 'string';
+
+    // has selected item component or the flag is explicitly set to true, then retain old behaviour
+    if(this.get('hasSIC')) {
+      return searchField && selected ? selectedValueWithSearchField : isSelectedString ? selected : searchText;
+    } else {
+      // only if allowRenderLikeSIC is set to false
+      return selected ? (isSelectedString ? selected : searchField ? selectedValueWithSearchField : selected) : searchText;
+    }
   }),
 
   options: computed({
@@ -311,6 +362,12 @@ export default Component.extend({
       if(this.get('ariaActivedescendant') !== null) {
         this.set('ariaActivedescendant', null);
       }
+
+      // remove chars when dropdown is closed, searchText needs to be changed based on selection value
+      if(this.get('canInlineSearch')) {
+        this._resetSearch();
+        if(isPresent(this.get('publicAPI.selected'))) this.updateInput();
+      }
     },
 
     onInput(e) {
@@ -321,9 +378,20 @@ export default Component.extend({
       if (action) {
         correctedTerm = action(term, publicAPI, e);
         if (correctedTerm === false) {
+          // for auto-complete fields with or withour url search, when dropdown is closed but input still has focus & 
+          // when a char is typed, dropdown opens but input loses typed char. To retain that below logic is required
+          if(term.length === 1 && !publicAPI.isOpen && this.get('searchEnabled') && this.get('mustShowSearchMessage')) {
+            this.updateState({ searchText: term, lastSearchedText: term, loading: false });
+          }
           return;
         }
       }
+
+      // search enabled for non auto-complete fields on typing in input auto open dropdown
+      if(!publicAPI.isOpen && this.get('searchEnabled') && !this.get('mustShowSearchMessage')) {
+        publicAPI.actions.open();
+      }
+
       publicAPI.actions.search(typeof correctedTerm === 'string' ? correctedTerm : term);
     },
 
@@ -369,6 +437,8 @@ export default Component.extend({
         if(this.get('multiSelect')) {
           if(this.get('searchEnabled')) {
             publicAPI.actions.search('');
+            // close multi select dropdown on selection via mouse
+            publicAPI.actions.close(e);
             this.focusInput();
             return false;
           }
@@ -377,6 +447,8 @@ export default Component.extend({
         }
 
         publicAPI.actions.close(e);
+        // after choosing an option, clear the search text input
+        this.get('searchEnabled') && publicAPI.actions.search('');
         return false;
       }
     },
@@ -448,10 +520,27 @@ export default Component.extend({
     },
 
     onFocus(event) {
+      // TODO: REFACTOR ONCE LEGACY CODE IS REMOVED
+      // We rely on focus event in legacy for performing form submit for cmd+enter key combo
+      // as focus event is trigger it goes to first input in page which in turn calls this function
+      // causing the dropdown to open on page load itself when transitioning from legacy to ember.
+      let isKeyboarduser = false;
+      let bodyEl = document.querySelector('body');
+
+      if(isPresent(bodyEl)) {
+        isKeyboarduser = bodyEl.classList.contains('keyboard-user');
+      }
+
       this.send('activate');
       let action = this.get('onfocus');
       if (action) {
         action(this.get('publicAPI'), event);
+      }
+
+      // for autocomplete fields alone, auto open dropdown when the input field receives focus
+      // this was added explicitly for keyboard users navigating via keyboard tab key
+      if(isKeyboarduser && this.get('searchEnabled') && this.get('mustShowSearchMessage')) {
+        this.get('publicAPI').actions.open();
       }
     },
 
@@ -531,7 +620,10 @@ export default Component.extend({
         publicAPI.actions.highlight(match, e);
         publicAPI.actions.scrollTo(match, e);
       } else {
-        publicAPI.actions.select(match, e);
+        // do not select if dropdown is not open, as search input is visible now, typing char itself selects value
+        if(publicAPI.isOpen || !this.get('searchEnabled')) {
+          publicAPI.actions.select(match, e);
+        }
       }
     }
     yield timeout(1000);
@@ -593,6 +685,14 @@ export default Component.extend({
     if(this.get('multiSelect')) {
       let input = document.querySelector(`#ember-power-select-trigger-multiple-input-${this.get('publicAPI.uniqueId')}`);
       input && run.next(() => (document.activeElement !== input) && input.focus());
+    }
+  },
+
+  updateInput() {
+    // will be updated only if component can inline search
+    let input = document.getElementById(`ember-power-select-search-input-trigger-${this.get('publicAPI.uniqueId')}`);
+    if(isPresent(input)) {
+      input.value = this.get('searchValue');
     }
   },
 
@@ -678,6 +778,10 @@ export default Component.extend({
       this._updateSelectedArray(selection);
     } else if (selection !== this.get('publicAPI').selected) {
       this.updateState({ selected: selection, highlighted: selection });
+      // clearing input search text and restore original state, when allowCreateOnBlur is allowed
+      if(this.get('allowCreateOnBlur') && isEmpty(selection)) {
+        this._resetSearch();
+      }
     }
   },
 
@@ -697,6 +801,7 @@ export default Component.extend({
     if (get(this, 'isDestroying')) {
       return;
     }
+
     let options = toPlainArray(opts);
     let publicAPI;
     if (this.get('search')) { // external search
@@ -781,12 +886,33 @@ export default Component.extend({
     if (e.keyCode === 38 || e.keyCode === 40) { // Up & Down
       return this._handleKeyUpDown(e);
     } else if (e.keyCode === 13) {  // ENTER
+      // after moving to inline search, enter is submitting the form, as we have cmd+enter behaviour, 
+      // ignoring this as per addon behaviour
+      e.preventDefault();
       return this._handleKeyEnter(e);
     } else if(e.keyCode === 9) { // TAB - perform selection & close
       this._handleKeyEnter(e);
       return this._handleKeyTab(e);
     } else if (e.keyCode === 27) {  // ESC
+      // after moving to inline search, pressing escape caused the input to be cleared 
+      // so added prevent default to avoid clearing the input
+      e.preventDefault()
       return this._handleKeyESC(e);
+    } else if(this.get('allowCreateOnBlur') && e.keyCode === 8) {
+      run.next(() => {
+        // to capture (meta key + a) which is select all chars behaviour + remvol
+        // and pressing backspace which removes all chars we have put inside run loop
+        return this._handleKeyBackspace(e);
+      });
+    }
+  },
+
+  _handleKeyBackspace(e) {
+    let publicAPI = this.get('publicAPI');
+    let inputField = document.getElementById(`ember-power-select-search-input-trigger-${publicAPI.uniqueId}`);
+
+    if(inputField && isEmpty(inputField.value) && isPresent(publicAPI.selected)) {
+      publicAPI.actions.select(null);
     }
   },
 

@@ -1,24 +1,47 @@
-{{#if (and select.isOpen searchEnabled)}}
+{{#if 
+  (or 
+    (and searchEnabled (not selectedItemComponent) (not allowRenderLikeSIC))
+    (and select.isOpen searchEnabled (or allowRenderLikeSIC selectedItemComponent))
+  )
+}}
   {{#component "power-select/search-input"
     searchValue=searchValue
     searchEnabled=searchEnabled
     listboxId=listboxId
     allowCreateOnBlur=allowCreateOnBlur
-    dropdown=dropdown
     ariaActivedescendant=ariaActivedescendant
     searchPlaceholder=searchPlaceholder
+    placeholder=placeholder
     labelText=labelText
     select=select
     errorId=errorId
     onInput=onInput
     onFocus=onFocus
     onBlur=onBlur
+    hasSIC=hasSIC
+    allowNull=allowNull
+    allowNullLabel=allowNullLabel
+    ariaDescribedBy=ariaDescribedBy
+    ariaLabel=ariaLabel
+    ariaLabelledBy=ariaLabelledBy
+    selectedItemComponent=selectedItemComponent
+    ariaLabelledById=ariaLabelledById
     tabindex=tabindex}}
   {{/component}}
+
+  {{#if (and select.selected (not selectedItemComponent))}}
+    <span class="ember-power-select-selected-item screen-reader-only" aria-hidden="true">
+      {{#if searchField}}
+        {{get select.selected searchField}}
+      {{else}}
+        {{yield select.selected select}}
+      {{/if}}
+    </span>
+  {{/if}}
 {{else}}
   {{#if select.selected}}
     {{#if selectedItemComponent}}
-      {{component selectedItemComponent extra=(readonly extra) option=(readonly select.selected) select=(readonly select)}}
+      {{component selectedItemComponent searchEnabled=searchEnabled extra=(readonly extra) option=(readonly select.selected) select=(readonly select)}}
     {{else}}
       <span aria-hidden={{if searchEnabled undefined "true"}} class="ember-power-select-selected-item {{if allowClear "has-clear" ""}}">{{yield select.selected select}}</span>
     {{/if}}
@@ -32,11 +55,19 @@
 {{/if}}
 
 {{#if labelText}}
-  <span id="ember-power-select-trigger-label-{{select.uniqueId}}" class="screen-reader-only" aria-hidden="true">
-    {{#if select.selected}}
-      {{concat (if searchField (get select.selected searchField) select.selected) ", " labelText}}
-    {{else}}
+  <span id={{ariaLabelledById}} class="screen-reader-only" aria-hidden="true">
+    {{#if (and searchEnabled (not selectedItemComponent) (not allowRenderLikeSIC))}}
       {{labelText}}
+    {{else}}
+      {{#if select.selected}}
+        {{#if searchField}}
+          {{concat (get select.selected searchField) ", " labelText}}
+        {{else}}
+          {{yield select.selected select}} {{concat ", " labelText}}
+        {{/if}}
+      {{else}}
+        {{labelText}}
+      {{/if}}
     {{/if}}
   </span>
 {{/if}}

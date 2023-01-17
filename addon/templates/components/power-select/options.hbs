@@ -6,15 +6,6 @@
 {{/if}}
 
 {{#if (readonly renderInVC)}}
-  {{#if (and (not multiSelect) (not search) allowNull)}}
-    <li
-      class="ember-power-select-option"
-      data-option-index="-1"
-      aria-current="{{eq opt select.highlighted}}"
-      role="option">
-      {{allowNullLabel}}
-    </li>
-  {{/if}}
   {{!-- by default estimateHeight is 1 & bufferSizeVC is 100 to prevent occluded-content z-index problem --}}
   {{#vertical-collection options
     estimateHeight=(or estimateHeightVC 1)
@@ -50,15 +41,6 @@
     {{/if}}
   {{/vertical-collection}}
 {{else}}
-  {{#if (and (not multiSelect) (not search) allowNull)}}
-    <li
-      class="ember-power-select-option"
-      data-option-index="-1"
-      aria-current="{{eq opt select.highlighted}}"
-      role="option">
-      {{allowNullLabel}}
-    </li>
-  {{/if}}
   {{#each options as |opt index|}}
     {{#if (ember-power-select-is-group opt)}}
       {{#component groupComponent

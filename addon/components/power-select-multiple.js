@@ -79,6 +79,8 @@ export default Component.extend({
         if (select.highlighted !== undefined) {
           if (!select.selected || select.selected.indexOf(select.highlighted) === -1) {
             select.actions.choose(select.highlighted, e);
+            // multi select after selection close it
+            select.actions.close(e);
             return false;
           } else {
             select.actions.close(e);
