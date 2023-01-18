@@ -2,11 +2,12 @@ import Component from '@ember/component';
 import { get } from '@ember/object';
 import { computed } from '@ember/object';
 import { inject } from '@ember/service';
-import { scheduleOnce } from '@ember/runloop';
+import { scheduleOnce, run } from '@ember/runloop';
 import { assert } from '@ember/debug';
 import { isBlank } from '@ember/utils';
 import { htmlSafe } from '@ember/string';
 import layout from '../../templates/components/power-select-multiple/trigger';
+import fallbackIfUndefined from '../../utils/computed-fallback-if-undefined';
 
 const ua = window && window.navigator ? window.navigator.userAgent : '';
 const isIE = ua.indexOf('MSIE ') > -1 || ua.indexOf('Trident/') > -1;
@@ -26,21 +27,11 @@ export default Component.extend({
     let inputStyle = this.input ? window.getComputedStyle(this.input) : null;
     this.inputFont = inputStyle ? `${ inputStyle.fontStyle } ${  inputStyle.fontVariant} ${ inputStyle.fontWeight } ${ inputStyle.fontSize}/${ inputStyle.lineHeight } ${ inputStyle.fontFamily }` : null;
     let optionsList = document.getElementById(`ember-power-select-multiple-options-${select.uniqueId}`);
-    let chooseOption = (e) => {
-      let selectedIndex = e.target.getAttribute('data-selected-index');
-      if (selectedIndex) {
-        e.stopPropagation();
-        e.preventDefault();
 
-        let select = this.get('select');
-        let object = this.selectedObject(select.selected, selectedIndex);
-        select.actions.choose(object);
-      }
-    };
     if (isTouchDevice) {
-      optionsList.addEventListener('touchstart', chooseOption);
+      optionsList.addEventListener('touchstart', this.chooseOption.bind(this));
     }
-    optionsList.addEventListener('mousedown', chooseOption);
+    optionsList.addEventListener('mousedown', this.chooseOption.bind(this));
   },
 
   didReceiveAttrs() {
@@ -48,6 +39,18 @@ export default Component.extend({
     let select = this.set('oldSelect', this.get('select'));
     if (oldSelect.isOpen && !select.isOpen) {
       scheduleOnce('actions', null, select.actions.search, '');
+    }
+  },
+
+  chooseOption (e) {
+    let selectedIndex = e.target.getAttribute('data-selected-index');
+    if (selectedIndex && e.target.classList.contains('ember-power-select-multiple-remove-btn')) {
+      e.stopPropagation();
+      e.preventDefault();
+
+      let select = this.get('select');
+      let object = this.selectedObject(select.selected, selectedIndex);
+      select.actions.choose(object);
     }
   },
 
@@ -76,6 +79,17 @@ export default Component.extend({
 
   // Actions
   actions: {
+    removeOption(e) {
+      // handle option removal via button pill
+      if(e.keyCode === 13) {
+        this.chooseOption(e);
+        let selectId = this.get('select.uniqueId');
+        let trigger = document.querySelector(`#ember-power-select-trigger-multiple-input-${selectId}`);
+        // focus to combobox once option is removed
+        trigger && trigger.focus();
+      }
+    },
+
     onInput(e) {
       let action = this.get('onInput');
       if (action &&  action(e) === false) {
@@ -95,18 +109,24 @@ export default Component.extend({
         if (isBlank(e.target.value)) {
           let lastSelection = select.selected[select.selected.length - 1];
           if (lastSelection) {
-            select.actions.select(this.get('buildSelection')(lastSelection, select), e);
-            if (typeof lastSelection === 'string') {
-              select.actions.search(lastSelection);
+            // if enabled, will remove selected option char by char instead of single removal
+            if(get(this, 'allowBackspaceRemoval')) {
+              select.actions.select(this.get('buildSelection')(lastSelection, select), e);
+              if (typeof lastSelection === 'string') {
+                select.actions.search(lastSelection);
+              } else {
+                let searchField = this.get('searchField');
+                assert('`{{power-select-multiple}}` requires a `searchField` when the options are not strings to remove options using backspace', searchField);
+                select.actions.search(get(lastSelection, searchField));
+              }
+              select.actions.open(e);
             } else {
-              let searchField = this.get('searchField');
-              assert('`{{power-select-multiple}}` requires a `searchField` when the options are not strings to remove options using backspace', searchField);
-              select.actions.search(get(lastSelection, searchField));
+              // removed via backspace
+              select.actions.select(this.get('buildSelection')(lastSelection, select), e);
             }
-            select.actions.open(e);
           }
         }
-      } else if (e.keyCode >= 48 && e.keyCode <= 90 || e.keyCode === 32) { // Keys 0-9, a-z or SPACE
+      } else if (e.keyCode >= 48 && e.keyCode <= 90 || e.keyCode === 32 || e.keyCode >= 96 && e.keyCode <= 105) { // Keys 0-9, a-z, SPACE or Numpad keys
         e.stopPropagation();
       }
     }

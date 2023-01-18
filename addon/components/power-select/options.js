@@ -1,5 +1,6 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
+import { reads } from '@ember/object/computed';
 import layout from '../../templates/components/power-select/options';
 
 const isTouchDevice = (!!window && 'ontouchstart' in window);
@@ -28,7 +29,8 @@ export default Component.extend({
   isTouchDevice,
   layout,
   tagName: 'ul',
-  attributeBindings: ['role', 'aria-controls'],
+  attributeBindings: ['role', 'aria-multiselectable', 'aria-label'],
+  classNameBindings: ['multiSelect:ember-power-select-multiple-list:ember-power-select-single-list'],
   role: 'listbox',
 
   // Lifecycle hooks
@@ -62,9 +64,11 @@ export default Component.extend({
   },
 
   // CPs
-  'aria-controls': computed('select.uniqueId', function() {
-    return `ember-power-select-trigger-${this.get('select.uniqueId')}`;
+  'aria-multiselectable': computed(function() {
+    return this.get('multiSelect') ? 'true' : 'false'
   }),
+
+  'aria-label': reads('labelText'),
 
   // Methods
   _addTouchEvents() {

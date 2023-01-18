@@ -1,0 +1,14 @@
+{{yield}}
+
+{{!-- if search is enabled, clearing is allowed as allowNull option will be available only if searched --}}
+{{#if (and select.selected allowClear (not select.disabled) (not multiSelect) (or (not allowNull) search))}}
+  <button
+    type="button"
+    aria-label={{concat clearMessage " " labelText}}
+    class="ember-power-select-clear-btn"
+    onkeydown={{action "removeOption"}}
+    onmousedown={{action "clear"}}
+    ontouchstart={{action "clear"}}>
+    {{svg-jar "cross" class="ember-svg size-18" role="presentation"}}
+  </button>
+{{/if}}

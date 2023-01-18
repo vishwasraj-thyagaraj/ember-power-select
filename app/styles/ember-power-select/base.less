@@ -229,6 +229,7 @@
   right: 5px;
 }
 .ember-power-select-clear-btn {
+  top: 5px;
   right: @ember-power-select-clear-btn-margin;
 }
 
@@ -239,6 +240,15 @@
   }
   .ember-power-select-option { padding-left: 3 * @ember-power-select-option-padding; }
   .ember-power-select-group-name { padding-left: @ember-power-select-option-padding; }
+}
+
+.screen-reader-only {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
 
 // RTL styles
@@ -262,7 +272,6 @@
     right: initial;
   }
 }
-
 
 .ember-power-select-dropdown[dir=rtl] {
   .ember-power-select-group {

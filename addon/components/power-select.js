@@ -1,18 +1,18 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
-import { scheduleOnce } from '@ember/runloop';
+import { scheduleOnce, run } from '@ember/runloop';
 import { getOwner } from '@ember/application';
-import { isEqual } from '@ember/utils';
 import { get, set } from '@ember/object';
 import { assert } from '@ember/debug';
 import { DEBUG } from '@glimmer/env';
-import { isBlank } from '@ember/utils';
+import { isEqual, isEmpty, isBlank, isPresent } from '@ember/utils';
 import { isArray as isEmberArray } from '@ember/array';
 import ArrayProxy from '@ember/array/proxy';
 import ObjectProxy from '@ember/object/proxy';
 import layout from '../templates/components/power-select';
 import fallbackIfUndefined from '../utils/computed-fallback-if-undefined';
 import optionsMatcher from '../utils/computed-options-matcher';
+import { typeOf } from '@ember/utils';
 import {
   defaultMatcher,
   indexOfOption,
@@ -76,6 +76,8 @@ export default Component.extend({
   tagName: '',
 
   // Options
+  ariaActivedescendant: null,
+  allowNullLabel: fallbackIfUndefined('--'),
   searchEnabled: fallbackIfUndefined(true),
   matchTriggerWidth: fallbackIfUndefined(true),
   preventScroll: fallbackIfUndefined(false),
@@ -83,13 +85,15 @@ export default Component.extend({
   loadingMessage: fallbackIfUndefined('Loading options...'),
   noMatchesMessage: fallbackIfUndefined('No results found'),
   searchMessage: fallbackIfUndefined('Type to search'),
+  searchPlaceholder: fallbackIfUndefined('Type to search'),
+  clearMessage: fallbackIfUndefined('Clear'),
   closeOnSelect: fallbackIfUndefined(true),
   defaultHighlighted: fallbackIfUndefined(defaultHighlighted),
   typeAheadMatcher: fallbackIfUndefined(defaultTypeAheadMatcher),
   highlightOnHover: fallbackIfUndefined(true),
 
   afterOptionsComponent: fallbackIfUndefined(null),
-  beforeOptionsComponent: fallbackIfUndefined('power-select/before-options'),
+  beforeOptionsComponent: fallbackIfUndefined(null),
   optionsComponent: fallbackIfUndefined('power-select/options'),
   groupComponent: fallbackIfUndefined('power-select/power-select-group'),
   selectedItemComponent: fallbackIfUndefined(null),
@@ -135,6 +139,44 @@ export default Component.extend({
   },
 
   // CPs
+  triggerRole: computed('multiSelect', 'searchEnabled', function() {
+    return this.get('searchEnabled') ? 'button' : 'combobox';
+  }),
+
+  popUpType: computed('multiSelect', 'searchEnabled', function() {
+    let type = null;
+    let hasSearch = this.get('searchEnabled');
+    let isMultipleSelect = this.get('multiSelect');
+
+    if(!hasSearch && !isMultipleSelect) {
+      type = 'listbox';
+    } else if(hasSearch) {
+      type = 'true';
+    }
+
+    return type;
+  }),
+
+  shouldRenderInVC: computed('renderInVC', function() {
+    return this.get('renderInVC') || this.get('options.length') > 500;
+  }),
+
+  ariaLabelledById: computed('labelText', function () {
+    let baseId = this.get('publicAPI.uniqueId');
+    if(this.get('multiSelect')) {
+      return `ember-power-select-trigger-multiple-label-${baseId}`;
+    } else {
+      return `ember-power-select-trigger-label-${baseId}`;
+    }
+  }),
+
+  getPlaceholder: computed('placeholder', 'multiSelect', function() {
+    if(isBlank(this.get('placeholder'))) {
+      return this.get('multiSelect') ? 'Search' : 'Select';
+    }
+    return this.get('placeholder');
+  }),
+
   inTesting: computed(function() {
     let config = getOwner(this).resolveRegistration('config:environment');
     return config.environment === 'test';
@@ -152,6 +194,14 @@ export default Component.extend({
       }
       return selected;
     }
+  }),
+
+  searchValue: computed('publicAPI.selected', function() {
+    let selected = get(this, 'publicAPI.selected');
+    let searchField = get(this, 'searchField');
+
+    return searchField && selected ?  get(this, `publicAPI.selected.${searchField}`)
+      : typeOf(selected) === 'string' ? selected : get(this, 'publicAPI.searchText');
   }),
 
   options: computed({
@@ -235,6 +285,15 @@ export default Component.extend({
         }
       }
       this.resetHighlighted();
+
+      if(this.get('ariaActivedescendant') === null) {
+        if(isPresent(this.get('selected')) && !this.get('multiSelect')) {
+          // dropdown not yet open scenario
+          run.next(() => this._setActiveDescendant(this.get('selected')));
+        } else {
+          this._setActiveDescendant(this.get('publicAPI').options[0], true);
+        }
+      }
     },
 
     onClose(_, e) {
@@ -245,7 +304,13 @@ export default Component.extend({
       if (e) {
         this.set('openingEvent', null);
       }
+
+      this.get('allowCreateOnBlur') && this.handleFocusOut(this.get('publicAPI'), e);
       this.updateState({ highlighted: undefined });
+
+      if(this.get('ariaActivedescendant') !== null) {
+        this.set('ariaActivedescendant', null);
+      }
     },
 
     onInput(e) {
@@ -298,7 +363,19 @@ export default Component.extend({
       }
       let publicAPI = this.get('publicAPI');
       publicAPI.actions.select(this.get('buildSelection')(selected, publicAPI), e);
+
       if (this.get('closeOnSelect')) {
+        // for multi select, once selected keep dropdown open
+        if(this.get('multiSelect')) {
+          if(this.get('searchEnabled')) {
+            publicAPI.actions.search('');
+            this.focusInput();
+            return false;
+          }
+          // uncommenting below code will close dropdown once selected
+          // return false;
+        }
+
         publicAPI.actions.close(e);
         return false;
       }
@@ -492,6 +569,16 @@ export default Component.extend({
         loading: false
       });
       this.resetHighlighted();
+      // remote search
+      if(this.get('publicAPI.isOpen')) {
+        run.later(() =>{
+          let option = this.get('publicAPI.results')[0];
+          if(this.get('publicAPI.highlighted') !== option) {
+            this.updateState({ highlighted: option });
+          }
+          this._setActiveDescendant(option);
+        }, 300);
+      }
     } catch(e) {
       this.updateState({ lastSearchedText: term, loading: false });
     } finally {
@@ -502,6 +589,48 @@ export default Component.extend({
   }).restartable(),
 
   // Methods
+  focusInput() {
+    if(this.get('multiSelect')) {
+      let input = document.querySelector(`#ember-power-select-trigger-multiple-input-${this.get('publicAPI.uniqueId')}`);
+      input && run.next(() => (document.activeElement !== input) && input.focus());
+    }
+  },
+
+  handleMultiSelect(publicAPI, e) {
+    let hasResults = publicAPI.results.length;
+    let isValidTerm = publicAPI.searchText.length >= 2;
+
+    if(!hasResults && isValidTerm) {
+      if(this.get('allowCommaSeparatedValues')) {
+        publicAPI.searchText.split(',').forEach(str => str.length >= 2 && this.customSuggestion(str.trim()))
+      } else {
+        this.customSuggestion(publicAPI.searchText.trim());
+      }
+      publicAPI.actions.open();
+      this.focusInput();
+    }
+  },
+
+  handleSingleSelect(publicAPI, e) {
+    let hasResults = publicAPI.results.length;
+    let isValidTerm = publicAPI.searchText.length >= 2;
+
+    if(!hasResults && isValidTerm) {
+      this.customSuggestion(publicAPI.searchText.trim());
+    }
+  },
+
+  handleFocusOut(publicAPI, e) {
+    // 1. support for adding values when clicked outside & when result is highlighted
+    // 2. support for adding values that is not present in results
+    this.get('multiSelect') ? (e.type !== 'keydown' && this.handleMultiSelect(publicAPI, e)) : this.handleSingleSelect(publicAPI, e);
+  },
+
+  customSuggestion(str) {
+    let value = { __isSuggestion__: true, __value__: str };
+    this.get('onchange')(this.get('multiSelect') ? [value] : value, this.get('publicAPI'), event);
+  },
+
   setIsActive(isActive) {
     this.updateState({ isActive });
   },
@@ -554,12 +683,12 @@ export default Component.extend({
 
   resetHighlighted() {
     let publicAPI = this.get('publicAPI');
-    let defaultHightlighted = this.get('defaultHighlighted');
+    let defaultHighlighted = this.get('defaultHighlighted');
     let highlighted;
-    if (typeof defaultHightlighted === 'function') {
-      highlighted = defaultHightlighted(publicAPI);
+    if (typeof defaultHighlighted === 'function') {
+      highlighted = defaultHighlighted(publicAPI);
     } else {
-      highlighted = defaultHightlighted;
+      highlighted = defaultHighlighted;
     }
     this.updateState({ highlighted });
   },
@@ -592,6 +721,7 @@ export default Component.extend({
   _resetSearch() {
     let results = this.get('publicAPI').options;
     this.get('handleAsyncSearchTask').cancelAll();
+
     this.updateState({
       results,
       searchText: '',
@@ -599,12 +729,37 @@ export default Component.extend({
       resultsCount: countOptions(results),
       loading: false
     });
+    // reset search
+    if(this.get('publicAPI.isOpen')) {
+      run.later(() => {
+        let option = this.get('publicAPI.options')[0];
+        if(this.get('publicAPI.highlighted') !== option) {
+          this.updateState({ highlighted: option });
+        }
+        this._setActiveDescendant(option);
+      }, 300);
+    }
   },
 
   _performFilter(term) {
     let results = this.filter(this.get('publicAPI').options, term);
-    this.updateState({ results, searchText: term, lastSearchedText: term, resultsCount: countOptions(results) });
+    this.updateState({ 
+      results, 
+      searchText: term, 
+      lastSearchedText: term, 
+      resultsCount: countOptions(results)
+    });
     this.resetHighlighted();
+    // local search
+    if(this.get('publicAPI.isOpen')) {
+      run.later(() => {
+        let option = this.get('publicAPI.results')[0];
+        if(this.get('publicAPI.highlighted') !== option) {
+          this.updateState({ highlighted: option });
+        }
+        this._setActiveDescendant(option);
+      }, 300);
+    }
   },
 
   _performSearch(term) {
@@ -627,7 +782,8 @@ export default Component.extend({
       return this._handleKeyUpDown(e);
     } else if (e.keyCode === 13) {  // ENTER
       return this._handleKeyEnter(e);
-    } else if (e.keyCode === 9) {   // Tab
+    } else if(e.keyCode === 9) { // TAB - perform selection & close
+      this._handleKeyEnter(e);
       return this._handleKeyTab(e);
     } else if (e.keyCode === 27) {  // ESC
       return this._handleKeyESC(e);
@@ -643,8 +799,18 @@ export default Component.extend({
       let newHighlighted = advanceSelectableOption(publicAPI.results, publicAPI.highlighted, step);
       publicAPI.actions.highlight(newHighlighted, e);
       publicAPI.actions.scrollTo(newHighlighted);
+      this._setActiveDescendant(newHighlighted);
     } else {
       publicAPI.actions.open(e);
+    }
+  },
+
+  _setActiveDescendant(newHighlighted, init = false) {
+    if(this.get('publicAPI.isOpen') || init) {
+      let _highlightedIndex = indexOfOption(this.get('publicAPI.results'), newHighlighted);
+      if(_highlightedIndex !== -1) {
+        this.set('ariaActivedescendant', `ember-power-select-options-${this.get('publicAPI.uniqueId')}-${_highlightedIndex}`);
+      }
     }
   },
 

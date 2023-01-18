@@ -1,20 +1,50 @@
-{{#if select.selected}}
-  {{#if selectedItemComponent}}
-    {{component selectedItemComponent extra=(readonly extra) option=(readonly select.selected) select=(readonly select)}}
-  {{else}}
-    <span class="ember-power-select-selected-item">{{yield select.selected select}}</span>
-  {{/if}}
-  {{#if (and allowClear (not select.disabled))}}
-    <button
-      type="button"
-      aria-label="Clear"
-      class="ember-power-select-clear-btn"
-      onmousedown={{action "clear"}}
-      ontouchstart={{action "clear"}}>
-      &times;
-    </button>
-  {{/if}}
+{{#if (and select.isOpen searchEnabled)}}
+  {{#component "power-select/search-input"
+    searchValue=searchValue
+    searchEnabled=searchEnabled
+    listboxId=listboxId
+    allowCreateOnBlur=allowCreateOnBlur
+    dropdown=dropdown
+    ariaActivedescendant=ariaActivedescendant
+    searchPlaceholder=searchPlaceholder
+    labelText=labelText
+    select=select
+    errorId=errorId
+    onInput=onInput
+    onFocus=onFocus
+    onBlur=onBlur
+    tabindex=tabindex}}
+  {{/component}}
 {{else}}
-  {{component placeholderComponent placeholder=placeholder}}
+  {{#if select.selected}}
+    {{#if selectedItemComponent}}
+      {{component selectedItemComponent extra=(readonly extra) option=(readonly select.selected) select=(readonly select)}}
+    {{else}}
+      <span aria-hidden={{if searchEnabled undefined "true"}} class="ember-power-select-selected-item {{if allowClear "has-clear" ""}}">{{yield select.selected select}}</span>
+    {{/if}}
+  {{else}}
+    {{#if (and allowNull (not search))}}
+      <span class="ember-power-select-placeholder">{{allowNullLabel}}</span>
+    {{else}}
+      {{component placeholderComponent placeholder=placeholder}}
+    {{/if}}
+  {{/if}}
 {{/if}}
-<span class="ember-power-select-status-icon"></span>
+
+{{#if labelText}}
+  <span id="ember-power-select-trigger-label-{{select.uniqueId}}" class="screen-reader-only" aria-hidden="true">
+    {{#if select.selected}}
+      {{concat (if searchField (get select.selected searchField) select.selected) ", " labelText}}
+    {{else}}
+      {{labelText}}
+    {{/if}}
+  </span>
+{{/if}}
+
+{{#if statusIcon}}
+  <span class="ember-power-select-custom-status-icon">
+    {{svg-jar statusIcon class="ember-svg size-16" role="presentation"}}
+  </span>
+{{else}}
+  <span class="ember-power-select-status-icon" role="presentation"></span>
+{{/if}}

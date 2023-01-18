@@ -1,0 +1,102 @@
+<main style="width:50%;margin:50px auto;">
+	<h1>Sample</h1>
+
+	<p>Single Select (with url search)</p>
+	{{#power-select
+		search=(action "searchRepo")
+		renderInPlace=true
+		selected=name
+		allowNull=true
+		allowClear=true
+		allowNullLabel="..."
+		onchange=(action (mut name))
+		as |option|
+	}}
+		{{option}}
+	{{/power-select}}
+
+	<br>
+
+	<p>Multi Select (with url search)</p>
+	{{#power-select-multiple
+		search=(action "searchRepo")
+		renderInPlace=true
+		selected=name0
+		onchange=(action "changeName" "name0")
+		allowClear=true
+		as |option|
+	}}
+		{{option}}
+	{{/power-select-multiple}}
+
+	<br>
+
+	<p>Multi Select (with search)</p>
+	<label>Agents</label>
+	{{#power-select-multiple
+		options=names
+		searchField="name"
+		selected=name1
+		renderInPlace=true
+		onchange=(action "changeName" "name1")
+		labelText="Agents"
+		allowClear=true
+		as |username|
+	}}
+		{{username.name}}
+	{{/power-select-multiple}}
+
+	<br>
+	<p>Multi Select (no search)</p>
+	<label>Agents</label>
+	{{#power-select-multiple
+		options=names
+		searchField="name"
+		selected=name2
+		renderInPlace=true
+		onchange=(action "changeName" "name2")
+		labelText="Agents"
+		allowClear=true
+		searchEnabled=false
+		as |username|
+	}}
+		{{username.name}}
+	{{/power-select-multiple}}
+
+	<br>
+	<p>Single Select (with search)</p>
+	<label>Agents</label>
+	{{#power-select
+		options=names
+		searchField="name"
+		renderInPlace=true
+		selected=name3
+		onchange=(action "changeName" "name3")
+		labelText="Agents"
+		allowClear=true
+		allowNull=true
+		allowNullLabel="--"
+		as |username|
+	}}
+		{{username.name}}
+	{{/power-select}}
+
+	<br>
+	<p>Single Select (no search)</p>
+	<label>Agents</label>
+	{{#power-select
+		options=names
+		searchField="name"
+		renderInPlace=true
+		selected=name4
+		onchange=(action "changeName" "name4")
+		labelText="Agents"
+		allowClear=true
+		allowNull=true
+		allowNullLabel="Any"
+		searchEnabled=false
+		as |username|
+	}}
+		{{username.name}}
+	{{/power-select}}
+</main>

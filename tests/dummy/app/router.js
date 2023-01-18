@@ -55,6 +55,8 @@ Router.map(function() {
 
   // Routes for fastboot tests
   this.route('fastboot-test');
+
+  this.route('sample');
 });
 
 export default Router;

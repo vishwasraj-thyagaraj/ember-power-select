@@ -1,7 +1,6 @@
 {{#if (hasBlock "inverse")}}
   {{#power-select
     _triggerTagName=_triggerTagName
-    triggerRole=triggerRole
     afterOptionsComponent=afterOptionsComponent
     allowClear=allowClear
     ariaDescribedBy=ariaDescribedBy
@@ -59,8 +58,13 @@
     verticalPosition=verticalPosition
     estimateHeightVC=estimateHeightVC
     bufferSizeVC=bufferSizeVC
-    renderInVC=renderInVC
+    renderInVC=shouldRenderInVC
     staticHeightVC=staticHeightVC
+    multiSelect=multiSelect
+    labelText=labelText
+    errorId=errorId
+    allowCreateOnBlur=allowCreateOnBlur
+    allowCommaSeparatedValues=allowCommaSeparatedValues
     as |option select|}}
     {{yield option select}}
   {{else}}
@@ -69,7 +73,6 @@
 {{else}}
   {{#power-select
     _triggerTagName=_triggerTagName
-    triggerRole=triggerRole
     afterOptionsComponent=afterOptionsComponent
     allowClear=allowClear
     ariaDescribedBy=ariaDescribedBy
@@ -127,8 +130,13 @@
     verticalPosition=verticalPosition
     estimateHeightVC=estimateHeightVC
     bufferSizeVC=bufferSizeVC
-    renderInVC=renderInVC
+    renderInVC=shouldRenderInVC
     staticHeightVC=staticHeightVC
+    multiSelect=multiSelect
+    labelText=labelText
+    errorId=errorId
+    allowCreateOnBlur=allowCreateOnBlur
+    allowCommaSeparatedValues=allowCommaSeparatedValues
     as |option select|}}
     {{yield option select}}
   {{/power-select}}
