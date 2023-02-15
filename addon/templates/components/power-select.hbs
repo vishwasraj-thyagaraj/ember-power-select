@@ -27,13 +27,13 @@
     allowNull=allowNull
   }}
   {{#dropdown.trigger
-    role=(or (if (and hasSIC dropdown.isOpen) "group" triggerRole) null)
+    role=(or (if (and hasSIC dropdown.isOpen searchEnabled) "group" triggerRole) null)
     tagName=(readonly _triggerTagName)
     ariaDescribedBy=(if (or multiSelect canInlineSearch) undefined computedAriaDescribedBy)
     ariaInvalid=(readonly ariaInvalid)
     ariaLabel=(if labelText null (or ariaLabel null))
-    ariaLabelledBy=(if (or multiSelect canInlineSearch) undefined (if labelText ariaLabelledById (or ariaLabelledBy null)))
-    ariaRequired=(readonly required)
+    ariaLabelledBy=(if (or multiSelect canInlineSearch) undefined (if labelText (or fieldId ariaLabelledById) (or ariaLabelledBy null)))
+    ariaRequired=(if (or multiSelect canInlineSearch) null required)
     title=(readonly title)
     class=(readonly concatenatedTriggerClasses)
     extra=(readonly extra)
@@ -82,8 +82,11 @@
       animationEnabled=(readonly animationEnabled)
       searchPlaceholder=(readonly searchPlaceholder)
       allowCreateOnBlur=allowCreateOnBlur
+      requiredMessage=requiredMessage
+      ariaRequired=(readonly required)
       removeOptionMessage=(or removeLabel removeOptionMessage)
       hasSIC=hasSIC
+      fieldId=(or fieldId null)
       as |opt term|}}
       {{yield opt term}}
     {{/component}}
@@ -111,6 +114,7 @@
       {{component searchMessageComponent
         searchMessage=(readonly searchMessage)
         hasSIC=hasSIC
+        multiSelect=multiSelect
         optionsId=optionsId
         select=(readonly publicAPI)
       }}

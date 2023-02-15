@@ -23,7 +23,7 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
     let select = this.get('select');
-    this.input = document.getElementById(`ember-power-select-trigger-multiple-input-${select.uniqueId}`);
+    this.input = document.querySelector(`[data-id="ember-power-select-trigger-multiple-input-${select.uniqueId}"]`);
     let inputStyle = this.input ? window.getComputedStyle(this.input) : null;
     this.inputFont = inputStyle ? `${ inputStyle.fontStyle } ${  inputStyle.fontVariant} ${ inputStyle.fontWeight } ${ inputStyle.fontSize}/${ inputStyle.lineHeight } ${ inputStyle.fontFamily }` : null;
     let optionsList = document.getElementById(`ember-power-select-multiple-options-${select.uniqueId}`);
@@ -84,7 +84,7 @@ export default Component.extend({
       if(e.keyCode === 13) {
         this.chooseOption(e);
         let selectId = this.get('select.uniqueId');
-        let trigger = document.querySelector(`#ember-power-select-trigger-multiple-input-${selectId}`);
+        let trigger = document.querySelector(`[data-id="ember-power-select-trigger-multiple-input-${selectId}"]`);
         // focus to combobox once option is removed
         trigger && trigger.focus();
       }

@@ -30,15 +30,17 @@
   autocorrect="off" 
   autocapitalize="off" 
   spellcheck="false"
-  id="ember-power-select-trigger-multiple-input-{{select.uniqueId}}"
+  data-id="ember-power-select-trigger-multiple-input-{{select.uniqueId}}"
+  id={{if fieldId fieldId null}}
   value={{select.searchText}}
   aria-controls={{listboxId}}
   aria-autocomplete={{if allowCreateOnBlur "both" "list"}}
   aria-activedescendant={{ariaActivedescendant}}
   aria-expanded={{if dropdown.isOpen "true" "false"}}
-  aria-label={{if labelText null (or ariaLabel null)}}
+  aria-label={{if (and labelText (not fieldId)) null (or ariaLabel null)}}
   aria-describedby={{ariaDescribedBy}}
-  aria-labelledby={{if labelText ariaLabelledById (or ariaLabelledBy null)}}
+  aria-labelledby={{if (and labelText (not fieldId)) ariaLabelledById (or ariaLabelledBy null)}}
+  aria-required={{if ariaRequired "true" null}}
   role="combobox"
   style={{triggerMultipleInputStyle}}
   placeholder={{or maybePlaceholder null}}
@@ -49,7 +51,7 @@
   tabindex={{tabindex}}
   onkeydown={{action "onKeydown"}}>
 
-{{#if labelText}}
+{{#if (and labelText (not fieldId))}}
   <span id={{ariaLabelledById}} class="screen-reader-only" aria-hidden="true">
     {{labelText}}
   </span>

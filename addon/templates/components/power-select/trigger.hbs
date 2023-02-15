@@ -19,6 +19,7 @@
     onFocus=onFocus
     onBlur=onBlur
     hasSIC=hasSIC
+    fieldId=fieldId
     allowNull=allowNull
     allowNullLabel=allowNullLabel
     ariaDescribedBy=ariaDescribedBy
@@ -26,6 +27,7 @@
     ariaLabelledBy=ariaLabelledBy
     selectedItemComponent=selectedItemComponent
     ariaLabelledById=ariaLabelledById
+    ariaRequired=ariaRequired
     tabindex=tabindex}}
   {{/component}}
 
@@ -43,7 +45,7 @@
     {{#if selectedItemComponent}}
       {{component selectedItemComponent searchEnabled=searchEnabled extra=(readonly extra) option=(readonly select.selected) select=(readonly select)}}
     {{else}}
-      <span aria-hidden={{if searchEnabled undefined "true"}} class="ember-power-select-selected-item {{if allowClear "has-clear" ""}}">{{yield select.selected select}}</span>
+      <span class="ember-power-select-selected-item {{if allowClear "has-clear" ""}}">{{yield select.selected select}}</span>
     {{/if}}
   {{else}}
     {{#if (and allowNull (not search))}}
@@ -54,7 +56,7 @@
   {{/if}}
 {{/if}}
 
-{{#if labelText}}
+{{#if (and labelText (not fieldId))}}
   <span id={{ariaLabelledById}} class="screen-reader-only" aria-hidden="true">
     {{#if (and searchEnabled (not selectedItemComponent) (not allowRenderLikeSIC))}}
       {{labelText}}

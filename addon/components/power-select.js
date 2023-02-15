@@ -683,14 +683,14 @@ export default Component.extend({
   // Methods
   focusInput() {
     if(this.get('multiSelect')) {
-      let input = document.querySelector(`#ember-power-select-trigger-multiple-input-${this.get('publicAPI.uniqueId')}`);
+      let input = document.querySelector(`[data-id="ember-power-select-trigger-multiple-input-${this.get('publicAPI.uniqueId')}"]`);
       input && run.next(() => (document.activeElement !== input) && input.focus());
     }
   },
 
   updateInput() {
     // will be updated only if component can inline search
-    let input = document.getElementById(`ember-power-select-search-input-trigger-${this.get('publicAPI.uniqueId')}`);
+    let input = document.querySelector(`[data-id="ember-power-select-search-input-trigger-${this.get('publicAPI.uniqueId')}"]`);
     if(isPresent(input)) {
       input.value = this.get('searchValue');
     }
@@ -909,8 +909,7 @@ export default Component.extend({
 
   _handleKeyBackspace(e) {
     let publicAPI = this.get('publicAPI');
-    let inputField = document.getElementById(`ember-power-select-search-input-trigger-${publicAPI.uniqueId}`);
-
+    let inputField = document.querySelector(`[data-id="ember-power-select-search-input-trigger-${publicAPI.uniqueId}"]`);
     if(inputField && isEmpty(inputField.value) && isPresent(publicAPI.selected)) {
       publicAPI.actions.select(null);
     }

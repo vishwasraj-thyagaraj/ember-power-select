@@ -1,5 +1,5 @@
 <ul aria-label={{searchMessage}} id={{optionsId}} class="ember-power-select-options" role="listbox">
-  <li  aria-live={{if hasSIC "assertive" undefined}} class="ember-power-select-option ember-power-select-option--search-message" role="option">
+  <li  aria-live={{if (and hasSIC (not multiSelect)) "assertive" undefined}} class="ember-power-select-option ember-power-select-option--search-message" role="option">
     {{searchMessage}}
   </li>
 </ul>

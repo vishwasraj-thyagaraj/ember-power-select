@@ -11,10 +11,18 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    let selectInput = document.querySelector(`#ember-power-select-search-input-trigger-${get(this.select, 'uniqueId')}`);
-    later(() => {
-      get(this.select, 'isOpen') && selectInput.select();
-    });
+    let selectInput = document.querySelector(`[data-id="ember-power-select-search-input-trigger-${get(this.select, 'uniqueId')}"]`);
+    if(selectInput) {
+      later(() => {
+        get(this.select, 'isOpen') && selectInput.select();
+      });
+    }
+
+    if(this.get('fieldId')) {
+      let labelEl = document.querySelector(`label[id="${this.get('fieldId')}"]`);
+      // if input is rendered with fieldId as "id" attribute there will be duplicate of it on the label element as well
+      labelEl && labelEl.removeAttribute('id');
+    }
   },
   
   willDestroyElement() {
