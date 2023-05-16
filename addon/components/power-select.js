@@ -838,7 +838,7 @@ export default Component.extend({
     if(this.get('publicAPI.isOpen')) {
       run.later(() => {
         let option = this.get('publicAPI.options')[0];
-        if(this.get('publicAPI.highlighted') !== option) {
+        if(this.get('publicAPI.highlighted') !== option && this.get('publicAPI.isOpen')) {
           this.updateState({ highlighted: option });
         }
         this._setActiveDescendant(option);
