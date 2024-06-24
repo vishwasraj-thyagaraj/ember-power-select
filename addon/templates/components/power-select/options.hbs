@@ -19,9 +19,10 @@
   {{#vertical-collection options
     estimateHeight=(or estimateHeightVC 1)
     bufferSize=(or bufferSizeVC 100)
+    registerAPI=(action "registerAPI")
     staticHeight=(or staticHeightVC false) as |opt index|}}
     {{#if (ember-power-select-is-group opt)}}
-      {{#component groupComponent
+        {{#component groupComponent
           group=(readonly opt)
           select=(readonly select)
           extra=(readonly extra)
@@ -61,7 +62,7 @@
   {{/if}}
   {{#each options as |opt index|}}
     {{#if (ember-power-select-is-group opt)}}
-      {{#component groupComponent
+        {{#component groupComponent
           group=(readonly opt)
           select=(readonly select)
           extra=(readonly extra)
